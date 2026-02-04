@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dext Competitive Intelligence - Feb 4, 2026</title>
-    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <title>Dext Competitive Intelligence - February 2026</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
@@ -23,19 +23,6 @@
 
     <script type="text/babel">
         const { useState } = React;
-        const { AlertCircle, CheckCircle, XCircle, Star, Users, Package, Zap, Info } = (() => {
-            const iconProps = { size: 20, className: "inline-block" };
-            return {
-                AlertCircle: (props) => <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>,
-                CheckCircle: (props) => <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>,
-                XCircle: (props) => <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>,
-                Star: (props) => <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
-                Users: (props) => <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
-                Package: (props) => <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>,
-                Zap: (props) => <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
-                Info: (props) => <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-            };
-        })();
 
         const DextDashboard = () => {
             const [activeTab, setActiveTab] = useState('overview');
@@ -53,93 +40,109 @@
                 'multi-entity': 'Manage multiple companies/locations under one account',
                 'gbp': 'British Pounds',
                 'aud': 'Australian Dollars',
-                'usd': 'United States Dollars',
                 'overage': 'What happens when you exceed your monthly document limit',
-                'credits': 'Pre-paid units for processing specific document types',
+                'credits': 'Pre-paid units for processing specific document types (statements, line-items)',
                 'api': 'Application Programming Interface - Allows custom software connections',
-                'payments': 'Feature that lets you pay suppliers directly from within the platform'
+                'emi': 'Electronic Money Institution - Regulated license for holding and moving funds',
+                'sca': 'Strong Customer Authentication - Security requirement where client approves payments'
             };
 
-            const Tooltip = ({ term, children }) => {
-                return (
-                    <div className="relative inline-flex items-center gap-1">
-                        {children}
-                        <div
-                            onMouseEnter={() => setHoveredTerm(term)}
-                            onMouseLeave={() => setHoveredTerm(null)}
-                            className="cursor-help"
-                        >
-                            <Info size={14} className="text-gray-400 hover:text-blue-600" />
-                        </div>
-                        {hoveredTerm === term && (
-                            <div className="absolute left-0 top-full mt-1 w-64 bg-gray-900 text-white text-xs rounded p-2 shadow-lg z-10">
-                                {tooltips[term]}
-                            </div>
-                        )}
+            const Tooltip = ({ term, children }) => (
+                <div className="relative inline-flex items-center gap-1">
+                    {children}
+                    <div
+                        onMouseEnter={() => setHoveredTerm(term)}
+                        onMouseLeave={() => setHoveredTerm(null)}
+                        className="cursor-help"
+                    >
+                        <svg className="w-3.5 h-3.5 text-gray-400 hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
                     </div>
-                );
-            };
+                    {hoveredTerm === term && (
+                        <div className="absolute left-0 top-full mt-1 w-64 bg-gray-900 text-white text-xs rounded p-2 shadow-lg z-10">
+                            {tooltips[term]}
+                        </div>
+                    )}
+                </div>
+            );
 
             const changeFlags = [
-                { 
-                    text: 'Dext Payments launched for UK Xero users', 
-                    date: 'Feb 2, 2026',
-                    source: 'https://itbrief.co.uk/story/dext-launches-integrated-payments-for-uk-xero-users'
-                },
-                { 
-                    text: 'Acquired by IRIS Software Group (completed)', 
-                    date: 'Dec 23, 2024',
-                    source: 'https://www.iris.co.uk/news/iris-completes-dext-acquisition/'
-                }
+                { type: 'new', text: 'NEW - Dext Payments launched for UK Xero users', date: 'Feb 2, 2026', url: 'https://dext.com/us/news/dext-launches-payments-bringing-supplier-invoice-expense-and-payroll-payments-into-one-trusted-platform', color: 'text-green-600' },
+                { type: 'acquisition', text: 'ACQUISITION - Acquired by IRIS Software Group (completed)', date: 'Dec 23, 2024', url: 'https://www.iris.co.uk/news/iris-completes-dext-acquisition/', color: 'text-orange-600' }
             ];
 
             const pricingData = {
-                usd: { monthly: '$31.50', annual: '$25.21', discount: '20%', includes: '5 users, 250 docs' },
-                gbp: { amount: '~£25', period: 'annual', note: 'Converted from USD - regional pricing available but not published' },
-                aud: { amount: '~A$47', period: 'monthly', note: 'Converted from USD - regional pricing available but not published' }
+                gbp: { amount: '~£25', period: 'annual', note: 'Converted from USD $31.50/mo', confidence: 'medium' },
+                aud: { amount: '~A$47', period: 'monthly', note: 'Converted from USD $31.50/mo', confidence: 'medium' },
+                usd: { 
+                    monthly: '$31.50', 
+                    annual: '$25.21', 
+                    discount: '20%',
+                    includes: '5 users, 250 docs/month',
+                    confidence: 'high'
+                }
+            };
+
+            const integrations = {
+                accounting: [
+                    { name: 'Xero', rating: '4.9/5', reviews: '1000+', status: 'verified' },
+                    { name: 'QuickBooks Online', rating: '4.9/5', reviews: '550+', status: 'verified' },
+                    { name: 'Sage', status: 'verified' },
+                    { name: 'NetSuite', status: 'verified' },
+                    { name: 'MYOB', status: 'verified' }
+                ],
+                ecommerce: ['Shopify', 'Stripe', 'PayPal', 'Amazon', 'Etsy', 'eBay'],
+                banking: '11,500+ institutions',
+                api: 'No public API',
+                other: ['ApprovalMax (integration partner)', 'Airwallex (payments partner)']
             };
 
             const features = {
                 hasFeature: [
-                    { name: 'Statement Reconciliation', detail: 'Automated, 1M+ processed', confidence: 'high', tooltip: 'statement-recon' },
-                    { name: 'OCR Accuracy', detail: '99.9% (incl. handwritten)', confidence: 'high', tooltip: 'ocr' },
-                    { name: 'PO Matching', detail: '2-way (Xero/QBO only)', confidence: 'high', tooltip: '2way' },
-                    { name: 'Multi-tier Approvals', detail: 'Mobile-enabled', confidence: 'medium', tooltip: null },
-                    { name: 'Line-item Extraction', detail: 'Credit-based', confidence: 'high', tooltip: 'line-item' },
+                    { name: 'OCR Data Extraction', detail: '99.9% accuracy (incl. handwritten)', confidence: 'high', tooltip: 'ocr' },
+                    { name: 'Statement Reconciliation', detail: 'Automated extraction & verification', confidence: 'high', tooltip: 'statement-recon' },
+                    { name: 'PO Matching', detail: '2-way matching (Xero/QBO only)', confidence: 'high', tooltip: '2way' },
+                    { name: 'Multi-tier Approvals', detail: 'Mobile-enabled workflows', confidence: 'high', tooltip: null },
+                    { name: 'Line-item Extraction', detail: 'Available (check allowance per plan)', confidence: 'high', tooltip: 'line-item' },
                     { name: 'Multi-entity Support', detail: 'Yes', confidence: 'high', tooltip: 'multi-entity' },
-                    { name: 'Mobile App', detail: '4.8★ App/Play Store', confidence: 'high', tooltip: null },
-                    { name: '10-Year Storage', detail: 'GDPR-compliant', confidence: 'high', tooltip: null },
-                    { name: 'Expense Management', detail: 'Mileage, approvals', confidence: 'high', tooltip: null },
-                    { name: 'Dext Payments (NEW)', detail: 'UK Xero only (Feb 2026)', confidence: 'high', tooltip: 'payments' }
+                    { name: 'Mobile App', detail: '4.8★ App Store, 4.5★ Google Play', confidence: 'high', tooltip: null },
+                    { name: '10-Year Storage', detail: 'GDPR-compliant UK/EU hosting', confidence: 'high', tooltip: null },
+                    { name: 'Expense Management', detail: 'Mileage tracking, approvals', confidence: 'high', tooltip: null },
+                    { name: 'Bank Connections', detail: '11,500+ institutions', confidence: 'high', tooltip: null },
+                    { name: 'Payments (NEW)', detail: 'UK Xero only - supplier & expense payments', confidence: 'high', tooltip: null }
                 ],
                 missing: [
-                    { name: 'Native PO Creation', tooltip: 'po' },
-                    { name: '3-way Matching', tooltip: '3way' },
-                    { name: 'Price Checking vs Pricelists', tooltip: 'price-check' },
-                    { name: 'Bank Detail Fraud Verification', tooltip: 'fraud-check' },
-                    { name: 'Supplier Portal', tooltip: null }
+                    { name: 'Native PO Creation', tooltip: 'po', note: 'Can match to existing POs in Xero/QBO but cannot create POs' },
+                    { name: '3-way Matching', tooltip: '3way', note: 'Only 2-way matching available' },
+                    { name: 'Price Checking vs Pricelists', tooltip: 'price-check', note: 'No automated price verification against agreed rates' },
+                    { name: 'Bank Detail Fraud Verification', tooltip: 'fraud-check', note: 'No built-in supplier bank detail checking' },
+                    { name: 'Supplier Portal', tooltip: null, note: 'No portal for suppliers to interact directly' }
                 ]
             };
 
             const vsLightyear = [
-                { metric: 'Entry Price', dext: '~£25/mo', lightyear: '£130/mo', winner: 'dext' },
-                { metric: 'Free Trial', dext: '14 days', lightyear: '30 days', winner: 'lightyear' },
-                { metric: 'PO Creation', dext: '❌', lightyear: '✅ Native', winner: 'lightyear', tooltip: 'po' },
-                { metric: '3-Way Matching', dext: '❌', lightyear: '✅ Line-level', winner: 'lightyear', tooltip: '3way' },
-                { metric: 'Statement Recon', dext: '✅ Automated', lightyear: '✅ Automated', winner: 'tie', tooltip: 'statement-recon' },
-                { metric: 'Price Checking', dext: '❌', lightyear: '✅', winner: 'lightyear', tooltip: 'price-check' },
-                { metric: 'Fraud Detection', dext: '❌', lightyear: '✅ Bank details', winner: 'lightyear', tooltip: 'fraud-check' },
-                { metric: 'Payments', dext: '✅ NEW (UK Xero)', lightyear: '❌', winner: 'dext', tooltip: 'payments' },
-                { metric: 'Banking Connections', dext: '✅ 11,500+', lightyear: '❌', winner: 'dext' },
-                { metric: 'E-commerce', dext: '✅ 6+ platforms', lightyear: '❌', winner: 'dext' },
-                { metric: 'Storage', dext: '10 years', lightyear: '7 years', winner: 'dext' },
-                { metric: 'Approval Levels', dext: 'Multi-tier', lightyear: 'Up to 8', winner: 'lightyear' }
+                { metric: 'Entry Price (GBP)', dext: '~£25/mo', lightyear: '£125/mo', winner: 'dext', confidence: 'medium' },
+                { metric: 'Entry Price (AUD)', dext: '~A$47/mo', lightyear: 'A$145/mo', winner: 'dext', confidence: 'medium' },
+                { metric: 'Free Trial', dext: '14 days', lightyear: '30 days', winner: 'lightyear', confidence: 'high' },
+                { metric: 'PO Creation', dext: '✗', lightyear: '✓ Native', winner: 'lightyear', tooltip: 'po', confidence: 'high' },
+                { metric: 'PO Matching', dext: '✓ 2-way (Xero/QBO)', lightyear: '✓ Line-level 3-way', winner: 'lightyear', tooltip: '3way', confidence: 'high' },
+                { metric: 'Statement Recon', dext: '✓ Automated', lightyear: '✓ Automated', winner: 'tie', tooltip: 'statement-recon', confidence: 'high' },
+                { metric: 'Price Checking', dext: '✗', lightyear: '✓', winner: 'lightyear', tooltip: 'price-check', confidence: 'high' },
+                { metric: 'Bank Detail Fraud Check', dext: '✗', lightyear: '✓', winner: 'lightyear', tooltip: 'fraud-check', confidence: 'high' },
+                { metric: 'Banking Connections', dext: '✓ 11,500+', lightyear: '✗', winner: 'dext', confidence: 'high' },
+                { metric: 'E-commerce Integrations', dext: '✓ Shopify, Amazon, Stripe, PayPal', lightyear: '✗', winner: 'dext', confidence: 'high' },
+                { metric: 'Payments Feature', dext: '✓ UK Xero only (NEW Feb 2026)', lightyear: '✗', winner: 'dext', confidence: 'high' },
+                { metric: 'Storage', dext: '10 years', lightyear: '7 years', winner: 'dext', confidence: 'high' },
+                { metric: 'Approval Levels', dext: 'Multi-tier', lightyear: 'Up to 5 levels', winner: 'lightyear', confidence: 'high' },
+                { metric: 'Hospitality POS', dext: '✗', lightyear: '✓ 8+ systems', winner: 'lightyear', confidence: 'high' }
             ];
 
             const getConfidenceBadge = (level) => {
                 const styles = {
                     high: 'bg-green-100 text-green-700 border-green-300',
-                    medium: 'bg-yellow-100 text-yellow-700 border-yellow-300'
+                    medium: 'bg-yellow-100 text-yellow-700 border-yellow-300',
+                    low: 'bg-orange-100 text-orange-700 border-orange-300'
                 };
                 return (
                     <span className={`px-2 py-0.5 rounded text-xs border ${styles[level]}`}>
@@ -151,6 +154,7 @@
             return (
                 <div className="min-h-screen bg-gray-50 p-6">
                     <div className="max-w-7xl mx-auto">
+                        {/* Header */}
                         <div className="mb-6">
                             <div className="flex items-center justify-between mb-4">
                                 <div>
@@ -159,23 +163,24 @@
                                 </div>
                                 <div className="text-right">
                                     <div className="text-sm text-gray-500">Next update</div>
-                                    <div className="font-semibold">Feb 10, 2026</div>
+                                    <div className="font-semibold">Feb 11, 2026</div>
                                 </div>
                             </div>
 
+                            {/* Change Alerts */}
                             {changeFlags.length > 0 && (
-                                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                                <div className="bg-gradient-to-r from-orange-50 to-green-50 border border-orange-200 rounded-lg p-4 mb-4">
                                     <div className="flex items-start gap-3">
-                                        <AlertCircle size={20} className="text-blue-600 mt-0.5" />
+                                        <svg className="text-orange-600 mt-0.5 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                        </svg>
                                         <div className="flex-1">
-                                            <h3 className="font-semibold text-blue-900 mb-2">Changes This Week</h3>
+                                            <h3 className="font-semibold text-orange-900 mb-2">Changes This Week</h3>
                                             {changeFlags.map((flag, i) => (
-                                                <div key={i} className="mb-2 last:mb-0">
-                                                    <div className="text-sm text-blue-800">
-                                                        <span className="font-medium">{flag.text}</span> - {flag.date}
-                                                    </div>
-                                                    <a href={flag.source} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline">
-                                                        Source: {flag.source}
+                                                <div key={i} className="text-sm mb-1">
+                                                    <span className={`font-medium ${flag.color}`}>{flag.text}</span> - {flag.date}
+                                                    <a href={flag.url} target="_blank" rel="noopener noreferrer" className="ml-2 text-blue-600 hover:underline text-xs">
+                                                        Source ↗
                                                     </a>
                                                 </div>
                                             ))}
@@ -185,6 +190,7 @@
                             )}
                         </div>
 
+                        {/* Tabs */}
                         <div className="bg-white rounded-lg shadow mb-6">
                             <div className="border-b border-gray-200">
                                 <nav className="flex -mb-px">
@@ -205,20 +211,25 @@
                             </div>
 
                             <div className="p-6">
+                                {/* Overview Tab */}
                                 {activeTab === 'overview' && (
                                     <div className="space-y-6">
                                         <div className="grid grid-cols-3 gap-4">
                                             <div className="bg-blue-50 p-4 rounded-lg">
                                                 <div className="flex items-center gap-2 mb-2">
-                                                    <Users size={20} className="text-blue-600" />
+                                                    <svg className="text-blue-600 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                                    </svg>
                                                     <span className="text-sm text-gray-600">User Base</span>
                                                 </div>
                                                 <div className="text-2xl font-bold text-gray-900">700K+</div>
-                                                <div className="text-xs text-gray-500">Businesses worldwide</div>
+                                                <div className="text-xs text-gray-500">Businesses & 12K+ accounting firms</div>
                                             </div>
                                             <div className="bg-green-50 p-4 rounded-lg">
                                                 <div className="flex items-center gap-2 mb-2">
-                                                    <Package size={20} className="text-green-600" />
+                                                    <svg className="text-green-600 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                    </svg>
                                                     <span className="text-sm text-gray-600">Processed</span>
                                                 </div>
                                                 <div className="text-2xl font-bold text-gray-900">320M+</div>
@@ -226,36 +237,64 @@
                                             </div>
                                             <div className="bg-purple-50 p-4 rounded-lg">
                                                 <div className="flex items-center gap-2 mb-2">
-                                                    <Star size={20} className="text-purple-600" />
-                                                    <span className="text-sm text-gray-600">User Rating</span>
+                                                    <svg className="text-purple-600 w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                    </svg>
+                                                    <span className="text-sm text-gray-600">Awards</span>
                                                 </div>
                                                 <div className="text-2xl font-bold text-gray-900">4.2★</div>
                                                 <div className="text-xs text-gray-500">Capterra (160 reviews)</div>
                                             </div>
                                         </div>
 
+                                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                            <h3 className="font-semibold text-blue-900 mb-2">Corporate News</h3>
+                                            <ul className="text-sm text-blue-800 space-y-1">
+                                                <li>• Acquired by IRIS Software Group - completed Dec 23, 2024</li>
+                                                <li>• Dext Payments launched Feb 2, 2026 (UK Xero users only)</li>
+                                                <li>• Xero App Partner of the Year 2024 (UK & US)</li>
+                                                <li>• QuickBooks Developer Spotlight 2024</li>
+                                            </ul>
+                                        </div>
+
                                         <div>
                                             <h3 className="font-semibold text-gray-900 mb-3">Key Strengths</h3>
                                             <div className="space-y-2">
                                                 <div className="flex items-start gap-2">
-                                                    <CheckCircle size={16} className="text-green-600 mt-0.5 flex-shrink-0" />
-                                                    <span className="text-sm">Massive banking ecosystem (11,500+ institutions)</span>
+                                                    <svg className="text-green-600 mt-0.5 flex-shrink-0 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                    </svg>
+                                                    <span className="text-sm">Massive banking ecosystem - 11,500+ institutions for bank feed connections</span>
                                                 </div>
                                                 <div className="flex items-start gap-2">
-                                                    <CheckCircle size={16} className="text-green-600 mt-0.5 flex-shrink-0" />
-                                                    <span className="text-sm">Lower entry pricing (~£25/mo vs Lightyear £130/mo)</span>
+                                                    <svg className="text-green-600 mt-0.5 flex-shrink-0 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                    </svg>
+                                                    <span className="text-sm">Lower entry price - ~£25/mo vs Lightyear £125/mo (5x cheaper)</span>
                                                 </div>
                                                 <div className="flex items-start gap-2">
-                                                    <CheckCircle size={16} className="text-green-600 mt-0.5 flex-shrink-0" />
-                                                    <span className="text-sm">Perfect Xero/QBO integration ratings (4.9/5)</span>
+                                                    <svg className="text-green-600 mt-0.5 flex-shrink-0 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                    </svg>
+                                                    <span className="text-sm">Perfect Xero/QBO integration ratings (4.9/5 with 1000+ reviews)</span>
                                                 </div>
                                                 <div className="flex items-start gap-2">
-                                                    <CheckCircle size={16} className="text-green-600 mt-0.5 flex-shrink-0" />
-                                                    <span className="text-sm">10-year document retention vs 7-year</span>
+                                                    <svg className="text-green-600 mt-0.5 flex-shrink-0 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                    </svg>
+                                                    <span className="text-sm">E-commerce platform integrations - Shopify, Amazon, Stripe, PayPal</span>
                                                 </div>
                                                 <div className="flex items-start gap-2">
-                                                    <Zap size={16} className="text-green-600 mt-0.5 flex-shrink-0" />
-                                                    <span className="text-sm">NEW: Dext Payments for UK Xero users (Feb 2026)</span>
+                                                    <svg className="text-green-600 mt-0.5 flex-shrink-0 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                    </svg>
+                                                    <span className="text-sm">NEW: Payments feature (UK Xero only) - closes the invoice-to-payment loop</span>
+                                                </div>
+                                                <div className="flex items-start gap-2">
+                                                    <svg className="text-green-600 mt-0.5 flex-shrink-0 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                    </svg>
+                                                    <span className="text-sm">10-year document retention vs 7-year standard</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -264,72 +303,165 @@
                                             <h3 className="font-semibold text-gray-900 mb-3">Competitive Gaps vs Lightyear</h3>
                                             <div className="space-y-2">
                                                 <div className="flex items-start gap-2">
-                                                    <XCircle size={16} className="text-red-600 mt-0.5 flex-shrink-0" />
-                                                    <span className="text-sm">No native purchase order creation or 3-way matching</span>
+                                                    <svg className="text-red-600 mt-0.5 flex-shrink-0 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                    <span className="text-sm">No native purchase order creation - can only match to existing POs in Xero/QBO</span>
                                                 </div>
                                                 <div className="flex items-start gap-2">
-                                                    <XCircle size={16} className="text-red-600 mt-0.5 flex-shrink-0" />
+                                                    <svg className="text-red-600 mt-0.5 flex-shrink-0 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                    <span className="text-sm">Only 2-way PO matching - no 3-way matching to verify goods received</span>
+                                                </div>
+                                                <div className="flex items-start gap-2">
+                                                    <svg className="text-red-600 mt-0.5 flex-shrink-0 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
                                                     <span className="text-sm">No automated price checking against supplier pricelists</span>
                                                 </div>
                                                 <div className="flex items-start gap-2">
-                                                    <XCircle size={16} className="text-red-600 mt-0.5 flex-shrink-0" />
-                                                    <span className="text-sm">No bank detail fraud verification</span>
+                                                    <svg className="text-red-600 mt-0.5 flex-shrink-0 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                    <span className="text-sm">No bank detail fraud verification on invoices</span>
                                                 </div>
                                                 <div className="flex items-start gap-2">
-                                                    <XCircle size={16} className="text-red-600 mt-0.5 flex-shrink-0" />
-                                                    <span className="text-sm">Shorter free trial (14 vs 30 days)</span>
+                                                    <svg className="text-red-600 mt-0.5 flex-shrink-0 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                    <span className="text-sm">Shorter free trial - 14 days vs 30 days</span>
+                                                </div>
+                                                <div className="flex items-start gap-2">
+                                                    <svg className="text-red-600 mt-0.5 flex-shrink-0 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                    <span className="text-sm">No hospitality POS integrations - Lightyear has 8+ POS systems</span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 )}
 
+                                {/* Pricing Tab */}
                                 {activeTab === 'pricing' && (
                                     <div className="space-y-6">
                                         <div className="grid grid-cols-3 gap-4">
-                                            <div className="border border-blue-200 rounded-lg p-4 bg-blue-50">
-                                                <Tooltip term="usd">
-                                                    <span className="text-sm text-gray-500">USD (Reference)</span>
-                                                </Tooltip>
-                                                <div className="text-2xl font-bold text-gray-900 mt-1">$31.50</div>
-                                                <div className="text-sm text-gray-600 mt-1">monthly</div>
-                                                <div className="text-xs text-green-600 mt-2">✅ Verified</div>
-                                            </div>
                                             <div className="border border-gray-200 rounded-lg p-4">
-                                                <Tooltip term="gbp">
-                                                    <span className="text-sm text-gray-500">GBP (UK)</span>
-                                                </Tooltip>
-                                                <div className="text-2xl font-bold text-gray-900 mt-1">{pricingData.gbp.amount}</div>
+                                                <div className="flex items-center gap-1 mb-1">
+                                                    <Tooltip term="gbp">
+                                                        <span className="text-sm text-gray-500">GBP (UK)</span>
+                                                    </Tooltip>
+                                                </div>
+                                                <div className="text-2xl font-bold text-gray-900">{pricingData.gbp.amount}</div>
                                                 <div className="text-sm text-gray-600 mt-1">{pricingData.gbp.period}</div>
-                                                <div className="text-xs text-orange-600 mt-2">⚠️ {pricingData.gbp.note}</div>
+                                                <div className="text-xs text-orange-600 mt-2 flex items-center gap-1">
+                                                    <span>⚠️</span>
+                                                    <span>{pricingData.gbp.note}</span>
+                                                </div>
+                                                <div className="mt-2">{getConfidenceBadge(pricingData.gbp.confidence)}</div>
                                             </div>
                                             <div className="border border-gray-200 rounded-lg p-4">
-                                                <Tooltip term="aud">
-                                                    <span className="text-sm text-gray-500">AUD (Australia)</span>
-                                                </Tooltip>
-                                                <div className="text-2xl font-bold text-gray-900 mt-1">{pricingData.aud.amount}</div>
+                                                <div className="flex items-center gap-1 mb-1">
+                                                    <Tooltip term="aud">
+                                                        <span className="text-sm text-gray-500">AUD (Australia)</span>
+                                                    </Tooltip>
+                                                </div>
+                                                <div className="text-2xl font-bold text-gray-900">{pricingData.aud.amount}</div>
                                                 <div className="text-sm text-gray-600 mt-1">{pricingData.aud.period}</div>
-                                                <div className="text-xs text-orange-600 mt-2">⚠️ {pricingData.aud.note}</div>
+                                                <div className="text-xs text-orange-600 mt-2 flex items-center gap-1">
+                                                    <span>⚠️</span>
+                                                    <span>{pricingData.aud.note}</span>
+                                                </div>
+                                                <div className="mt-2">{getConfidenceBadge(pricingData.aud.confidence)}</div>
+                                            </div>
+                                            <div className="border border-blue-200 rounded-lg p-4 bg-blue-50">
+                                                <div className="text-sm text-gray-500 mb-1">USD (Reference)</div>
+                                                <div className="text-2xl font-bold text-gray-900">{pricingData.usd.monthly}</div>
+                                                <div className="text-sm text-gray-600 mt-1">monthly</div>
+                                                <div className="text-xs text-green-600 mt-2">✅ Verified from G2</div>
+                                                <div className="mt-2">{getConfidenceBadge(pricingData.usd.confidence)}</div>
+                                            </div>
+                                        </div>
+
+                                        <div className="border border-gray-200 rounded-lg p-4">
+                                            <h3 className="font-semibold mb-3">Pricing Structure</h3>
+                                            <div className="grid grid-cols-2 gap-4 text-sm">
+                                                <div>
+                                                    <span className="text-gray-600">Billing Model:</span>
+                                                    <span className="ml-2 font-medium">Per user + document limits</span>
+                                                </div>
+                                                <div>
+                                                    <span className="text-gray-600">Annual Discount:</span>
+                                                    <span className="ml-2 font-medium text-green-600">20%</span>
+                                                </div>
+                                                <div>
+                                                    <span className="text-gray-600">Starter Plan Includes:</span>
+                                                    <span className="ml-2 font-medium">{pricingData.usd.includes}</span>
+                                                </div>
+                                                <div>
+                                                    <div className="flex items-center gap-1">
+                                                        <Tooltip term="overage">
+                                                            <span className="text-gray-600">If You Exceed Limit:</span>
+                                                        </Tooltip>
+                                                    </div>
+                                                    <span className="ml-2 font-medium text-red-600">Documents uploaded but not extracted</span>
+                                                    <div className="text-xs text-gray-500 mt-1">Uploads accepted but data extraction stops until next billing cycle</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                            <div className="flex items-center gap-1 mb-2">
+                                                <Tooltip term="credits">
+                                                    <h4 className="font-semibold text-yellow-900">Additional Costs</h4>
+                                                </Tooltip>
+                                            </div>
+                                            <ul className="text-sm text-yellow-800 space-y-1">
+                                                <li>• Bank statement extraction - limited credits per plan, must purchase more</li>
+                                                <li>• Line-item extraction - limited credits per plan, must purchase more</li>
+                                                <li>• Supplier statement reconciliation - limited credits per plan</li>
+                                                <li>• Dext Payments add-on: £10/client/month (includes 20 payment runs, 25p per additional)</li>
+                                            </ul>
+                                        </div>
+
+                                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                            <h3 className="font-semibold text-blue-900 mb-2">Practice Plans (Accountants/Bookkeepers)</h3>
+                                            <div className="text-sm text-blue-800 space-y-1">
+                                                <div>• Start at $239.19/month for 10 business clients</div>
+                                                <div>• Annual subscription: $207.99/month (13% discount)</div>
+                                                <div>• Per-client charging model (changed from unlimited in Nov 2023)</div>
+                                                <div>• Add clients to customize plan</div>
                                             </div>
                                         </div>
 
                                         <div className="border-l-4 border-blue-600 bg-blue-50 p-4">
                                             <div className="text-sm text-blue-900">
-                                                <strong>Sales Note:</strong> While Dext now handles payments in-platform (UK Xero only), Lightyear differentiates upstream—preventing payment errors through PO controls and price verification before payment execution.
+                                                <strong>Sales Note:</strong> Dext's lower entry price (~£25 vs Lightyear's £125) is compelling for SMBs doing basic receipt/expense capture. However, lacks full AP automation. Position Lightyear as complete AP automation with upstream controls - PO management, 3-way matching, price verification - that prevent payment errors rather than just processing payments. Dext's new Payments feature (UK Xero only) handles downstream execution but doesn't prevent upstream issues.
                                             </div>
                                         </div>
                                     </div>
                                 )}
 
+                                {/* Features Tab */}
                                 {activeTab === 'features' && (
                                     <div className="space-y-6">
                                         <div>
                                             <h3 className="font-semibold text-gray-900 mb-4">Features Available</h3>
+                                            
+                                            <div className="grid grid-cols-3 gap-4 px-3 pb-2 mb-2 border-b-2 border-gray-300">
+                                                <div className="font-semibold text-gray-700">Feature</div>
+                                                <div className="font-semibold text-gray-700">Details</div>
+                                                <div className="font-semibold text-gray-700">Data Confidence</div>
+                                            </div>
+
                                             <div className="space-y-3">
                                                 {features.hasFeature.map((feature, i) => (
                                                     <div key={i} className="grid grid-cols-3 gap-4 items-center p-3 bg-gray-50 rounded-lg">
                                                         <div className="flex items-center gap-2">
-                                                            <CheckCircle size={18} className="text-green-600 flex-shrink-0" />
+                                                            <svg className="text-green-600 flex-shrink-0 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                            </svg>
                                                             {feature.tooltip ? (
                                                                 <Tooltip term={feature.tooltip}>
                                                                     <div className="font-medium text-gray-900">{feature.name}</div>
@@ -339,7 +471,9 @@
                                                             )}
                                                         </div>
                                                         <div className="text-sm text-gray-600">{feature.detail}</div>
-                                                        <div>{getConfidenceBadge(feature.confidence)}</div>
+                                                        <div>
+                                                            {getConfidenceBadge(feature.confidence)}
+                                                        </div>
                                                     </div>
                                                 ))}
                                             </div>
@@ -349,22 +483,69 @@
                                             <h3 className="font-semibold text-gray-900 mb-4">Features NOT Available (vs Lightyear)</h3>
                                             <div className="space-y-2">
                                                 {features.missing.map((feature, i) => (
-                                                    <div key={i} className="flex items-center gap-3 p-3 bg-red-50 rounded-lg">
-                                                        <XCircle size={18} className="text-red-600 flex-shrink-0" />
-                                                        {feature.tooltip ? (
-                                                            <Tooltip term={feature.tooltip}>
-                                                                <span className="text-gray-900">{feature.name}</span>
-                                                            </Tooltip>
-                                                        ) : (
-                                                            <span className="text-gray-900">{feature.name}</span>
-                                                        )}
+                                                    <div key={i} className="p-3 bg-red-50 rounded-lg">
+                                                        <div className="flex items-center gap-3">
+                                                            <svg className="text-red-600 flex-shrink-0 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                            </svg>
+                                                            {feature.tooltip ? (
+                                                                <Tooltip term={feature.tooltip}>
+                                                                    <span className="text-gray-900 font-medium">{feature.name}</span>
+                                                                </Tooltip>
+                                                            ) : (
+                                                                <span className="text-gray-900 font-medium">{feature.name}</span>
+                                                            )}
+                                                        </div>
+                                                        <div className="text-xs text-gray-600 mt-1 ml-8">{feature.note}</div>
                                                     </div>
                                                 ))}
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-white border border-gray-200 rounded-lg p-4">
+                                            <h3 className="font-semibold mb-3">Software Integrations</h3>
+                                            <div className="space-y-4">
+                                                <div>
+                                                    <div className="text-sm text-gray-600 mb-2">Accounting Software (Top 5)</div>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {integrations.accounting.map((int, i) => (
+                                                            <div key={i} className="bg-blue-50 border border-blue-200 rounded px-3 py-1.5 text-sm">
+                                                                <span className="font-medium">{int.name}</span>
+                                                                {int.rating && <span className="text-blue-600 ml-2">{int.rating}</span>}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div className="text-sm text-gray-600 mb-2">E-commerce Platforms</div>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {integrations.ecommerce.map((name, i) => (
+                                                            <span key={i} className="bg-gray-100 rounded px-2 py-1 text-sm">{name}</span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                                <div className="pt-2 border-t">
+                                                    <span className="text-sm font-medium text-gray-900">Banking Connections: </span>
+                                                    <span className="text-sm text-green-600">{integrations.banking}</span>
+                                                </div>
+                                                <div className="pt-2 border-t">
+                                                    <span className="text-sm font-medium text-gray-900">Other Partners: </span>
+                                                    <span className="text-sm text-gray-600">{integrations.other.join(', ')}</span>
+                                                </div>
+                                                <div className="pt-2 border-t">
+                                                    <div className="flex items-center gap-1">
+                                                        <Tooltip term="api">
+                                                            <span className="text-sm font-medium text-gray-900">Public API Access:</span>
+                                                        </Tooltip>
+                                                        <span className="text-sm text-red-600 ml-2">{integrations.api}</span>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 )}
 
+                                {/* VS Lightyear Tab */}
                                 {activeTab === 'vs-lightyear' && (
                                     <div className="space-y-6">
                                         <div className="bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-lg">
@@ -372,10 +553,26 @@
                                             <p className="text-gray-700">Direct feature comparison to inform sales positioning</p>
                                         </div>
 
+                                        <div className="grid grid-cols-5 gap-4 px-4 pb-2 border-b-2 border-gray-300">
+                                            <div className="font-semibold text-gray-700">Feature</div>
+                                            <div className="text-center font-semibold text-blue-700">Dext</div>
+                                            <div className="text-center font-semibold text-green-700">Lightyear</div>
+                                            <div className="text-center font-semibold text-gray-700">Winner</div>
+                                            <div className="text-center font-semibold text-gray-700">Confidence</div>
+                                        </div>
+
                                         <div className="space-y-2">
                                             {vsLightyear.map((item, i) => (
-                                                <div key={i} className="grid grid-cols-4 gap-4 p-4 bg-white border border-gray-200 rounded-lg">
-                                                    <div className="font-medium text-gray-900">{item.metric}</div>
+                                                <div key={i} className="grid grid-cols-5 gap-4 p-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+                                                    <div className="font-medium text-gray-900 flex items-center gap-1">
+                                                        {item.tooltip ? (
+                                                            <Tooltip term={item.tooltip}>
+                                                                <span>{item.metric}</span>
+                                                            </Tooltip>
+                                                        ) : (
+                                                            <span>{item.metric}</span>
+                                                        )}
+                                                    </div>
                                                     <div className={`text-center ${item.winner === 'dext' ? 'bg-blue-50 font-semibold text-blue-900' : 'text-gray-600'} rounded px-2 py-1`}>
                                                         {item.dext}
                                                     </div>
@@ -387,15 +584,53 @@
                                                         {item.winner === 'lightyear' && <span className="text-green-600 font-medium">Lightyear</span>}
                                                         {item.winner === 'tie' && <span className="text-gray-500">Tie</span>}
                                                     </div>
+                                                    <div className="text-center">
+                                                        {getConfidenceBadge(item.confidence)}
+                                                    </div>
                                                 </div>
                                             ))}
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-6 mt-6">
+                                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                                <h4 className="font-semibold text-blue-900 mb-3">When Dext Wins</h4>
+                                                <ul className="text-sm text-blue-800 space-y-2">
+                                                    <li>• Lower entry cost (~5x cheaper for small teams)</li>
+                                                    <li>• Massive banking connectivity (11,500+ institutions)</li>
+                                                    <li>• E-commerce integrations (Shopify, Amazon, Stripe, PayPal)</li>
+                                                    <li>• Payments feature (UK Xero only - NEW)</li>
+                                                    <li>• Longer document retention (10 years vs 7)</li>
+                                                    <li>• Larger user base/brand recognition (700K+ businesses)</li>
+                                                </ul>
+                                            </div>
+                                            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                                                <h4 className="font-semibold text-green-900 mb-3">When Lightyear Wins</h4>
+                                                <ul className="text-sm text-green-800 space-y-2">
+                                                    <li>• Native purchase order creation workflow</li>
+                                                    <li>• 3-way matching (prevents paying for undelivered goods)</li>
+                                                    <li>• Automated price checking (prevents supplier overcharging)</li>
+                                                    <li>• Bank fraud verification (payment security)</li>
+                                                    <li>• Hospitality POS integrations (8+ systems)</li>
+                                                    <li>• Longer free trial (30 days vs 14)</li>
+                                                    <li>• Multi-entity with parent/child dashboards</li>
+                                                </ul>
+                                            </div>
                                         </div>
 
                                         <div className="bg-purple-50 border border-purple-200 rounded-lg p-5">
                                             <h4 className="font-semibold text-purple-900 mb-3">🎯 Sales Positioning Scripts</h4>
                                             <div className="space-y-3 text-sm text-purple-900">
                                                 <div>
-                                                    <strong>Against Dext:</strong> "While Dext excels at receipt scanning and now handles payments (UK Xero only), Lightyear prevents payment errors upstream through PO management, 3-way matching, and automated price checking. We catch overcharges before they reach payment execution."
+                                                    <strong>Against Dext:</strong> "Dext is excellent for receipt/expense capture and now handles payments (UK Xero only). But Lightyear provides complete AP automation with upstream controls - purchase order management, 3-way matching, and automated price checking - that prevent payment errors before they happen. Dext processes payments downstream; Lightyear prevents problems upstream."
+                                                </div>
+                                                <div>
+                                                    <strong>For Hospitality/Multi-site:</strong> "Dext's lack of POS integrations and native PO workflows creates manual gaps for hospitality businesses. Lightyear's 8+ POS integrations and parent/child dashboards are purpose-built for restaurants, hotels, and multi-location operators."
+                                                </div>
+                                                <div>
+                                                    <strong>For SMBs with Supplier Control Needs:</strong> "If you only need receipt scanning, Dext works. But if you manage suppliers, purchase orders, and need to prevent overcharging, Lightyear's automated price checking and fraud detection pay for themselves by catching errors before payment."
+                                                </div>
+                                                <div>
+                                                    <strong>Dext Payments Positioning:</strong> "Dext now handles payments for UK Xero users, which streamlines downstream execution. But payment execution is only valuable if the upstream data is correct. Lightyear's differentiation is preventing payment errors through PO controls, 3-way matching, and price verification - catching problems before payment execution."
                                                 </div>
                                             </div>
                                         </div>
@@ -404,15 +639,17 @@
                             </div>
                         </div>
 
+                        {/* Data Quality Indicator */}
                         <div className="bg-white rounded-lg shadow p-4">
                             <div className="flex items-center justify-between">
                                 <div>
                                     <h3 className="font-semibold text-gray-900">Data Quality Summary</h3>
-                                    <p className="text-sm text-gray-600">GBP/AUD pricing converted from USD | Dext Payments launched Feb 2026</p>
+                                    <p className="text-sm text-gray-600">5 feature gaps identified | GBP/AUD pricing converted from USD</p>
                                 </div>
                                 <div className="flex gap-2">
-                                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded text-sm">✅ High: 18</span>
-                                    <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded text-sm">⚠️ Medium: 3</span>
+                                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded text-sm">✅ High: 22 items</span>
+                                    <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded text-sm">⚠️ Medium: 2 items</span>
+                                    <span className="px-3 py-1 bg-red-100 text-red-700 rounded text-sm">❌ Gaps: 5 items</span>
                                 </div>
                             </div>
                         </div>
