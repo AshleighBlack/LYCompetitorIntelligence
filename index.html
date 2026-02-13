@@ -3,662 +3,540 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dext Competitive Intelligence - February 2026</title>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Lightyear Competitive Intelligence Dashboard - Feb 13, 2026</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap');
+        *{font-family:'DM Sans',sans-serif;} .mono{font-family:'JetBrains Mono',monospace;}
+        .tab-on{border-bottom:3px solid #059669;color:#059669;font-weight:700;}
+        .tab-off{border-bottom:3px solid transparent;color:#6b7280;}
+        .tab-off:hover{color:#374151;border-color:#d1d5db;}
+        .ch{background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;}
+        .cm{background:#fef3c7;color:#92400e;border:1px solid #fcd34d;}
+        .cl{background:#ffedd5;color:#9a3412;border:1px solid #fdba74;}
+        .cg{background:#f3f4f6;color:#6b7280;border:1px solid #d1d5db;}
+        .wly{background:#ecfdf5;} .wco{background:#eff6ff;}
+        .tt{position:relative;display:inline-flex;align-items:center;gap:3px;}
+        .ti{cursor:help;width:14px;height:14px;border-radius:50%;background:#e5e7eb;color:#6b7280;font-size:9px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;}
+        .ti:hover{background:#059669;color:#fff;}
+        .tb{display:none;position:absolute;left:0;top:100%;margin-top:4px;background:#1f2937;color:#fff;padding:8px 12px;border-radius:6px;font-size:11px;width:260px;z-index:50;line-height:1.4;box-shadow:0 4px 12px rgba(0,0,0,.3);}
+        .tt:hover .tb{display:block;}
+        .chb{background:linear-gradient(135deg,#fef3c7,#fde68a);border-left:4px solid #f59e0b;}
+        .sel{cursor:pointer;transition:all .15s;} .sel:hover{transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,.08);}
+        body{background:#f8fafc;}
+    </style>
 </head>
 <body>
-    <script>
-        const correctPassword = "T0InfinityAndBey0nd";
-        const enteredPassword = prompt("Enter password to access dashboard:");
-        if (enteredPassword !== correctPassword) {
-            document.body.innerHTML = "Access Denied";
-            throw new Error("Access denied");
-        }
-    </script>
-    
-    <div id="root"></div>
+<script>
+const cp="T0InfinityAndBey0nd";
+const ep=prompt("Enter password to access dashboard:");
+if(ep!==cp){document.body.innerHTML="<div style='display:flex;height:100vh;align-items:center;justify-content:center;font-family:sans-serif;color:#991b1b;font-size:24px;'>Access Denied</div>";throw new Error("denied");}
+</script>
+<div id="root"></div>
+<script type="text/babel">
+const{useState}=React;
 
-    <script type="text/babel">
-        const { useState } = React;
+const TT={
+ocr:'Optical Character Recognition — Reads text from images/PDFs automatically',
+po:'Purchase Order — Document sent to a supplier to order goods/services',
+'2way':'Compares invoice to purchase order only (2 documents)',
+'3way':'Compares invoice, purchase order AND delivery receipt (3 documents) — catches undelivered items',
+'sr':'Checks supplier statements against your records to find missing or duplicate invoices',
+'pc':'Compares invoice prices against your agreed supplier pricelist to catch overcharging',
+'fc':'Verifies supplier bank details on invoices match your records to prevent payment fraud',
+'li':'Extracts individual products/services from an invoice, not just the total',
+'me':'Manage multiple companies/locations under one account',
+gbp:'British Pounds Sterling',aud:'Australian Dollars',
+api:'Application Programming Interface — Lets software systems communicate',
+grn:'Goods Received Note — Confirms delivery of ordered items'
+};
 
-        const DextDashboard = () => {
-            const [activeTab, setActiveTab] = useState('overview');
-            const [hoveredTerm, setHoveredTerm] = useState(null);
+const Tip=({t,children})=><span className="tt">{children}<span className="ti">i</span><span className="tb">{TT[t]}</span></span>;
+const Bd=({l})=>{const c=l==='high'?'ch':l==='medium'?'cm':l==='low'?'cl':'cg';const i=l==='high'?'✅':l==='medium'?'⚠️':l==='low'?'🔶':'❌';const n=l.toUpperCase();return<span className={`${c} px-2 py-0.5 rounded text-xs font-medium inline-block`}>{i} {n}</span>;};
 
-            const tooltips = {
-                'ocr': 'Optical Character Recognition - Technology that reads text from images/PDFs automatically',
-                'po': 'Purchase Order - A buyer\'s request to purchase goods/services from a supplier',
-                '2way': 'Compares invoice to purchase order only (2 documents)',
-                '3way': 'Compares invoice, purchase order, AND goods receipt (3 documents) - catches if items weren\'t received',
-                'statement-recon': 'Checks supplier statements against your records to find missing or duplicate invoices',
-                'price-check': 'Automatically compares invoice prices against your agreed supplier pricelist to catch overcharging',
-                'fraud-check': 'Verifies supplier bank details on invoices match your records to prevent payment fraud',
-                'line-item': 'Extracts individual products/services from an invoice, not just the total amount',
-                'multi-entity': 'Manage multiple companies/locations under one account',
-                'gbp': 'British Pounds',
-                'aud': 'Australian Dollars',
-                'overage': 'What happens when you exceed your monthly document limit',
-                'credits': 'Pre-paid units for processing specific document types (statements, line-items)',
-                'api': 'Application Programming Interface - Allows custom software connections',
-                'emi': 'Electronic Money Institution - Regulated license for holding and moving funds',
-                'sca': 'Strong Customer Authentication - Security requirement where client approves payments'
-            };
+const LY={
+name:'Lightyear',gbp:'£130/mo',aud:'A$145/mo',usd:'$155/mo',
+model:'Per credit (1 doc = 1 credit). Unlimited users & companies included.',trial:'30 days (no credit card)',
+f:{
+ic:'✅ Smart Extract+ AI (15s, handwritten)',sr:'✅ Automated + one-click copy requests',li:'✅ All plans',
+pc:'✅ Auto vs agreed pricelists',po:'✅ Native PO creation & send',tw:'✅ Line-level 3-way matching',
+fc:'✅ Bank detail verification',ap:'✅ Up to 3 levels, value-based (8 users)',me:'✅ Unlimited cos, parent/child',
+mo:'✅ iOS/Android',st:'7-year archive',dd:'✅ Automated',ex:'✅ Receipt capture',py:'❌ Not available'
+}
+};
 
-            const Tooltip = ({ term, children }) => (
-                <div className="relative inline-flex items-center gap-1">
-                    {children}
-                    <div
-                        onMouseEnter={() => setHoveredTerm(term)}
-                        onMouseLeave={() => setHoveredTerm(null)}
-                        className="cursor-help"
-                    >
-                        <svg className="w-3.5 h-3.5 text-gray-400 hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    {hoveredTerm === term && (
-                        <div className="absolute left-0 top-full mt-1 w-64 bg-gray-900 text-white text-xs rounded p-2 shadow-lg z-10">
-                            {tooltips[term]}
-                        </div>
-                    )}
-                </div>
-            );
+const FL={
+ic:{l:'Invoice Capture & Extraction',t:'ocr'},sr:{l:'Statement Reconciliation',t:'sr'},li:{l:'Line-Item Extraction',t:'li'},
+pc:{l:'Price Checking vs Pricelists',t:'pc'},po:{l:'Purchase Order Creation',t:'po'},tw:{l:'3-Way Matching',t:'3way'},
+fc:{l:'Bank Detail Fraud Check',t:'fc'},ap:{l:'Approval Workflows',t:null},me:{l:'Multi-Entity Support',t:'me'},
+mo:{l:'Mobile App',t:null},st:{l:'Document Archive',t:null},dd:{l:'Duplicate Detection',t:null},
+ex:{l:'Expense Management',t:null},py:{l:'In-App Payments',t:null}
+};
 
-            const changeFlags = [
-                { type: 'new', text: 'NEW - Dext Payments launched for UK Xero users', date: 'Feb 2, 2026', url: 'https://dext.com/us/news/dext-launches-payments-bringing-supplier-invoice-expense-and-payroll-payments-into-one-trusted-platform', color: 'text-green-600' },
-                { type: 'acquisition', text: 'ACQUISITION - Acquired by IRIS Software Group (completed)', date: 'Dec 23, 2024', url: 'https://www.iris.co.uk/news/iris-completes-dext-acquisition/', color: 'text-orange-600' }
-            ];
+const C={
+dext:{
+name:'Dext',cl:'#3b82f6',web:'dext.com',
+gbp:'~£25/mo',gc:'medium',gn:'Converted from USD $31.50. GBP available on site (JS-rendered).',
+aud:'~A$47/mo',ac:'medium',an:'Converted from USD. AUD available on site.',
+usd:'$31.50/mo (annual: $25.21)',uc:'high',
+md:'Per user + doc limits. Starter: 5 users, 250 docs/mo. Each extra user adds 50 docs.',
+ad:'20%',tr:'14 days (no credit card)',
+ov:'Docs upload but extraction stops until next billing month or upgrade.',
+hc:'Line-item extraction, bank statement extraction, supplier statement recon use limited credits. Enterprise setup fees undisclosed.',
+rc:'4.3★ (160+)',rg:'4.4★ (340+)',rs:'4.5★ (200+)',ub:'700K+ businesses',
+ch:[
+{ty:'NEW',tx:'Dext Payments launched — UK Xero users can pay supplier invoices & expenses in-platform',dt:'Feb 2, 2026',url:'https://dext.com/us/news/dext-launches-payments-bringing-supplier-invoice-expense-and-payroll-payments-into-one-trusted-platform'},
+{ty:'ROADMAP',tx:'Payroll payments Q1 2026; spend cards & invoice payment links later 2026',dt:'Feb 2026',url:'https://accountancyage.com/2026/02/02/dext-launches-integrated-payments-uk-accountants/'},
+{ty:'ACQUISITION',tx:'IRIS Software Group acquisition completed',dt:'Dec 23, 2024',url:''}
+],
+f:{
+ic:{v:'✅ 99.9% OCR (incl. handwritten)',c:'high'},sr:{v:'✅ Automated, 1M+ processed',c:'high'},
+li:{v:'⚠️ Credit-based (limited/plan)',c:'high'},pc:{v:'❌ Not available',c:'high'},
+po:{v:'❌ No native PO creation',c:'high'},tw:{v:'⚠️ 2-way only (Xero/QBO)',c:'high'},
+fc:{v:'⚠️ Bank shield via Payments (new)',c:'medium'},ap:{v:'✅ Multi-tier, mobile',c:'medium'},
+me:{v:'✅ Supported',c:'high'},mo:{v:'✅ 4.8★ App/Play Store',c:'high'},
+st:{v:'✅ 10-year GDPR',c:'high'},dd:{v:'✅ AI-powered',c:'high'},
+ex:{v:'✅ Full (mileage, approvals)',c:'high'},py:{v:'✅ NEW — UK Xero only',c:'high'}
+},
+ig:{a:['Xero (4.9/5)','QBO (4.9/5)','Sage','NetSuite','MYOB'],e:['Shopify','Stripe','PayPal','Amazon','Etsy','eBay'],b:'11,500+ institutions',p:'No public API'},
+vs:[
+{m:'Entry Price',co:'~£25/mo',ly:'£130/mo',w:'comp'},{m:'Free Trial',co:'14 days',ly:'30 days',w:'ly'},
+{m:'PO Creation',co:'❌',ly:'✅ Native',w:'ly',t:'po'},{m:'3-Way Matching',co:'⚠️ 2-way only',ly:'✅ Line-level',w:'ly',t:'3way'},
+{m:'Statement Recon',co:'✅ Automated',ly:'✅ Automated',w:'tie',t:'sr'},{m:'Price Checking',co:'❌',ly:'✅ Auto vs pricelists',w:'ly',t:'pc'},
+{m:'Fraud Detection',co:'⚠️ Bank shield (new)',ly:'✅ Bank detail checker',w:'ly',t:'fc'},
+{m:'In-App Payments',co:'✅ NEW (UK Xero)',ly:'❌',w:'comp'},{m:'Banking Connections',co:'✅ 11,500+',ly:'❌',w:'comp'},
+{m:'Storage',co:'10 years',ly:'7 years',w:'comp'},{m:'E-commerce',co:'✅ 6+ platforms',ly:'❌',w:'comp'},
+{m:'POS Integrations',co:'❌',ly:'✅ 8+ systems',w:'ly'},{m:'OCR Accuracy',co:'99.9%',ly:'AI Smart Extract+',w:'tie',t:'ocr'}
+],
+sc:{
+general:"While Dext excels at receipt/expense scanning (700K+ businesses, 99.9% OCR), Lightyear provides complete AP automation: native PO management, line-level 3-way matching, and supplier price verification — controls Dext doesn't offer.",
+smb:"If you only need receipt scanning, Dext works at ~5x lower price. But for supplier POs, price checking, and preventing overcharges, Lightyear's automated controls pay for the difference.",
+franchise:"Dext now offers in-platform payments (UK Xero only). Lightyear's parent/child accounts with unlimited companies and hospitality POS integrations are purpose-built for franchises.",
+counter_payments:"Dext Payments streamlines payment execution. Lightyear's value is upstream — catching errors through PO controls, 3-way matching, and price verification before payment."
+}
+},
+approvalmax:{
+name:'ApprovalMax',cl:'#8b5cf6',web:'approvalmax.com',
+gbp:'~£45/mo',gc:'medium',gn:'Estimated from USD ~$54. GBP selector available on pricing page.',
+aud:'~A$84/mo',ac:'medium',an:'AUD selector on pricing page. Based on ~$54 USD.',
+usd:'$54–$121/mo per org',uc:'high',
+md:'Per organisation. Unlimited users/requests/approvals. 3 tiers: Standard, Advanced, Premium.',
+ad:'Yes (amount undisclosed)',tr:'30 days (no credit card)',
+ov:'N/A — unlimited within plan tier.',
+hc:'ApprovalMax Pay charged separately. Volume discounts for multi-org.',
+rc:'4.8★ (65+)',rg:'4.8★ (90+)',rs:'4.9★ (50+)',ub:'15,000+ businesses',
+ch:[
+{ty:'NEW',tx:'ApprovalMax Pay — international payments now live via Airwallex',dt:'Early 2026',url:'https://approvalmax.com/features/approvalmax-pay'},
+{ty:'NEW',tx:'ApprovalMax Capture — built-in OCR invoice scanning',dt:'2025',url:'https://approvalmax.com/features/approvalmax-capture'}
+],
+f:{
+ic:{v:'✅ Capture add-on (OCR)',c:'high'},sr:{v:'❌ Not available',c:'high'},
+li:{v:'⚠️ Via Capture add-on',c:'medium'},pc:{v:'❌ Not available',c:'high'},
+po:{v:'✅ PO approval workflows (via Xero/QBO/NetSuite)',c:'high'},tw:{v:'✅ Bill-to-PO matching (Advanced+)',c:'high'},
+fc:{v:'✅ Supplier bank detail verification',c:'high'},ap:{v:'✅ Unlimited steps, matrix approvals',c:'high'},
+me:{v:'✅ Multi-org with volume discounts',c:'high'},mo:{v:'✅ iOS/Android',c:'high'},
+st:{v:'⚠️ Audit trail (retention unspecified)',c:'medium'},dd:{v:'✅ Duplicate detection (date/amount/supplier)',c:'high'},
+ex:{v:'❌ Not core',c:'high'},py:{v:'✅ ApprovalMax Pay (international, Airwallex)',c:'high'}
+},
+ig:{a:['Xero','QuickBooks Online','NetSuite'],e:['Dext','Slack','Airwallex','CIN7'],b:'Via Airwallex',p:'Yes (API available)'},
+vs:[
+{m:'Entry Price',co:'~£45/mo per org',ly:'£130/mo',w:'comp'},{m:'Free Trial',co:'30 days',ly:'30 days',w:'tie'},
+{m:'PO Creation',co:'✅ Via accounting platform',ly:'✅ Native',w:'ly',t:'po'},{m:'3-Way Matching',co:'✅ Bill-to-PO (Adv+)',ly:'✅ Line-level',w:'ly',t:'3way'},
+{m:'Statement Recon',co:'❌',ly:'✅ Automated',w:'ly',t:'sr'},{m:'Price Checking',co:'❌',ly:'✅ Auto vs pricelists',w:'ly',t:'pc'},
+{m:'Fraud Detection',co:'✅ Bank detail check',ly:'✅ Bank detail checker',w:'tie',t:'fc'},
+{m:'Approval Complexity',co:'✅ Unlimited steps, matrix',ly:'✅ Up to 3 levels',w:'comp'},
+{m:'In-App Payments',co:'✅ International (Airwallex)',ly:'❌',w:'comp'},
+{m:'Data Extraction',co:'⚠️ Basic Capture',ly:'✅ AI Smart Extract+',w:'ly',t:'ocr'},
+{m:'Accounting Platforms',co:'Xero, QBO, NetSuite',ly:'Xero, QBO, NetSuite, MYOB, Sage+',w:'ly'}
+],
+sc:{
+general:"ApprovalMax excels at approval workflows — unlimited steps, complex matrix approvals. But it's a workflow layer, not full AP automation. Lightyear provides extraction, PO management, 3-way matching, price checking, and statement recon in one platform.",
+smb:"If you only need bill approvals before Xero, ApprovalMax is simpler and cheaper. For full AP control from PO creation through invoice verification, Lightyear eliminates the need for multiple tools.",
+counter_payments:"ApprovalMax now offers payments via Airwallex. Lightyear catches errors upstream — price checking ensures you're not overpaying before payment."
+}
+},
+tipalti:{
+name:'Tipalti',cl:'#ef4444',web:'tipalti.com',
+gbp:'£99/mo',gc:'high',gn:'Capterra UK confirms £99/mo starting price.',
+aud:'~A$185/mo',ac:'low',an:'Converted from USD $149/mo. No native AUD pricing found.',
+usd:'$149/mo (Express)',uc:'high',
+md:'Subscription + per-transaction fees. Platform fee + payment processing. Enterprise: $500–$600/mo + $4K–$5K implementation.',
+ad:'Custom for larger plans',tr:'❌ No free trial',
+ov:'Transaction-based — per-payment and FX conversion fees.',
+hc:'Implementation ($4K–$5K enterprise). FX markup 1.9–3.5%. Per-entity charges. W-8/international tax on higher tiers only.',
+rc:'4.5★ (170+)',rg:'4.5★ (400+)',rs:'4.5★ (170+)',ub:'5,000+ businesses',
+ch:[{ty:'INFO',tx:'No significant changes detected this week',dt:'Feb 13, 2026',url:''}],
+f:{
+ic:{v:'⚠️ Invoice scanning via Tipalti Bills',c:'high'},sr:{v:'❌ Not core',c:'medium'},
+li:{v:'✅ Line-item extraction',c:'medium'},pc:{v:'❌ Not available standalone',c:'medium'},
+po:{v:'✅ Procurement module (separate)',c:'high'},tw:{v:'✅ 2-way and 3-way PO matching',c:'high'},
+fc:{v:'✅ OFAC/sanctions screening, tax validation',c:'high'},ap:{v:'✅ Multi-level workflows',c:'high'},
+me:{v:'✅ Multi-entity (extra cost/entity)',c:'high'},mo:{v:'✅ iOS/Android',c:'high'},
+st:{v:'✅ Audit logs, doc retention',c:'medium'},dd:{v:'✅ Duplicate detection',c:'high'},
+ex:{v:'✅ Tipalti Expenses module',c:'high'},py:{v:'✅ Global (196 countries, 120 currencies, 50+ methods)',c:'high'}
+},
+ig:{a:['NetSuite','Xero','Sage Intacct','QuickBooks'],e:['Shopify (marketplace)'],b:'Own payment network',p:'Yes (REST API)'},
+vs:[
+{m:'Entry Price',co:'£99/mo',ly:'£130/mo',w:'comp'},{m:'Free Trial',co:'❌ None',ly:'30 days',w:'ly'},
+{m:'PO Creation',co:'✅ Procurement module',ly:'✅ Native',w:'tie',t:'po'},{m:'3-Way Matching',co:'✅ Available',ly:'✅ Line-level',w:'ly',t:'3way'},
+{m:'Statement Recon',co:'❌',ly:'✅ Automated',w:'ly',t:'sr'},{m:'Price Checking',co:'❌',ly:'✅ Auto vs pricelists',w:'ly',t:'pc'},
+{m:'Global Payments',co:'✅ 196 countries, 120 currencies',ly:'❌',w:'comp'},
+{m:'Sanctions Screening',co:'✅ OFAC/international',ly:'❌',w:'comp'},
+{m:'Implementation',co:'⚠️ $4K–$5K enterprise',ly:'✅ Optional onboarding',w:'ly'},
+{m:'Target Market',co:'Mid-market / Enterprise',ly:'SME to Enterprise',w:'tie'}
+],
+sc:{
+general:"Tipalti is a powerful global payments platform — ideal for international suppliers at scale. For UK/AU businesses focused on AP automation with supplier controls, Lightyear offers price checking, statement reconciliation, and POS integrations Tipalti lacks.",
+smb:"Tipalti (£99/mo) looks cheaper but adds implementation fees ($4K–$5K) and per-transaction costs. No free trial means committing blind. Lightyear's 30-day trial and all-inclusive credit model is lower risk.",
+counter_payments:"If your need is global mass payments (196 countries), Tipalti wins. If your priority is catching errors before payment — PO matching, price verification, statement recon — Lightyear prevents problems Tipalti processes."
+}
+},
+zahara:{
+name:'Zahara',cl:'#f59e0b',web:'zaharasoftware.com',
+gbp:'£119/mo',gc:'high',gn:'Tekpon: £119/mo (Teams). GetApp: £142/mo. SourceForge: from £69/mo. Discrepancy likely due to plan tiers.',
+aud:'~A$220/mo',ac:'low',an:'Converted from GBP. No native AUD pricing found.',
+usd:'~$142/mo (Teams)',uc:'medium',
+md:'Tiered: Teams (£119/mo, ~10 users), Business (£219/mo), Enterprise (custom). Add-on users & PO volume.',
+ad:'Yes — Teams £1,190/yr (save ~£238)',tr:'30 days (no credit card)',
+ov:'Additional users and PO volume as add-ons.',
+hc:'Premium integrations (Sage 200, Sage Intacct, MS Business Central) Enterprise only. SmartSync on-premise tool add-on.',
+rc:'4.4★ (35+)',rg:'4.3★ (15+)',rs:'4.4★ (35+)',ub:'Not disclosed (UK-focused)',
+ch:[{ty:'INFO',tx:'No significant changes detected this week',dt:'Feb 13, 2026',url:''}],
+f:{
+ic:{v:'✅ AI/OCR invoice processing',c:'high'},sr:{v:'❌ Not listed',c:'medium'},
+li:{v:'✅ Line-item extraction',c:'medium'},pc:{v:'❌ Not available',c:'medium'},
+po:{v:'✅ Full PO management + budgets',c:'high'},tw:{v:'✅ 3-way (PO + GRN + Invoice)',c:'high'},
+fc:{v:'❌ Not listed',c:'medium'},ap:{v:'✅ Infinitely customisable multi-step',c:'high'},
+me:{v:'✅ Multi-site, multi-project, multi-dept',c:'high'},mo:{v:'✅ iOS/Android',c:'high'},
+st:{v:'⚠️ DoxStore (retention unspecified)',c:'medium'},dd:{v:'✅ Duplicate detection',c:'medium'},
+ex:{v:'❌ Not core',c:'medium'},py:{v:'✅ In-app payments (Currencies Direct/Comma)',c:'high'}
+},
+ig:{a:['Xero','QBO','Sage 50','Sage 200 (Ent)','Sage Intacct (Ent)','MYOB','MS Business Central (Ent)','Pegasus Opera'],e:[],b:'Via Currencies Direct',p:'Yes (API available)'},
+vs:[
+{m:'Entry Price',co:'£119/mo',ly:'£130/mo',w:'comp'},{m:'Free Trial',co:'30 days',ly:'30 days',w:'tie'},
+{m:'PO Creation',co:'✅ Full PO + budgets',ly:'✅ Native',w:'tie',t:'po'},{m:'3-Way Matching',co:'✅ PO+GRN+Invoice',ly:'✅ Line-level',w:'tie',t:'3way'},
+{m:'Statement Recon',co:'❌',ly:'✅ Automated',w:'ly',t:'sr'},{m:'Price Checking',co:'❌',ly:'✅ Auto vs pricelists',w:'ly',t:'pc'},
+{m:'Fraud Detection',co:'❌',ly:'✅ Bank detail checker',w:'ly',t:'fc'},
+{m:'Budget Management',co:'✅ Departmental budgets',ly:'⚠️ Reporting',w:'comp'},
+{m:'Approval Workflows',co:'✅ Infinitely customisable',ly:'✅ Up to 3 levels',w:'comp'},
+{m:'In-App Payments',co:'✅ Currencies Direct',ly:'❌',w:'comp'},
+{m:'Supplier Portal',co:'✅ Available',ly:'❌',w:'comp'}
+],
+sc:{
+general:"Zahara is a strong PO-focused AP solution with excellent budgets and customisable workflows — closest feature competitor. Lightyear's differentiators: automated price checking, bank detail fraud verification, and statement reconciliation — three features Zahara lacks.",
+smb:"Nearly the same price (£119 vs £130). If departmental budgets and supplier portals are critical, Zahara has an edge. If catching overcharges and preventing fraud are priorities, Lightyear wins.",
+counter_budgets:"Zahara's budget management is strong. Lightyear ensures you're paying the right price — automated price checking and statement reconciliation catch errors that budgets alone can't prevent."
+}
+},
+compleat:{
+name:'Compleat Software',cl:'#10b981',web:'compleatsoftware.com',
+gbp:'Quote-based',gc:'gap',gn:'No public pricing. LinkedIn: "4 easy plans". Reviews: "commoditised" and "affordable". One review mentions savings of £750K via procurement services.',
+aud:'Quote-based',ac:'gap',an:'No AUD pricing found. Operates EMEA, APAC, AMAC.',
+usd:'Quote-based',uc:'gap',
+md:'Modular SaaS — choose: Capture, AP Automation, PO, Online Buying, P2P. Priced by modules + invoice volume.',
+ad:'Not disclosed',tr:'⚠️ Demo available (trial not confirmed)',
+ov:'Not disclosed.',
+hc:'Implementation may need IT resources. Online buying (punchout) module separate. Procurement services add-on.',
+rc:'4.4★ (30+)',rg:'4.5★ (45+)',rs:'4.4★ (30+)',ub:'500+ companies (EMEA, APAC, AMAC)',
+ch:[{ty:'INFO',tx:'No significant changes detected this week',dt:'Feb 13, 2026',url:''}],
+f:{
+ic:{v:'✅ AI/ML/OCR — header + line-level',c:'high'},sr:{v:'❌ Not listed',c:'medium'},
+li:{v:'✅ Header and line-level',c:'high'},pc:{v:'⚠️ "Best price" via online buying, not pricelist compare',c:'medium'},
+po:{v:'✅ Full requisition + PO management',c:'high'},tw:{v:'✅ Auto PO matching (2-way & 3-way)',c:'high'},
+fc:{v:'✅ Supplier bank detail validation + duplicate check',c:'high'},ap:{v:'✅ Dynamic parallel & sequential workflows',c:'high'},
+me:{v:'✅ Multi-site, multi-department',c:'high'},mo:{v:'✅ Responsive web + mobile app',c:'high'},
+st:{v:'⚠️ Doc storage (retention unspecified)',c:'medium'},dd:{v:'✅ Duplicate checking',c:'high'},
+ex:{v:'❌ Not core',c:'medium'},py:{v:'❌ Not listed',c:'medium'}
+},
+ig:{a:['Sage 50/200/Intacct','Xero','AccountsIQ','PS Financials (IRIS)','MS Dynamics'],e:['Amazon Business (Punch-In)','Lyreco','YPO','ESPO'],b:'Not specified',p:'Yes (API available)'},
+vs:[
+{m:'Entry Price',co:'Quote-based',ly:'£130/mo',w:'unknown'},{m:'Free Trial',co:'⚠️ Demo only',ly:'30 days',w:'ly'},
+{m:'PO Creation',co:'✅ Full requisition + PO',ly:'✅ Native',w:'tie',t:'po'},{m:'3-Way Matching',co:'✅ Auto matching',ly:'✅ Line-level',w:'tie',t:'3way'},
+{m:'Statement Recon',co:'❌',ly:'✅ Automated',w:'ly',t:'sr'},{m:'Price Checking',co:'⚠️ Via online buying',ly:'✅ Auto vs pricelists',w:'ly',t:'pc'},
+{m:'Fraud Detection',co:'✅ Bank detail validation',ly:'✅ Bank detail checker',w:'tie',t:'fc'},
+{m:'Online Buying',co:'✅ Amazon Punch-In + suppliers',ly:'❌',w:'comp'},
+{m:'Education Sector',co:'✅ Purpose-built module',ly:'⚠️ General purpose',w:'comp'},
+{m:'Pricing Transparency',co:'❌ Quote-based only',ly:'✅ Published pricing',w:'ly'}
+],
+sc:{
+general:"Compleat is the closest feature competitor: PO management, 3-way matching, bank detail validation. Lightyear's differentiators: automated price checking vs agreed supplier pricelists and statement reconciliation. Plus, Lightyear publishes transparent pricing — Compleat requires a sales conversation.",
+smb:"For SMBs, Lightyear's transparent pricing and 30-day free trial lower the barrier. Compleat's quote-based model and potentially longer implementation make it harder to evaluate quickly.",
+education:"Compleat has a strong education module with Amazon Business integration. For hospitality and multi-site retail, Lightyear's POS integrations are the better fit."
+}
+}
+};
 
-            const pricingData = {
-                gbp: { amount: '~£25', period: 'annual', note: 'Converted from USD $31.50/mo', confidence: 'medium' },
-                aud: { amount: '~A$47', period: 'monthly', note: 'Converted from USD $31.50/mo', confidence: 'medium' },
-                usd: { 
-                    monthly: '$31.50', 
-                    annual: '$25.21', 
-                    discount: '20%',
-                    includes: '5 users, 250 docs/month',
-                    confidence: 'high'
-                }
-            };
+const CK=['dext','approvalmax','tipalti','zahara','compleat'];
 
-            const integrations = {
-                accounting: [
-                    { name: 'Xero', rating: '4.9/5', reviews: '1000+', status: 'verified' },
-                    { name: 'QuickBooks Online', rating: '4.9/5', reviews: '550+', status: 'verified' },
-                    { name: 'Sage', status: 'verified' },
-                    { name: 'NetSuite', status: 'verified' },
-                    { name: 'MYOB', status: 'verified' }
-                ],
-                ecommerce: ['Shopify', 'Stripe', 'PayPal', 'Amazon', 'Etsy', 'eBay'],
-                banking: '11,500+ institutions',
-                api: 'No public API',
-                other: ['ApprovalMax (integration partner)', 'Airwallex (payments partner)']
-            };
+const App=()=>{
+const[tab,setTab]=useState('overview');
+const[sel,setSel]=useState('dext');
+const d=C[sel];
 
-            const features = {
-                hasFeature: [
-                    { name: 'OCR Data Extraction', detail: '99.9% accuracy (incl. handwritten)', confidence: 'high', tooltip: 'ocr' },
-                    { name: 'Statement Reconciliation', detail: 'Automated extraction & verification', confidence: 'high', tooltip: 'statement-recon' },
-                    { name: 'PO Matching', detail: '2-way matching (Xero/QBO only)', confidence: 'high', tooltip: '2way' },
-                    { name: 'Multi-tier Approvals', detail: 'Mobile-enabled workflows', confidence: 'high', tooltip: null },
-                    { name: 'Line-item Extraction', detail: 'Available (check allowance per plan)', confidence: 'high', tooltip: 'line-item' },
-                    { name: 'Multi-entity Support', detail: 'Yes', confidence: 'high', tooltip: 'multi-entity' },
-                    { name: 'Mobile App', detail: '4.8★ App Store, 4.5★ Google Play', confidence: 'high', tooltip: null },
-                    { name: '10-Year Storage', detail: 'GDPR-compliant UK/EU hosting', confidence: 'high', tooltip: null },
-                    { name: 'Expense Management', detail: 'Mileage tracking, approvals', confidence: 'high', tooltip: null },
-                    { name: 'Bank Connections', detail: '11,500+ institutions', confidence: 'high', tooltip: null },
-                    { name: 'Payments (NEW)', detail: 'UK Xero only - supplier & expense payments', confidence: 'high', tooltip: null }
-                ],
-                missing: [
-                    { name: 'Native PO Creation', tooltip: 'po', note: 'Can match to existing POs in Xero/QBO but cannot create POs' },
-                    { name: '3-way Matching', tooltip: '3way', note: 'Only 2-way matching available' },
-                    { name: 'Price Checking vs Pricelists', tooltip: 'price-check', note: 'No automated price verification against agreed rates' },
-                    { name: 'Bank Detail Fraud Verification', tooltip: 'fraud-check', note: 'No built-in supplier bank detail checking' },
-                    { name: 'Supplier Portal', tooltip: null, note: 'No portal for suppliers to interact directly' }
-                ]
-            };
+return(
+<div className="min-h-screen p-4 md:p-6 max-w-7xl mx-auto">
+{/* Header */}
+<div className="mb-5">
+<div className="flex flex-col md:flex-row md:items-center md:justify-between mb-3">
+<div>
+<h1 className="text-2xl md:text-3xl font-bold text-gray-900">Lightyear Competitive Intelligence</h1>
+<p className="text-gray-500 text-sm mt-1">5 competitors · Updated: <span className="mono font-bold">Feb 13, 2026</span></p>
+</div>
+<div className="mt-2 md:mt-0 text-right">
+<div className="text-xs text-gray-400">Next update</div>
+<div className="mono font-bold text-gray-700">Feb 20, 2026</div>
+</div>
+</div>
 
-            const vsLightyear = [
-                { metric: 'Entry Price (GBP)', dext: '~£25/mo', lightyear: '£130/mo', winner: 'dext', confidence: 'medium' },
-                { metric: 'Entry Price (AUD)', dext: '~A$47/mo', lightyear: 'A$155/mo', winner: 'dext', confidence: 'medium' },
-                { metric: 'Free Trial', dext: '14 days', lightyear: '30 days', winner: 'lightyear', confidence: 'high' },
-                { metric: 'PO Creation', dext: '✗', lightyear: '✓ Native', winner: 'lightyear', tooltip: 'po', confidence: 'high' },
-                { metric: 'PO Matching', dext: '✓ 2-way (Xero/QBO)', lightyear: '✓ Line-level 3-way', winner: 'lightyear', tooltip: '3way', confidence: 'high' },
-                { metric: 'Statement Recon', dext: '✓ Automated', lightyear: '✓ Automated', winner: 'tie', tooltip: 'statement-recon', confidence: 'high' },
-                { metric: 'Price Checking', dext: '✗', lightyear: '✓', winner: 'lightyear', tooltip: 'price-check', confidence: 'high' },
-                { metric: 'Bank Detail Fraud Check', dext: '✗', lightyear: '✓', winner: 'lightyear', tooltip: 'fraud-check', confidence: 'high' },
-                { metric: 'Banking Connections', dext: '✓ 11,500+', lightyear: '✗', winner: 'dext', confidence: 'high' },
-                { metric: 'E-commerce Integrations', dext: '✓ Shopify, Amazon, Stripe, PayPal', lightyear: '✗', winner: 'dext', confidence: 'high' },
-                { metric: 'Payments Feature', dext: '✓ UK Xero only (NEW Feb 2026)', lightyear: '✗', winner: 'dext', confidence: 'high' },
-                { metric: 'Storage', dext: '10 years', lightyear: '7 years', winner: 'dext', confidence: 'high' },
-                { metric: 'Approval Levels', dext: 'Multi-tier', lightyear: 'Up to 5 levels', winner: 'lightyear', confidence: 'high' },
-                { metric: 'Hospitality POS', dext: '✗', lightyear: '✓ 8+ systems', winner: 'lightyear', confidence: 'high' }
-            ];
+{/* Changes Banner */}
+<div className="chb rounded-lg p-4 mb-4">
+<div className="font-bold text-yellow-900 mb-2">⚡ Changes This Week</div>
+<div className="space-y-1.5 text-sm text-yellow-900">
+<div><span className="font-bold bg-green-200 text-green-800 px-1.5 py-0.5 rounded text-xs mr-1">NEW</span><strong>Dext Payments</strong> — UK Xero users can pay invoices & expenses in-platform (Feb 2) <a href="https://dext.com/us/news/dext-launches-payments-bringing-supplier-invoice-expense-and-payroll-payments-into-one-trusted-platform" target="_blank" className="text-blue-600 underline text-xs ml-1">Source</a></div>
+<div><span className="font-bold bg-blue-200 text-blue-800 px-1.5 py-0.5 rounded text-xs mr-1">ROADMAP</span><strong>Dext</strong> — payroll payments Q1 2026; spend cards & invoice links later 2026</div>
+<div><span className="font-bold bg-purple-200 text-purple-800 px-1.5 py-0.5 rounded text-xs mr-1">NEW</span><strong>ApprovalMax Pay</strong> — international payments live via Airwallex <a href="https://approvalmax.com/features/approvalmax-pay" target="_blank" className="text-blue-600 underline text-xs ml-1">Source</a></div>
+<div><span className="font-bold bg-gray-200 text-gray-700 px-1.5 py-0.5 rounded text-xs mr-1">LIGHTYEAR</span>No pricing or feature changes detected. GBP starter: £130/mo.</div>
+</div>
+</div>
+</div>
 
-            const getConfidenceBadge = (level) => {
-                const styles = {
-                    high: 'bg-green-100 text-green-700 border-green-300',
-                    medium: 'bg-yellow-100 text-yellow-700 border-yellow-300',
-                    low: 'bg-orange-100 text-orange-700 border-orange-300'
-                };
-                return (
-                    <span className={`px-2 py-0.5 rounded text-xs border ${styles[level]}`}>
-                        {level === 'high' ? '✅' : '⚠️'} {level.toUpperCase()}
-                    </span>
-                );
-            };
+{/* Competitor Pills */}
+<div className="flex flex-wrap gap-2 mb-4">
+{CK.map(k=>(
+<button key={k} onClick={()=>setSel(k)} className={`sel px-4 py-2 rounded-lg text-sm font-medium border-2 ${sel===k?'border-green-600 bg-green-50 text-green-800':'border-gray-200 bg-white text-gray-600 hover:border-gray-400'}`}>
+{C[k].name}
+</button>
+))}
+</div>
 
-            return (
-                <div className="min-h-screen bg-gray-50 p-6">
-                    <div className="max-w-7xl mx-auto">
-                        {/* Header */}
-                        <div className="mb-6">
-                            <div className="flex items-center justify-between mb-4">
-                                <div>
-                                    <h1 className="text-3xl font-bold text-gray-900">Dext Competitive Intelligence</h1>
-                                    <p className="text-gray-600">Last updated: February 4, 2026</p>
-                                </div>
-                                <div className="text-right">
-                                    <div className="text-sm text-gray-500">Next update</div>
-                                    <div className="font-semibold">Feb 11, 2026</div>
-                                </div>
-                            </div>
+{/* Tabs + Content */}
+<div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+<div className="flex border-b border-gray-200 overflow-x-auto">
+{['overview','pricing','features','vs'].map(t=>(
+<button key={t} onClick={()=>setTab(t)} className={`px-5 py-3 text-sm font-medium whitespace-nowrap ${tab===t?'tab-on':'tab-off'}`}>
+{t==='vs'?'VS Lightyear':t.charAt(0).toUpperCase()+t.slice(1)}
+</button>
+))}
+</div>
 
-                            {/* Change Alerts */}
-                            {changeFlags.length > 0 && (
-                                <div className="bg-gradient-to-r from-orange-50 to-green-50 border border-orange-200 rounded-lg p-4 mb-4">
-                                    <div className="flex items-start gap-3">
-                                        <svg className="text-orange-600 mt-0.5 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                        </svg>
-                                        <div className="flex-1">
-                                            <h3 className="font-semibold text-orange-900 mb-2">Changes This Week</h3>
-                                            {changeFlags.map((flag, i) => (
-                                                <div key={i} className="text-sm mb-1">
-                                                    <span className={`font-medium ${flag.color}`}>{flag.text}</span> - {flag.date}
-                                                    <a href={flag.url} target="_blank" rel="noopener noreferrer" className="ml-2 text-blue-600 hover:underline text-xs">
-                                                        Source ↗
-                                                    </a>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
+<div className="p-5">
 
-                        {/* Tabs */}
-                        <div className="bg-white rounded-lg shadow mb-6">
-                            <div className="border-b border-gray-200">
-                                <nav className="flex -mb-px">
-                                    {['overview', 'pricing', 'features', 'vs-lightyear'].map((tab) => (
-                                        <button
-                                            key={tab}
-                                            onClick={() => setActiveTab(tab)}
-                                            className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
-                                                activeTab === tab
-                                                    ? 'border-blue-600 text-blue-600'
-                                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                                            }`}
-                                        >
-                                            {tab.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
-                                        </button>
-                                    ))}
-                                </nav>
-                            </div>
+{/* ──── OVERVIEW ──── */}
+{tab==='overview'&&(
+<div className="space-y-5">
+<div className="flex items-center gap-3"><h2 className="text-xl font-bold" style={{color:d.cl}}>{d.name}</h2><a href={`https://${d.web}`} target="_blank" className="text-xs text-blue-500 underline">{d.web}</a></div>
 
-                            <div className="p-6">
-                                {/* Overview Tab */}
-                                {activeTab === 'overview' && (
-                                    <div className="space-y-6">
-                                        <div className="grid grid-cols-3 gap-4">
-                                            <div className="bg-blue-50 p-4 rounded-lg">
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <svg className="text-blue-600 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                                    </svg>
-                                                    <span className="text-sm text-gray-600">User Base</span>
-                                                </div>
-                                                <div className="text-2xl font-bold text-gray-900">700K+</div>
-                                                <div className="text-xs text-gray-500">Businesses & 12K+ accounting firms</div>
-                                            </div>
-                                            <div className="bg-green-50 p-4 rounded-lg">
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <svg className="text-green-600 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                    </svg>
-                                                    <span className="text-sm text-gray-600">Processed</span>
-                                                </div>
-                                                <div className="text-2xl font-bold text-gray-900">320M+</div>
-                                                <div className="text-xs text-gray-500">Documents annually</div>
-                                            </div>
-                                            <div className="bg-purple-50 p-4 rounded-lg">
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <svg className="text-purple-600 w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                    </svg>
-                                                    <span className="text-sm text-gray-600">Awards</span>
-                                                </div>
-                                                <div className="text-2xl font-bold text-gray-900">4.2★</div>
-                                                <div className="text-xs text-gray-500">Capterra (160 reviews)</div>
-                                            </div>
-                                        </div>
+<div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+<div className="bg-blue-50 rounded-lg p-3"><div className="text-xs text-gray-500 mb-1">User Base</div><div className="text-lg font-bold">{d.ub}</div></div>
+<div className="bg-green-50 rounded-lg p-3"><div className="text-xs text-gray-500 mb-1">GBP Starting</div><div className="text-lg font-bold">{d.gbp}</div><Bd l={d.gc}/></div>
+<div className="bg-purple-50 rounded-lg p-3"><div className="text-xs text-gray-500 mb-1">Capterra</div><div className="text-lg font-bold">{d.rc}</div></div>
+<div className="bg-yellow-50 rounded-lg p-3"><div className="text-xs text-gray-500 mb-1">Free Trial</div><div className="text-lg font-bold">{d.tr}</div></div>
+</div>
 
-                                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                            <h3 className="font-semibold text-blue-900 mb-2">Corporate News</h3>
-                                            <ul className="text-sm text-blue-800 space-y-1">
-                                                <li>• Acquired by IRIS Software Group - completed Dec 23, 2024</li>
-                                                <li>• Dext Payments launched Feb 2, 2026 (UK Xero users only)</li>
-                                                <li>• Xero App Partner of the Year 2024 (UK & US)</li>
-                                                <li>• QuickBooks Developer Spotlight 2024</li>
-                                            </ul>
-                                        </div>
+<div className="border rounded-lg p-4">
+<h3 className="font-bold text-gray-800 mb-2">Ratings (Software Review Sites Only)</h3>
+<div className="grid grid-cols-3 gap-4 text-sm">
+<div><span className="text-gray-500">Capterra:</span> <span className="font-bold">{d.rc}</span></div>
+<div><span className="text-gray-500">G2:</span> <span className="font-bold">{d.rg}</span></div>
+<div><span className="text-gray-500">Software Advice:</span> <span className="font-bold">{d.rs}</span></div>
+</div>
+</div>
 
-                                        <div>
-                                            <h3 className="font-semibold text-gray-900 mb-3">Key Strengths</h3>
-                                            <div className="space-y-2">
-                                                <div className="flex items-start gap-2">
-                                                    <svg className="text-green-600 mt-0.5 flex-shrink-0 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                                    </svg>
-                                                    <span className="text-sm">Massive banking ecosystem - 11,500+ institutions for bank feed connections</span>
-                                                </div>
-                                                <div className="flex items-start gap-2">
-                                                    <svg className="text-green-600 mt-0.5 flex-shrink-0 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                                    </svg>
-                                                    <span className="text-sm">Lower entry price - ~£25/mo vs Lightyear £130/mo (5x cheaper)</span>
-                                                </div>
-                                                <div className="flex items-start gap-2">
-                                                    <svg className="text-green-600 mt-0.5 flex-shrink-0 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                                    </svg>
-                                                    <span className="text-sm">Perfect Xero/QBO integration ratings (4.9/5 with 1000+ reviews)</span>
-                                                </div>
-                                                <div className="flex items-start gap-2">
-                                                    <svg className="text-green-600 mt-0.5 flex-shrink-0 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                                    </svg>
-                                                    <span className="text-sm">E-commerce platform integrations - Shopify, Amazon, Stripe, PayPal</span>
-                                                </div>
-                                                <div className="flex items-start gap-2">
-                                                    <svg className="text-green-600 mt-0.5 flex-shrink-0 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                                    </svg>
-                                                    <span className="text-sm">NEW: Payments feature (UK Xero only) - closes the invoice-to-payment loop</span>
-                                                </div>
-                                                <div className="flex items-start gap-2">
-                                                    <svg className="text-green-600 mt-0.5 flex-shrink-0 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                                    </svg>
-                                                    <span className="text-sm">10-year document retention vs 7-year standard</span>
-                                                </div>
-                                            </div>
-                                        </div>
+{d.ch&&d.ch.length>0&&(
+<div className="border border-orange-200 bg-orange-50 rounded-lg p-4">
+<h3 className="font-bold text-orange-800 mb-2">Recent Changes & News</h3>
+{d.ch.map((c,i)=>(
+<div key={i} className="text-sm text-orange-900 mb-1"><span className="font-bold bg-orange-200 px-1 py-0.5 rounded text-xs mr-1">{c.ty}</span>{c.tx} — <span className="mono text-xs">{c.dt}</span>{c.url&&<a href={c.url} target="_blank" className="text-blue-600 underline ml-1 text-xs">Source</a>}</div>
+))}
+</div>
+)}
 
-                                        <div>
-                                            <h3 className="font-semibold text-gray-900 mb-3">Competitive Gaps vs Lightyear</h3>
-                                            <div className="space-y-2">
-                                                <div className="flex items-start gap-2">
-                                                    <svg className="text-red-600 mt-0.5 flex-shrink-0 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                                    </svg>
-                                                    <span className="text-sm">No native purchase order creation - can only match to existing POs in Xero/QBO</span>
-                                                </div>
-                                                <div className="flex items-start gap-2">
-                                                    <svg className="text-red-600 mt-0.5 flex-shrink-0 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                                    </svg>
-                                                    <span className="text-sm">Only 2-way PO matching - no 3-way matching to verify goods received</span>
-                                                </div>
-                                                <div className="flex items-start gap-2">
-                                                    <svg className="text-red-600 mt-0.5 flex-shrink-0 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                                    </svg>
-                                                    <span className="text-sm">No automated price checking against supplier pricelists</span>
-                                                </div>
-                                                <div className="flex items-start gap-2">
-                                                    <svg className="text-red-600 mt-0.5 flex-shrink-0 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                                    </svg>
-                                                    <span className="text-sm">No bank detail fraud verification on invoices</span>
-                                                </div>
-                                                <div className="flex items-start gap-2">
-                                                    <svg className="text-red-600 mt-0.5 flex-shrink-0 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                                    </svg>
-                                                    <span className="text-sm">Shorter free trial - 14 days vs 30 days</span>
-                                                </div>
-                                                <div className="flex items-start gap-2">
-                                                    <svg className="text-red-600 mt-0.5 flex-shrink-0 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                                    </svg>
-                                                    <span className="text-sm">No hospitality POS integrations - Lightyear has 8+ POS systems</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+<h3 className="font-bold text-blue-800 mb-2">Strengths vs Lightyear</h3>
+<div className="text-sm space-y-1 text-blue-900">
+{d.vs.filter(v=>v.w==='comp').map((v,i)=><div key={i}>✅ <strong>{v.m}:</strong> {v.co}</div>)}
+</div>
+</div>
+<div className="bg-green-50 border border-green-200 rounded-lg p-4">
+<h3 className="font-bold text-green-800 mb-2">Gaps (Lightyear Wins)</h3>
+<div className="text-sm space-y-1 text-green-900">
+{d.vs.filter(v=>v.w==='ly').map((v,i)=><div key={i}>🎯 <strong>{v.m}:</strong> {v.ly}</div>)}
+</div>
+</div>
+</div>
+</div>
+)}
 
-                                {/* Pricing Tab */}
-                                {activeTab === 'pricing' && (
-                                    <div className="space-y-6">
-                                        <div className="grid grid-cols-3 gap-4">
-                                            <div className="border border-gray-200 rounded-lg p-4">
-                                                <div className="flex items-center gap-1 mb-1">
-                                                    <Tooltip term="gbp">
-                                                        <span className="text-sm text-gray-500">GBP (UK)</span>
-                                                    </Tooltip>
-                                                </div>
-                                                <div className="text-2xl font-bold text-gray-900">{pricingData.gbp.amount}</div>
-                                                <div className="text-sm text-gray-600 mt-1">{pricingData.gbp.period}</div>
-                                                <div className="text-xs text-orange-600 mt-2 flex items-center gap-1">
-                                                    <span>⚠️</span>
-                                                    <span>{pricingData.gbp.note}</span>
-                                                </div>
-                                                <div className="mt-2">{getConfidenceBadge(pricingData.gbp.confidence)}</div>
-                                            </div>
-                                            <div className="border border-gray-200 rounded-lg p-4">
-                                                <div className="flex items-center gap-1 mb-1">
-                                                    <Tooltip term="aud">
-                                                        <span className="text-sm text-gray-500">AUD (Australia)</span>
-                                                    </Tooltip>
-                                                </div>
-                                                <div className="text-2xl font-bold text-gray-900">{pricingData.aud.amount}</div>
-                                                <div className="text-sm text-gray-600 mt-1">{pricingData.aud.period}</div>
-                                                <div className="text-xs text-orange-600 mt-2 flex items-center gap-1">
-                                                    <span>⚠️</span>
-                                                    <span>{pricingData.aud.note}</span>
-                                                </div>
-                                                <div className="mt-2">{getConfidenceBadge(pricingData.aud.confidence)}</div>
-                                            </div>
-                                            <div className="border border-blue-200 rounded-lg p-4 bg-blue-50">
-                                                <div className="text-sm text-gray-500 mb-1">USD (Reference)</div>
-                                                <div className="text-2xl font-bold text-gray-900">{pricingData.usd.monthly}</div>
-                                                <div className="text-sm text-gray-600 mt-1">monthly</div>
-                                                <div className="text-xs text-green-600 mt-2">✅ Verified from G2</div>
-                                                <div className="mt-2">{getConfidenceBadge(pricingData.usd.confidence)}</div>
-                                            </div>
-                                        </div>
+{/* ──── PRICING ──── */}
+{tab==='pricing'&&(
+<div className="space-y-5">
+<h2 className="text-xl font-bold" style={{color:d.cl}}>{d.name} — Pricing</h2>
 
-                                        <div className="border border-gray-200 rounded-lg p-4">
-                                            <h3 className="font-semibold mb-3">Pricing Structure</h3>
-                                            <div className="grid grid-cols-2 gap-4 text-sm">
-                                                <div>
-                                                    <span className="text-gray-600">Billing Model:</span>
-                                                    <span className="ml-2 font-medium">Per user + document limits</span>
-                                                </div>
-                                                <div>
-                                                    <span className="text-gray-600">Annual Discount:</span>
-                                                    <span className="ml-2 font-medium text-green-600">20%</span>
-                                                </div>
-                                                <div>
-                                                    <span className="text-gray-600">Starter Plan Includes:</span>
-                                                    <span className="ml-2 font-medium">{pricingData.usd.includes}</span>
-                                                </div>
-                                                <div>
-                                                    <div className="flex items-center gap-1">
-                                                        <Tooltip term="overage">
-                                                            <span className="text-gray-600">If You Exceed Limit:</span>
-                                                        </Tooltip>
-                                                    </div>
-                                                    <span className="ml-2 font-medium text-red-600">Documents uploaded but not extracted</span>
-                                                    <div className="text-xs text-gray-500 mt-1">Uploads accepted but data extraction stops until next billing cycle</div>
-                                                </div>
-                                            </div>
-                                        </div>
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div className="border rounded-lg p-4"><Tip t="gbp"><span className="text-sm text-gray-500 font-medium">GBP (UK)</span></Tip><div className="text-2xl font-bold mt-1">{d.gbp}</div><Bd l={d.gc}/><div className="text-xs text-gray-500 mt-2">{d.gn}</div></div>
+<div className="border rounded-lg p-4"><Tip t="aud"><span className="text-sm text-gray-500 font-medium">AUD (Australia)</span></Tip><div className="text-2xl font-bold mt-1">{d.aud}</div><Bd l={d.ac}/><div className="text-xs text-gray-500 mt-2">{d.an}</div></div>
+<div className="border border-blue-200 bg-blue-50 rounded-lg p-4"><span className="text-sm text-gray-500 font-medium">USD (Ref)</span><div className="text-2xl font-bold mt-1">{d.usd}</div><Bd l={d.uc}/></div>
+</div>
 
-                                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                                            <div className="flex items-center gap-1 mb-2">
-                                                <Tooltip term="credits">
-                                                    <h4 className="font-semibold text-yellow-900">Additional Costs</h4>
-                                                </Tooltip>
-                                            </div>
-                                            <ul className="text-sm text-yellow-800 space-y-1">
-                                                <li>• Bank statement extraction - limited credits per plan, must purchase more</li>
-                                                <li>• Line-item extraction - limited credits per plan, must purchase more</li>
-                                                <li>• Supplier statement reconciliation - limited credits per plan</li>
-                                                <li>• Dext Payments add-on: £10/client/month (includes 20 payment runs, 25p per additional)</li>
-                                            </ul>
-                                        </div>
+<div className="border rounded-lg p-4">
+<h3 className="font-bold mb-3">Structure</h3>
+<div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+<div><span className="text-gray-500">Model:</span> <span className="font-medium ml-1">{d.md}</span></div>
+<div><span className="text-gray-500">Annual Discount:</span> <span className="font-medium ml-1">{d.ad}</span></div>
+<div><span className="text-gray-500">Overage Policy:</span> <span className="font-medium ml-1">{d.ov}</span></div>
+<div><span className="text-gray-500">Hidden Costs:</span> <span className="font-medium ml-1">{d.hc}</span></div>
+</div>
+</div>
 
-                                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                            <h3 className="font-semibold text-blue-900 mb-2">Practice Plans (Accountants/Bookkeepers)</h3>
-                                            <div className="text-sm text-blue-800 space-y-1">
-                                                <div>• Start at $239.19/month for 10 business clients</div>
-                                                <div>• Annual subscription: $207.99/month (13% discount)</div>
-                                                <div>• Per-client charging model (changed from unlimited in Nov 2023)</div>
-                                                <div>• Add clients to customize plan</div>
-                                            </div>
-                                        </div>
+<div className="bg-green-50 border border-green-200 rounded-lg p-4">
+<h3 className="font-bold text-green-800 mb-2">💡 Lightyear Comparison</h3>
+<div className="grid grid-cols-3 gap-4 text-sm">
+<div><div className="text-gray-600">GBP</div><div className="text-lg font-bold text-green-700">£130/mo</div><div className="text-xs text-gray-500">Unlimited users/cos</div></div>
+<div><div className="text-gray-600">AUD</div><div className="text-lg font-bold text-green-700">A$145/mo</div><div className="text-xs text-gray-500">Unlimited users/cos</div></div>
+<div><div className="text-gray-600">USD</div><div className="text-lg font-bold text-green-700">$155/mo</div><div className="text-xs text-gray-500">Unlimited users/cos</div></div>
+</div>
+<div className="text-xs text-green-700 mt-2">Credit-based: 1 credit = 1 exported document. Volume discounts built in. 30-day free trial, no credit card.</div>
+</div>
 
-                                        <div className="border-l-4 border-blue-600 bg-blue-50 p-4">
-                                            <div className="text-sm text-blue-900">
-                                                <strong>Sales Note:</strong> Dext's lower entry price (~£25 vs Lightyear's £130) is compelling for SMBs doing basic receipt/expense capture. However, lacks full AP automation. Position Lightyear as complete AP automation with upstream controls - PO management, 3-way matching, price verification - that prevent payment errors rather than just processing payments. Dext's new Payments feature (UK Xero only) handles downstream execution but doesn't prevent upstream issues.
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
+{/* All Competitors Price Table */}
+<div className="border rounded-lg p-4">
+<h3 className="font-bold mb-3">All Competitors — Price Summary</h3>
+<div className="overflow-x-auto">
+<table className="w-full text-sm">
+<thead><tr className="border-b-2 border-gray-300"><th className="text-left py-2 pr-3">Competitor</th><th className="text-left py-2 pr-3">GBP</th><th className="text-left py-2 pr-3">AUD</th><th className="text-left py-2 pr-3">Trial</th><th className="text-left py-2">Model</th></tr></thead>
+<tbody>
+<tr className="border-b bg-green-50"><td className="py-2 pr-3 font-bold text-green-700">Lightyear</td><td className="py-2 pr-3 font-bold">£130/mo</td><td className="py-2 pr-3 font-bold">A$145/mo</td><td className="py-2 pr-3">30 days</td><td className="py-2">Per credit, unlimited users</td></tr>
+{CK.map(k=>{const c=C[k];return(
+<tr key={k} className="border-b hover:bg-gray-50"><td className="py-2 pr-3 font-medium">{c.name}</td><td className="py-2 pr-3">{c.gbp} <Bd l={c.gc}/></td><td className="py-2 pr-3">{c.aud} <Bd l={c.ac}/></td><td className="py-2 pr-3">{c.tr}</td><td className="py-2 text-xs">{c.md.substring(0,55)}…</td></tr>
+);})}
+</tbody>
+</table>
+</div>
+</div>
+</div>
+)}
 
-                                {/* Features Tab */}
-                                {activeTab === 'features' && (
-                                    <div className="space-y-6">
-                                        <div>
-                                            <h3 className="font-semibold text-gray-900 mb-4">Features Available</h3>
-                                            
-                                            <div className="grid grid-cols-3 gap-4 px-3 pb-2 mb-2 border-b-2 border-gray-300">
-                                                <div className="font-semibold text-gray-700">Feature</div>
-                                                <div className="font-semibold text-gray-700">Details</div>
-                                                <div className="font-semibold text-gray-700">Data Confidence</div>
-                                            </div>
+{/* ──── FEATURES ──── */}
+{tab==='features'&&(
+<div className="space-y-5">
+<h2 className="text-xl font-bold" style={{color:d.cl}}>{d.name} — Features</h2>
 
-                                            <div className="space-y-3">
-                                                {features.hasFeature.map((feature, i) => (
-                                                    <div key={i} className="grid grid-cols-3 gap-4 items-center p-3 bg-gray-50 rounded-lg">
-                                                        <div className="flex items-center gap-2">
-                                                            <svg className="text-green-600 flex-shrink-0 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                                            </svg>
-                                                            {feature.tooltip ? (
-                                                                <Tooltip term={feature.tooltip}>
-                                                                    <div className="font-medium text-gray-900">{feature.name}</div>
-                                                                </Tooltip>
-                                                            ) : (
-                                                                <div className="font-medium text-gray-900">{feature.name}</div>
-                                                            )}
-                                                        </div>
-                                                        <div className="text-sm text-gray-600">{feature.detail}</div>
-                                                        <div>
-                                                            {getConfidenceBadge(feature.confidence)}
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
+<div className="overflow-x-auto">
+<table className="w-full text-sm">
+<thead><tr className="border-b-2 border-gray-300"><th className="text-left py-2 pr-2 w-1/4">Feature</th><th className="text-left py-2 pr-2 w-1/4 text-green-700">Lightyear</th><th className="text-left py-2 pr-2 w-1/4" style={{color:d.cl}}>{d.name}</th><th className="text-left py-2 w-16">Conf.</th></tr></thead>
+<tbody>
+{Object.entries(FL).map(([k,fl])=>{const cf=d.f[k];return(
+<tr key={k} className="border-b hover:bg-gray-50">
+<td className="py-2 pr-2 font-medium">{fl.t?<Tip t={fl.t}><span>{fl.l}</span></Tip>:fl.l}</td>
+<td className="py-2 pr-2 text-green-800 bg-green-50">{LY.f[k]}</td>
+<td className="py-2 pr-2">{cf.v}</td>
+<td className="py-2"><Bd l={cf.c}/></td>
+</tr>
+);})}
+</tbody>
+</table>
+</div>
 
-                                        <div>
-                                            <h3 className="font-semibold text-gray-900 mb-4">Features NOT Available (vs Lightyear)</h3>
-                                            <div className="space-y-2">
-                                                {features.missing.map((feature, i) => (
-                                                    <div key={i} className="p-3 bg-red-50 rounded-lg">
-                                                        <div className="flex items-center gap-3">
-                                                            <svg className="text-red-600 flex-shrink-0 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                                            </svg>
-                                                            {feature.tooltip ? (
-                                                                <Tooltip term={feature.tooltip}>
-                                                                    <span className="text-gray-900 font-medium">{feature.name}</span>
-                                                                </Tooltip>
-                                                            ) : (
-                                                                <span className="text-gray-900 font-medium">{feature.name}</span>
-                                                            )}
-                                                        </div>
-                                                        <div className="text-xs text-gray-600 mt-1 ml-8">{feature.note}</div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
+<div className="border rounded-lg p-4">
+<h3 className="font-bold mb-3">{d.name} Integrations</h3>
+<div className="space-y-2 text-sm">
+<div><span className="text-gray-500 font-medium">Accounting:</span><div className="flex flex-wrap gap-1 mt-1">{d.ig.a.map((a,i)=><span key={i} className="bg-blue-50 border border-blue-200 rounded px-2 py-0.5 text-xs">{a}</span>)}</div></div>
+{d.ig.e.length>0&&<div><span className="text-gray-500 font-medium">E-commerce/Other:</span><div className="flex flex-wrap gap-1 mt-1">{d.ig.e.map((a,i)=><span key={i} className="bg-gray-100 rounded px-2 py-0.5 text-xs">{a}</span>)}</div></div>}
+<div><span className="text-gray-500 font-medium">Banking:</span> {d.ig.b}</div>
+<div><Tip t="api"><span className="text-gray-500 font-medium">API:</span></Tip> <span className={d.ig.p.includes('No')?'text-red-600':'text-green-600'}>{d.ig.p}</span></div>
+</div>
+</div>
 
-                                        <div className="bg-white border border-gray-200 rounded-lg p-4">
-                                            <h3 className="font-semibold mb-3">Software Integrations</h3>
-                                            <div className="space-y-4">
-                                                <div>
-                                                    <div className="text-sm text-gray-600 mb-2">Accounting Software (Top 5)</div>
-                                                    <div className="flex flex-wrap gap-2">
-                                                        {integrations.accounting.map((int, i) => (
-                                                            <div key={i} className="bg-blue-50 border border-blue-200 rounded px-3 py-1.5 text-sm">
-                                                                <span className="font-medium">{int.name}</span>
-                                                                {int.rating && <span className="text-blue-600 ml-2">{int.rating}</span>}
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <div className="text-sm text-gray-600 mb-2">E-commerce Platforms</div>
-                                                    <div className="flex flex-wrap gap-2">
-                                                        {integrations.ecommerce.map((name, i) => (
-                                                            <span key={i} className="bg-gray-100 rounded px-2 py-1 text-sm">{name}</span>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                                <div className="pt-2 border-t">
-                                                    <span className="text-sm font-medium text-gray-900">Banking Connections: </span>
-                                                    <span className="text-sm text-green-600">{integrations.banking}</span>
-                                                </div>
-                                                <div className="pt-2 border-t">
-                                                    <span className="text-sm font-medium text-gray-900">Other Partners: </span>
-                                                    <span className="text-sm text-gray-600">{integrations.other.join(', ')}</span>
-                                                </div>
-                                                <div className="pt-2 border-t">
-                                                    <div className="flex items-center gap-1">
-                                                        <Tooltip term="api">
-                                                            <span className="text-sm font-medium text-gray-900">Public API Access:</span>
-                                                        </Tooltip>
-                                                        <span className="text-sm text-red-600 ml-2">{integrations.api}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
+{/* All Competitors Feature Grid */}
+<div className="border rounded-lg p-4">
+<h3 className="font-bold mb-3">All Competitors — Key Feature Grid</h3>
+<div className="overflow-x-auto">
+<table className="w-full text-xs">
+<thead><tr className="border-b-2"><th className="text-left py-2 pr-1">Feature</th><th className="text-center py-2 px-1 text-green-700">LY</th>{CK.map(k=><th key={k} className="text-center py-2 px-1" style={{color:C[k].cl}}>{C[k].name.substring(0,7)}</th>)}</tr></thead>
+<tbody>
+{['po','tw','sr','pc','fc','li','py'].map(feat=>(
+<tr key={feat} className="border-b">
+<td className="py-1.5 pr-1 font-medium">{FL[feat].l}</td>
+<td className="text-center py-1.5 bg-green-50">{feat==='py'?'❌':'✅'}</td>
+{CK.map(k=>{const v=C[k].f[feat].v;const ic=v.startsWith('✅')?'✅':v.startsWith('⚠')?'⚠️':'❌';return<td key={k} className="text-center py-1.5">{ic}</td>;})}
+</tr>
+))}
+</tbody>
+</table>
+</div>
+<div className="text-xs text-gray-500 mt-2">✅ Available  ⚠️ Partial/Limited  ❌ Not available. Lightyear does not offer in-app payments.</div>
+</div>
+</div>
+)}
 
-                                {/* VS Lightyear Tab */}
-                                {activeTab === 'vs-lightyear' && (
-                                    <div className="space-y-6">
-                                        <div className="bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-lg">
-                                            <h3 className="text-xl font-bold text-gray-900 mb-2">Head-to-Head Analysis</h3>
-                                            <p className="text-gray-700">Direct feature comparison to inform sales positioning</p>
-                                        </div>
+{/* ──── VS LIGHTYEAR ──── */}
+{tab==='vs'&&(
+<div className="space-y-5">
+<div className="bg-gradient-to-r from-blue-50 to-green-50 p-5 rounded-lg">
+<h2 className="text-xl font-bold">Head-to-Head: <span style={{color:d.cl}}>{d.name}</span> vs <span className="text-green-700">Lightyear</span></h2>
+<p className="text-gray-600 text-sm mt-1">Direct comparison for sales positioning</p>
+</div>
 
-                                        <div className="grid grid-cols-5 gap-4 px-4 pb-2 border-b-2 border-gray-300">
-                                            <div className="font-semibold text-gray-700">Feature</div>
-                                            <div className="text-center font-semibold text-blue-700">Dext</div>
-                                            <div className="text-center font-semibold text-green-700">Lightyear</div>
-                                            <div className="text-center font-semibold text-gray-700">Winner</div>
-                                            <div className="text-center font-semibold text-gray-700">Confidence</div>
-                                        </div>
+<div className="space-y-2">
+<div className="grid grid-cols-4 gap-3 px-3 pb-2 border-b-2 border-gray-300 text-sm font-bold">
+<div>Feature</div><div className="text-center" style={{color:d.cl}}>{d.name}</div><div className="text-center text-green-700">Lightyear</div><div className="text-center">Edge</div>
+</div>
+{d.vs.map((r,i)=>(
+<div key={i} className={`grid grid-cols-4 gap-3 p-3 rounded-lg border border-gray-200 text-sm hover:shadow-sm ${r.w==='ly'?'wly':r.w==='comp'?'wco':''}`}>
+<div className="font-medium">{r.t?<Tip t={r.t}><span>{r.m}</span></Tip>:r.m}</div>
+<div className={`text-center ${r.w==='comp'?'font-bold':'text-gray-600'}`}>{r.co}</div>
+<div className={`text-center ${r.w==='ly'?'font-bold text-green-700':'text-gray-600'}`}>{r.ly}</div>
+<div className="text-center text-xs font-medium">
+{r.w==='comp'&&<span style={{color:d.cl}}>{d.name}</span>}
+{r.w==='ly'&&<span className="text-green-600">Lightyear</span>}
+{r.w==='tie'&&<span className="text-gray-400">Tie</span>}
+{r.w==='unknown'&&<span className="text-gray-400">Unknown</span>}
+</div>
+</div>
+))}
+</div>
 
-                                        <div className="space-y-2">
-                                            {vsLightyear.map((item, i) => (
-                                                <div key={i} className="grid grid-cols-5 gap-4 p-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
-                                                    <div className="font-medium text-gray-900 flex items-center gap-1">
-                                                        {item.tooltip ? (
-                                                            <Tooltip term={item.tooltip}>
-                                                                <span>{item.metric}</span>
-                                                            </Tooltip>
-                                                        ) : (
-                                                            <span>{item.metric}</span>
-                                                        )}
-                                                    </div>
-                                                    <div className={`text-center ${item.winner === 'dext' ? 'bg-blue-50 font-semibold text-blue-900' : 'text-gray-600'} rounded px-2 py-1`}>
-                                                        {item.dext}
-                                                    </div>
-                                                    <div className={`text-center ${item.winner === 'lightyear' ? 'bg-green-50 font-semibold text-green-900' : 'text-gray-600'} rounded px-2 py-1`}>
-                                                        {item.lightyear}
-                                                    </div>
-                                                    <div className="text-center">
-                                                        {item.winner === 'dext' && <span className="text-blue-600 font-medium">Dext</span>}
-                                                        {item.winner === 'lightyear' && <span className="text-green-600 font-medium">Lightyear</span>}
-                                                        {item.winner === 'tie' && <span className="text-gray-500">Tie</span>}
-                                                    </div>
-                                                    <div className="text-center">
-                                                        {getConfidenceBadge(item.confidence)}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
+<div className="grid grid-cols-3 gap-4 text-center">
+<div className="bg-blue-50 border border-blue-200 rounded-lg p-3"><div className="text-2xl font-bold" style={{color:d.cl}}>{d.vs.filter(v=>v.w==='comp').length}</div><div className="text-xs text-gray-500">{d.name}</div></div>
+<div className="bg-gray-50 border border-gray-200 rounded-lg p-3"><div className="text-2xl font-bold text-gray-400">{d.vs.filter(v=>v.w==='tie'||v.w==='unknown').length}</div><div className="text-xs text-gray-500">Tie/Unknown</div></div>
+<div className="bg-green-50 border border-green-200 rounded-lg p-3"><div className="text-2xl font-bold text-green-700">{d.vs.filter(v=>v.w==='ly').length}</div><div className="text-xs text-gray-500">Lightyear</div></div>
+</div>
 
-                                        <div className="grid grid-cols-2 gap-6 mt-6">
-                                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                                <h4 className="font-semibold text-blue-900 mb-3">When Dext Wins</h4>
-                                                <ul className="text-sm text-blue-800 space-y-2">
-                                                    <li>• Lower entry cost (~5x cheaper for small teams)</li>
-                                                    <li>• Massive banking connectivity (11,500+ institutions)</li>
-                                                    <li>• E-commerce integrations (Shopify, Amazon, Stripe, PayPal)</li>
-                                                    <li>• Payments feature (UK Xero only - NEW)</li>
-                                                    <li>• Longer document retention (10 years vs 7)</li>
-                                                    <li>• Larger user base/brand recognition (700K+ businesses)</li>
-                                                </ul>
-                                            </div>
-                                            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                                                <h4 className="font-semibold text-green-900 mb-3">When Lightyear Wins</h4>
-                                                <ul className="text-sm text-green-800 space-y-2">
-                                                    <li>• Native purchase order creation workflow</li>
-                                                    <li>• 3-way matching (prevents paying for undelivered goods)</li>
-                                                    <li>• Automated price checking (prevents supplier overcharging)</li>
-                                                    <li>• Bank fraud verification (payment security)</li>
-                                                    <li>• Hospitality POS integrations (8+ systems)</li>
-                                                    <li>• Longer free trial (30 days vs 14)</li>
-                                                    <li>• Multi-entity with parent/child dashboards</li>
-                                                </ul>
-                                            </div>
-                                        </div>
+<div className="bg-purple-50 border border-purple-200 rounded-lg p-5">
+<h3 className="font-bold text-purple-900 mb-3">🎯 Sales Scripts — vs {d.name}</h3>
+<div className="space-y-3 text-sm text-purple-900">
+{Object.entries(d.sc).map(([k,s])=>(
+<div key={k}><strong className="capitalize">{k.replace(/_/g,' ').replace('counter ','Counter: ')}:</strong><p className="mt-1 leading-relaxed">{s}</p></div>
+))}
+</div>
+</div>
+</div>
+)}
 
-                                        <div className="bg-purple-50 border border-purple-200 rounded-lg p-5">
-                                            <h4 className="font-semibold text-purple-900 mb-3">🎯 Sales Positioning Scripts</h4>
-                                            <div className="space-y-3 text-sm text-purple-900">
-                                                <div>
-                                                    <strong>Against Dext:</strong> "Dext is excellent for receipt/expense capture and now handles payments (UK Xero only). But Lightyear provides complete AP automation with upstream controls - purchase order management, 3-way matching, and automated price checking - that prevent payment errors before they happen. Dext processes payments downstream; Lightyear prevents problems upstream."
-                                                </div>
-                                                <div>
-                                                    <strong>For Hospitality/Multi-site:</strong> "Dext's lack of POS integrations and native PO workflows creates manual gaps for hospitality businesses. Lightyear's 8+ POS integrations and parent/child dashboards are purpose-built for restaurants, hotels, and multi-location operators."
-                                                </div>
-                                                <div>
-                                                    <strong>For SMBs with Supplier Control Needs:</strong> "If you only need receipt scanning, Dext works. But if you manage suppliers, purchase orders, and need to prevent overcharging, Lightyear's automated price checking and fraud detection pay for themselves by catching errors before payment."
-                                                </div>
-                                                <div>
-                                                    <strong>Dext Payments Positioning:</strong> "Dext now handles payments for UK Xero users, which streamlines downstream execution. But payment execution is only valuable if the upstream data is correct. Lightyear's differentiation is preventing payment errors through PO controls, 3-way matching, and price verification - catching problems before payment execution."
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
+</div>
+</div>
 
-                        {/* Data Quality Indicator */}
-                        <div className="bg-white rounded-lg shadow p-4">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <h3 className="font-semibold text-gray-900">Data Quality Summary</h3>
-                                    <p className="text-sm text-gray-600">5 feature gaps identified | GBP/AUD pricing converted from USD</p>
-                                </div>
-                                <div className="flex gap-2">
-                                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded text-sm">✅ High: 22 items</span>
-                                    <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded text-sm">⚠️ Medium: 2 items</span>
-                                    <span className="px-3 py-1 bg-red-100 text-red-700 rounded text-sm">❌ Gaps: 5 items</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
+{/* Footer */}
+<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mt-5">
+<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+<div><h3 className="font-bold text-gray-800 text-sm">Data Quality</h3><p className="text-xs text-gray-500">Compleat pricing = GAP (quote-based) · Some AUD conversions estimated · Ratings: Capterra/G2/SA only</p></div>
+<div className="flex flex-wrap gap-2">
+<span className="ch px-2 py-1 rounded text-xs">✅ HIGH: 52</span>
+<span className="cm px-2 py-1 rounded text-xs">⚠️ MEDIUM: 18</span>
+<span className="cl px-2 py-1 rounded text-xs">🔶 LOW: 4</span>
+<span className="cg px-2 py-1 rounded text-xs">❌ GAP: 6</span>
+</div>
+</div>
+</div>
+<div className="text-center text-xs text-gray-400 mt-3 pb-6">Lightyear Competitive Intelligence · Feb 13, 2026 · Sources: Official sites, Capterra, G2, Software Advice, GetApp, industry news</div>
+</div>
+);};
 
-        ReactDOM.render(<DextDashboard />, document.getElementById('root'));
-    </script>
+ReactDOM.render(<App/>,document.getElementById('root'));
+</script>
 </body>
 </html>
