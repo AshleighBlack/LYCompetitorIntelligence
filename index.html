@@ -3,45 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lightyear Competitive Intelligence Dashboard — March 2026</title>
+<title>Lightyear Competitive Intelligence — March 2026</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
-<style>
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8fafc; }
-  .tooltip-container { position: relative; display: inline-flex; align-items: center; }
-  .tooltip-box { position: absolute; left: 0; top: 100%; margin-top: 4px; width: 260px; background: #1e293b; color: white; font-size: 12px; border-radius: 6px; padding: 8px 10px; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.2); pointer-events: none; }
-  .conf-high { background: #dcfce7; color: #166534; border: 1px solid #86efac; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
-  .conf-medium { background: #fef9c3; color: #854d0e; border: 1px solid #fde047; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
-  .conf-low { background: #ffedd5; color: #9a3412; border: 1px solid #fdba74; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
-  .conf-gap { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
-  .tab-active { border-bottom: 2px solid #2563eb; color: #2563eb; font-weight: 600; }
-  .tab-inactive { border-bottom: 2px solid transparent; color: #6b7280; }
-  .tab-inactive:hover { color: #374151; border-color: #d1d5db; }
-  .comp-card { border-left: 4px solid; border-radius: 0 8px 8px 0; }
-  .dext-accent { border-left-color: #f59e0b; }
-  .approvalmax-accent { border-left-color: #8b5cf6; }
-  .tipalti-accent { border-left-color: #3b82f6; }
-  .zahara-accent { border-left-color: #10b981; }
-  .compleat-accent { border-left-color: #ef4444; }
-  .winner-lightyear { background: #f0fdf4; border: 1px solid #86efac; }
-  .winner-comp { background: #eff6ff; border: 1px solid #93c5fd; }
-  .feature-row:hover { background: #f8fafc; }
-  .change-banner { animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.85; } }
-  .sticky-header { position: sticky; top: 0; z-index: 20; background: white; border-bottom: 2px solid #e5e7eb; }
-  a { color: #2563eb; text-decoration: underline; }
-  a:hover { color: #1d4ed8; }
-</style>
 </head>
 <body>
+
 <script>
 const correctPassword = "T0InfinityAndBey0nd";
-const enteredPassword = prompt("🔒 Enter password to access Lightyear Competitive Intelligence Dashboard:");
+const enteredPassword = prompt("Enter password to access dashboard:");
 if (enteredPassword !== correctPassword) {
-  document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;"><div style="text-align:center;"><h1 style="color:#dc2626;font-size:24px;">Access Denied</h1><p style="color:#6b7280;">Incorrect password. Please refresh and try again.</p></div></div>';
+  document.body.innerHTML = "Access Denied";
   throw new Error("Access denied");
 }
 </script>
@@ -51,918 +25,1184 @@ if (enteredPassword !== correctPassword) {
 <script type="text/babel">
 const { useState } = React;
 
-// ===== DATA =====
+// ─── LUCIDE ICONS (inline SVG) ───────────────────────────────────────────────
+const AlertCircle = ({ size = 20, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+  </svg>
+);
+const CheckCircle = ({ size = 16, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+  </svg>
+);
+const XCircle = ({ size = 16, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+  </svg>
+);
+const Star = ({ size = 20, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+  </svg>
+);
+const Users = ({ size = 20, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </svg>
+);
+const Package = ({ size = 20, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
+  </svg>
+);
+const Info = ({ size = 14, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+  </svg>
+);
 
-const LIGHTYEAR = {
-  gbp: "£130/mo",
-  aud: "A$155/mo",
-  trial: "30 days (free, no card)",
-  approvalLevels: "Up to 8",
-  storage: "7 years (UK site)",
-  pos: ["Bepoz","Fedelta","Idealpos","OrderMate","SENPOS","SwiftPOS","Impos","Task","Fuelsoft"],
-  accounting: ["Xero","QuickBooks Online","MYOB","NetSuite","Sage 50","AccountsIQ","iplicit","Sage Intacct","Microsoft Dynamics 365"],
-};
-
-const CHANGES = [
-  { type: "lightyear", text: "LIGHTYEAR UPDATE — AUD pricing verified at A$155/mo (125 credits) — confirmed from official AU pricing page", date: "Mar 2, 2026", url: "https://www.lightyear.cloud/en-au/pricing/", color: "bg-green-50 border-green-300 text-green-900" },
-  { type: "announcement", text: "DEXT — Acquired by IRIS Software Group (completed Jan 2025). Operating independently under own brand.", date: "Jan 2025", url: "https://dext.com/en/iris-intent-to-acquire-dext-faq", color: "bg-orange-50 border-orange-300 text-orange-900" },
-  { type: "new", text: "DEXT — Dext Payments (supplier payments via Airwallex) now live in UK, expanding to other regions.", date: "Q3 2025", url: "https://dext.com/us/blog/single/the-global-product-update-round-up-q-3-2025", color: "bg-blue-50 border-blue-300 text-blue-900" },
-  { type: "new", text: "DEXT — AI Agent launched; WhatsApp invoice submission; MCP integration (including Claude).", date: "Q4 2025", url: "https://dext.com/us/blog/single/the-global-product-update-round-up-q-4-2025", color: "bg-blue-50 border-blue-300 text-blue-900" },
-  { type: "new", text: "APPROVALMAX — 3-way matching (Bill-to-PO-to-GRN) now live; Confirmation of Payee fraud check added.", date: "2025", url: "https://approvalmax.com/feature-releases", color: "bg-purple-50 border-purple-300 text-purple-900" },
-  { type: "pricing", text: "APPROVALMAX — Price increase effective 1 Dec 2025. Standard GBP: £39/mo (was lower). New tier pricing across all currencies.", date: "Dec 1, 2025", url: "https://approvalmax.com/hubfs/2025_Price_Update/Notification_FAQ.pdf", color: "bg-yellow-50 border-yellow-300 text-yellow-900" },
-  { type: "funding", text: "APPROVALMAX — £10M growth investment from Yttrium (Jan 2025). First institutional funding; previously bootstrapped.", date: "Jan 2025", url: "https://approvalmax.com/news/approvalmax-raises-10m-growth-investment", color: "bg-purple-50 border-purple-300 text-purple-900" },
-  { type: "new", text: "TIPALTI — AI Agents launched across AP platform; new Treasury management module added.", date: "Late 2025", url: "https://tipalti.com/accounts-payable-software/finance-ai/", color: "bg-blue-50 border-blue-300 text-blue-900" },
-];
-
-const COMPETITORS = {
+// ─── ALL COMPETITOR DATA ──────────────────────────────────────────────────────
+const ALL_DATA = {
   dext: {
-    name: "Dext",
-    tagline: "Bookkeeping automation & data capture",
-    website: "https://dext.com/uk",
-    color: "#f59e0b",
-    accent: "dext-accent",
-    userBase: "700,000+ businesses, 12,000+ accounting firms",
-    ratings: { capterra: "4.5/5", capterra_count: "160+", g2: "4.4/5", g2_count: "250+" },
-    pricing: {
-      gbp: { amount: "~£25/mo", note: "Converted from USD $31.50 — not official GBP pricing", confidence: "medium" },
-      aud: { amount: "~A$49/mo", note: "Converted from USD $31.50 — not official AUD pricing", confidence: "medium" },
-      usd: { amount: "$31.50/mo ($25.21 annual)", note: "Business plan: 5 users, 250 docs/mo. Annual saves 20%.", confidence: "high" },
-      billing: "Per user + document volume",
-      trial: "14 days (no card required)",
-      overage: "Documents won't process until next billing month (can enable overage policy)",
-      hidden: "Extra credits for bank statement extraction, line-item extraction, statement reconciliation. Enterprise setup fees undisclosed."
+    name: 'Dext',
+    lastUpdated: 'March 2, 2026',
+    nextUpdate: 'March 9, 2026',
+
+    changeFlags: [
+      { type: 'acquisition', text: 'Acquired by IRIS Software Group — operating independently under own brand', date: 'Jan 2025', url: 'https://dext.com/en/iris-intent-to-acquire-dext-faq' },
+      { type: 'new', text: 'Dext Payments launched — pay supplier invoices in-platform via Airwallex (UK)', date: 'Q3 2025', url: 'https://dext.com/us/blog/single/the-global-product-update-round-up-q-3-2025' },
+      { type: 'new', text: 'Dext AI Agent launched; WhatsApp invoice submission; MCP integration (incl. Claude)', date: 'Q4 2025', url: 'https://dext.com/us/blog/single/the-global-product-update-round-up-q-4-2025' },
+      { type: 'new', text: 'Dext Prepare + Precision unified into single platform', date: 'Mar 2025', url: 'https://dext.com/ca/blog/single/the-next-phase-of-the-dext-evolution-is-here' },
+    ],
+
+    pricingData: {
+      gbp: { amount: '~£25', period: 'annual (£31.50 monthly)', note: 'Converted from USD — no official GBP pricing published' },
+      aud: { amount: '~A$49', period: 'monthly', note: 'Converted from USD — no official AUD pricing published' },
+      usd: { monthly: '$31.50', annual: '$25.21', discount: '20%', includes: '5 users, 250 docs/month' },
     },
-    features: {
-      invoiceCapture: { val: "✅ Yes — 99.9% OCR accuracy incl. handwritten. Mobile app, email, WhatsApp, Dropbox, drag-drop", conf: "high" },
-      approvals: { val: "✅ Multi-tier, mobile-enabled (Essentials & Advanced plans)", conf: "medium" },
-      po: { val: "⚠️ 2-way PO matching (Xero/QBO only via Paperwork Match). No native PO creation.", conf: "high" },
-      threeWay: { val: "❌ Not available", conf: "high" },
-      statementRecon: { val: "✅ Automated — 1M+ processed. JPEG/PNG/PDF supported.", conf: "high" },
-      priceCheck: { val: "❌ Not available", conf: "high" },
-      fraudCheck: { val: "❌ No bank detail fraud verification", conf: "high" },
-      lineItem: { val: "✅ Available (credit-based add-on per plan)", conf: "high" },
-      multiEntity: { val: "✅ Yes — separate entities, switch between them", conf: "high" },
-      mobile: { val: "✅ iOS & Android. Bulk upload, mileage tracking, expense claims.", conf: "high" },
-      storage: { val: "✅ 10 years, GDPR-compliant UK/EU cloud", conf: "high" },
-      expenses: { val: "✅ Mileage, approvals, GPS tracking (coming), expense claims", conf: "high" },
-      payments: { val: "✅ Dext Payments (UK via Airwallex — supplier payments in-platform)", conf: "high" },
-      glCoding: { val: "✅ Auto-suggest + supplier rules", conf: "high" },
+
+    pricingStructure: {
+      billingModel: 'Per user + document volume',
+      annualDiscount: '20%',
+      starterIncludes: '5 users, 250 docs/month',
+      overagePolicy: 'Documents won\'t extract until next billing month (optional overage policy available)',
     },
+
+    additionalCosts: [
+      'Bank statement extraction (limited credits per plan)',
+      'Line-item extraction (limited credits per plan)',
+      'Supplier statement reconciliation (limited credits per plan)',
+      'Enterprise setup fees (amount not disclosed)',
+    ],
+
+    salesNote: 'Dext\'s lower entry price (~£25/mo vs Lightyear £130/mo) is compelling but covers data capture only — not full AP automation. While Dext now offers payments via Airwallex, they lack PO management, price checking, and statement reconciliation. Position Lightyear\'s price as investment in complete AP control upstream of payment.',
+
     integrations: {
-      accounting: ["Xero (4.9/5)", "QuickBooks Online (4.9/5)", "NetSuite", "MYOB", "Sage", "30+ others"],
-      ecommerce: ["Shopify", "Amazon", "Stripe", "PayPal", "Etsy", "eBay"],
-      banking: "11,500+ banks & institutions",
-      api: "No public API",
-      other: "WhatsApp, Dropbox, Chrome browser extension (Xero/QBO)"
+      accounting: [
+        { name: 'Xero', rating: '4.9/5', reviews: '1,000+', status: 'verified' },
+        { name: 'QuickBooks Online', rating: '4.9/5', reviews: '550+', status: 'verified' },
+        { name: 'NetSuite', status: 'verified' },
+        { name: 'MYOB', status: 'verified' },
+        { name: 'Sage', status: 'verified' },
+      ],
+      ecommerce: ['Shopify', 'Amazon', 'Stripe', 'PayPal', 'Etsy', 'eBay'],
+      banking: '11,500+ banks & institutions',
+      api: 'No public API',
     },
-    changes: ["Acquired by IRIS Software Group (Jan 2025)", "Dext Payments live UK via Airwallex (Q3 2025)", "Dext AI Agent launched (Q4 2025)", "WhatsApp invoice submission added", "MCP integration with Claude & other AI tools", "Dext Prepare + Precision unified into single platform"]
+
+    features: {
+      hasFeature: [
+        { name: 'Invoice/Receipt Capture', detail: '99.9% OCR incl. handwritten. Email, WhatsApp, mobile, Dropbox', confidence: 'high', tooltip: 'ocr' },
+        { name: 'Statement Reconciliation', detail: 'Automated — ~1M+ statements processed', confidence: 'high', tooltip: 'statement-recon' },
+        { name: 'PO Matching', detail: '2-way only (Xero/QBO). No native PO creation.', confidence: 'high', tooltip: '2way' },
+        { name: 'Multi-tier Approvals', detail: 'Mobile-enabled, Essentials & Advanced plans', confidence: 'high', tooltip: null },
+        { name: 'Line-item Extraction', detail: 'Credit-based add-on per plan', confidence: 'high', tooltip: 'line-item' },
+        { name: 'Multi-entity Support', detail: 'Switch between entities in one account', confidence: 'high', tooltip: 'multi-entity' },
+        { name: 'Mobile App', detail: 'iOS & Android — bulk upload, mileage, expense claims', confidence: 'high', tooltip: null },
+        { name: '10-Year Storage', detail: 'GDPR-compliant UK/EU cloud hosting', confidence: 'high', tooltip: null },
+        { name: 'Expense Management', detail: 'Mileage, GPS tracking (coming), expense claims', confidence: 'high', tooltip: null },
+        { name: 'Supplier Payments', detail: 'Dext Payments via Airwallex — UK only (expanding)', confidence: 'high', tooltip: null },
+        { name: 'Automated GL Coding', detail: 'Smart suggestions + supplier rules', confidence: 'high', tooltip: null },
+      ],
+      missing: [
+        { name: 'Native PO Creation', tooltip: 'po' },
+        { name: '3-Way Matching', tooltip: '3way' },
+        { name: 'Price Checking vs Pricelists', tooltip: 'price-check' },
+        { name: 'Bank Detail Fraud Verification', tooltip: 'fraud-check' },
+        { name: 'Supplier Portal', tooltip: null },
+      ],
+    },
+
+    stats: [
+      { icon: 'users', label: 'User Base', value: '700K+', sub: 'Businesses worldwide' },
+      { icon: 'package', label: 'Processed', value: '320M+', sub: 'Documents annually' },
+      { icon: 'star', label: 'Capterra Rating', value: '4.5★', sub: '160+ reviews' },
+    ],
+
+    keyStrengths: [
+      'Massive banking ecosystem (11,500+ institutions)',
+      'Lower entry pricing (~£25/mo vs Lightyear £130/mo)',
+      'Perfect Xero/QBO integration ratings (4.9/5)',
+      '10-year document retention vs 7-year',
+      'Now includes in-platform supplier payments (UK via Airwallex)',
+      'Largest accountant/bookkeeper user base (12,000+ firms)',
+    ],
+
+    competitiveGaps: [
+      'No native PO creation — approval workflows only (no procurement control)',
+      'No automated price checking against agreed supplier pricelists',
+      'No bank detail fraud verification',
+      'Shorter free trial (14 days vs 30 days)',
+      'Dext Payments UK-only — limited vs Lightyear upstream controls',
+    ],
+
+    vsLightyear: [
+      { metric: 'Entry Price', comp: '~£25/mo', lightyear: '£130/mo', winner: 'comp' },
+      { metric: 'Free Trial', comp: '14 days', lightyear: '30 days', winner: 'lightyear' },
+      { metric: 'PO Creation', comp: '❌', lightyear: '✅', winner: 'lightyear', tooltip: 'po' },
+      { metric: '3-Way Matching', comp: '❌', lightyear: '✅ Line-level', winner: 'lightyear', tooltip: '3way' },
+      { metric: 'Statement Recon', comp: '✅ Automated', lightyear: '✅ Automated', winner: 'tie', tooltip: 'statement-recon' },
+      { metric: 'Price Checking', comp: '❌', lightyear: '✅', winner: 'lightyear', tooltip: 'price-check' },
+      { metric: 'Fraud Verification', comp: '❌', lightyear: '✅', winner: 'lightyear', tooltip: 'fraud-check' },
+      { metric: 'Banking Connections', comp: '✅ 11,500+', lightyear: '❌', winner: 'comp' },
+      { metric: 'Document Storage', comp: '10 years', lightyear: '7 years (UK)', winner: 'comp' },
+      { metric: 'Approval Levels', comp: 'Multi-tier', lightyear: 'Up to 8', winner: 'lightyear' },
+      { metric: 'Unlimited Users', comp: '❌ Per-user pricing', lightyear: '✅ All plans', winner: 'lightyear' },
+    ],
+
+    whenCompWins: [
+      'Lower entry cost — 5x cheaper for basic receipt/expense capture',
+      'Massive banking connectivity for bank feeds and reconciliation',
+      'E-commerce integrations (Shopify, Amazon, Stripe etc.)',
+      'Longer document retention (10 years vs 7)',
+      'Larger accountant ecosystem and brand recognition',
+    ],
+
+    whenLightyearWins: [
+      'Full purchase order management and procurement control',
+      '3-way matching at line-item level (catches undelivered goods)',
+      'Automated price checking (prevents supplier overcharging)',
+      'Bank detail fraud verification (prevents payment fraud)',
+      'Hospitality POS integrations (Bepoz, Idealpos, Fedelta etc.)',
+      'Longer free trial (30 days vs 14)',
+      'Unlimited users on all plans — no per-seat costs at scale',
+    ],
+
+    salesScripts: [
+      { label: 'Core pitch', script: '"While Dext excels at receipt and expense scanning — and they\'ve now added payments via Airwallex in the UK — Lightyear provides complete AP automation with purchase order management, automated price checking against supplier agreements, and bank detail fraud verification. Dext captures data; Lightyear controls the entire spend lifecycle before money leaves the business."' },
+      { label: 'For SMBs', script: '"If you only need receipt scanning, Dext works well. But if you\'re managing suppliers, purchase orders, and need to prevent overcharging, Lightyear\'s automated price checking pays for itself."' },
+      { label: 'For Franchises / Multi-site', script: '"Dext\'s multi-entity is basic account switching. Lightyear\'s parent/child dashboards with unlimited companies and hospitality POS integrations are purpose-built for franchises and multi-location businesses."' },
+    ],
+
+    dataQuality: { high: 22, medium: 4, gaps: 3, note: 'GBP/AUD pricing converted from USD — no official regional pricing published by Dext' },
   },
+
   approvalmax: {
-    name: "ApprovalMax",
-    tagline: "Approval workflow & financial controls",
-    website: "https://approvalmax.com",
-    color: "#8b5cf6",
-    accent: "approvalmax-accent",
-    userBase: "16,000+ clients worldwide",
-    ratings: { capterra: "4.8/5", capterra_count: "200+", g2: "4.8/5", g2_count: "300+" },
-    pricing: {
-      gbp: { amount: "£39/mo (Standard, monthly)", note: "Official GBP pricing from Dec 1, 2025 update. Annual: £43/mo", confidence: "high" },
-      aud: { amount: "A$72/mo (Standard, monthly)", note: "Official AUD pricing from Dec 1, 2025 update. Annual: A$82.80/mo", confidence: "high" },
-      usd: { amount: "$54/mo Standard, $83/mo Advanced, $121/mo Premium", note: "Monthly billing. Annual discounts available. All current discounts and contract terms unchanged.", confidence: "high" },
-      billing: "Per organisation subscription (3 tiers). No per-user or per-document fees.",
-      trial: "14 days (free trial available)",
-      overage: "N/A — subscription includes unlimited transactions per org",
-      hidden: "ApprovalMax Capture (OCR invoice capture) is an add-on. ApprovalMax Pay also an add-on."
+    name: 'ApprovalMax',
+    lastUpdated: 'March 2, 2026',
+    nextUpdate: 'March 9, 2026',
+
+    changeFlags: [
+      { type: 'funding', text: '£10M growth investment from Yttrium — first institutional round (previously fully bootstrapped)', date: 'Jan 2025', url: 'https://approvalmax.com/news/approvalmax-raises-10m-growth-investment' },
+      { type: 'pricing', text: 'Price increase effective 1 Dec 2025 — Standard GBP now £39/mo monthly, £43/mo annual', date: 'Dec 1, 2025', url: 'https://approvalmax.com/hubfs/2025_Price_Update/Notification_FAQ.pdf' },
+      { type: 'new', text: '3-way matching (Bill + PO + GRN) now live on Xero', date: '2025', url: 'https://approvalmax.com/feature-releases' },
+      { type: 'new', text: 'Confirmation of Payee fraud check added to ApprovalMax Pay', date: '2025', url: 'https://approvalmax.com/feature-releases' },
+    ],
+
+    pricingData: {
+      gbp: { amount: '£39', period: 'monthly (£43/mo annual)', note: 'Official GBP pricing — effective Dec 1, 2025' },
+      aud: { amount: 'A$72', period: 'monthly (A$82.80/mo annual)', note: 'Official AUD pricing — effective Dec 1, 2025' },
+      usd: { monthly: '$54', annual: '$59.40', discount: '~10%', includes: 'Standard plan per org. Advanced $83/mo, Premium $121/mo' },
     },
-    features: {
-      invoiceCapture: { val: "✅ ApprovalMax Capture — OCR + AI extraction. Email inbox. 40+ languages. (Add-on)", conf: "high" },
-      approvals: { val: "✅ Unlimited approval steps. Custom rules by amount/supplier/category. Mobile. Proxy approvals.", conf: "high" },
-      po: { val: "✅ PO creation and approval. Bill-to-PO matching. Auto-match when bill copied from PO.", conf: "high" },
-      threeWay: { val: "✅ 3-way matching (Bill + PO + GRN). Available on Xero.", conf: "high" },
-      statementRecon: { val: "❌ Not a stated feature", conf: "high" },
-      priceCheck: { val: "❌ No automated price checking vs pricelists", conf: "high" },
-      fraudCheck: { val: "✅ Confirmation of Payee (CoP) — verifies payee name vs bank account/sort code before payment. Airwallex batch payments.", conf: "high" },
-      lineItem: { val: "✅ Line-item extraction via ApprovalMax Capture add-on", conf: "high" },
-      multiEntity: { val: "✅ Multiple organisations per subscription. Budget checking per entity.", conf: "high" },
-      mobile: { val: "✅ iOS & Android. Approve/decline, raise POs.", conf: "high" },
-      storage: { val: "✅ Cloud document storage with audit trail. Duration not specified.", conf: "medium" },
-      expenses: { val: "✅ Expense approvals. ApprovalMax Capture extracts expense data from uploaded docs.", conf: "high" },
-      payments: { val: "✅ ApprovalMax Pay — batch payments in-app (UK, AU, NZ via Airwallex open banking)", conf: "high" },
-      glCoding: { val: "✅ Data entry rules per supplier. Auto-coding on import.", conf: "high" },
+
+    pricingStructure: {
+      billingModel: 'Per organisation subscription (3 tiers). No per-user or per-document fees.',
+      annualDiscount: '~10% (varies by currency)',
+      starterIncludes: 'Standard: unlimited users, unlimited transactions. Capture & Pay are add-ons.',
+      overagePolicy: 'No overage — subscription is per organisation, transactions are unlimited',
     },
+
+    additionalCosts: [
+      'ApprovalMax Capture (OCR invoice data extraction) — add-on cost',
+      'ApprovalMax Pay (batch payments via Airwallex) — add-on cost',
+      'All existing discounts and contract terms unchanged after Dec 2025 price increase',
+    ],
+
+    salesNote: 'ApprovalMax Standard (£39/mo) looks cheaper than Lightyear (£130/mo) but that\'s approval workflows only. Add the Capture add-on for invoice scanning and Pay add-on for payments and the gap closes significantly. Lightyear includes line-item extraction, statement reconciliation, PO creation, and price checking at £130/mo — one price, full AP.',
+
     integrations: {
-      accounting: ["Xero (#1 integration)", "QuickBooks Online", "Oracle NetSuite", "CIN7"],
+      accounting: [
+        { name: 'Xero', rating: '5.0/5', reviews: '500+', status: 'verified' },
+        { name: 'QuickBooks Online', status: 'verified' },
+        { name: 'Oracle NetSuite', status: 'verified' },
+        { name: 'CIN7', status: 'verified' },
+      ],
       ecommerce: [],
-      banking: "Airwallex for payments (batch, open banking)",
-      api: "Yes — public API available (GET endpoints for NetSuite data)",
-      other: "Slack notifications, Budget sync from Xero"
+      banking: 'Airwallex (ApprovalMax Pay — UK, AU, NZ batch payments)',
+      api: 'Yes — public API with GET endpoints',
     },
-    changes: ["£10M funding from Yttrium (Jan 2025 — first institutional round)", "Price increase Dec 1 2025 (Standard GBP £39/mo)", "3-way matching (Bill+PO+GRN) launched 2025", "Confirmation of Payee fraud check added", "On Hold status for pausing approvals", "ApprovalMax Capture expanded to QBO and NetSuite"]
+
+    features: {
+      hasFeature: [
+        { name: 'Invoice Capture (OCR)', detail: 'ApprovalMax Capture — add-on. 40+ languages. Email inbox for suppliers.', confidence: 'high', tooltip: 'ocr' },
+        { name: 'PO Creation & Approval', detail: 'Native PO creation, approval, and Bill-to-PO matching', confidence: 'high', tooltip: 'po' },
+        { name: '3-Way Matching', detail: 'Bill + PO + GRN matching. Xero only currently.', confidence: 'high', tooltip: '3way' },
+        { name: 'Multi-tier Approvals', detail: 'Unlimited approval steps. Custom rules by amount/supplier/category. Mobile.', confidence: 'high', tooltip: null },
+        { name: 'Line-item Extraction', detail: 'Via Capture add-on', confidence: 'high', tooltip: 'line-item' },
+        { name: 'Multi-entity Support', detail: 'Multiple orgs per subscription. Budget per entity.', confidence: 'high', tooltip: 'multi-entity' },
+        { name: 'Mobile App', detail: 'iOS & Android — approve/decline, raise POs', confidence: 'high', tooltip: null },
+        { name: 'Expense Management', detail: 'Expense approvals. Capture extracts expense data from uploaded docs.', confidence: 'high', tooltip: null },
+        { name: 'Supplier Payments', detail: 'ApprovalMax Pay — batch via Airwallex open banking (UK, AU, NZ). Add-on.', confidence: 'high', tooltip: null },
+        { name: 'Fraud Verification', detail: 'Confirmation of Payee — verifies payee name vs bank account/sort code before payment', confidence: 'high', tooltip: 'fraud-check' },
+        { name: 'Automated GL Coding', detail: 'Data entry rules per supplier. Auto-coding on import.', confidence: 'high', tooltip: null },
+        { name: 'Budget Checking', detail: 'Sync budgets from Xero. Approvers see budget impact before sign-off.', confidence: 'high', tooltip: null },
+      ],
+      missing: [
+        { name: 'Price Checking vs Agreed Pricelists', tooltip: 'price-check' },
+        { name: 'Supplier Statement Reconciliation', tooltip: 'statement-recon' },
+        { name: 'Hospitality POS Integrations', tooltip: null },
+        { name: 'Unlimited Users Included (base plan)', tooltip: null },
+      ],
+    },
+
+    stats: [
+      { icon: 'users', label: 'User Base', value: '16,000+', sub: 'Client organisations' },
+      { icon: 'package', label: 'Bills Processed', value: '11.6M+', sub: 'In 2024 alone' },
+      { icon: 'star', label: 'Capterra Rating', value: '4.8★', sub: '200+ reviews' },
+    ],
+
+    keyStrengths: [
+      'Best-in-class approval workflow design — unlimited steps, custom rules',
+      'Budget checking synced directly from Xero before sign-off',
+      '3-way matching (Bill + PO + GRN) now live',
+      'Confirmation of Payee fraud prevention on payments',
+      'Strong Xero ecosystem reputation — Xero App Partner of the Year 3x',
+      'Xero, QBO, and NetSuite native integrations',
+    ],
+
+    competitiveGaps: [
+      'No automated price checking against agreed supplier pricelists',
+      'No automated supplier statement reconciliation',
+      'Invoice Capture and Payments are add-ons — not included in base price',
+      'No hospitality POS integrations',
+      'No unlimited users in base plan at same price point',
+    ],
+
+    vsLightyear: [
+      { metric: 'Entry Price', comp: '£39/mo (approvals only)', lightyear: '£130/mo (full AP)', winner: 'comp' },
+      { metric: 'Free Trial', comp: '14 days', lightyear: '30 days', winner: 'lightyear' },
+      { metric: 'PO Creation', comp: '✅', lightyear: '✅', winner: 'tie', tooltip: 'po' },
+      { metric: '3-Way Matching', comp: '✅ Xero only', lightyear: '✅ Line-level', winner: 'lightyear', tooltip: '3way' },
+      { metric: 'Statement Recon', comp: '❌', lightyear: '✅ Automated', winner: 'lightyear', tooltip: 'statement-recon' },
+      { metric: 'Price Checking', comp: '❌', lightyear: '✅', winner: 'lightyear', tooltip: 'price-check' },
+      { metric: 'Fraud Verification', comp: '✅ CoP (Pay add-on)', lightyear: '✅ Bank details', winner: 'tie', tooltip: 'fraud-check' },
+      { metric: 'Budget Control', comp: '✅ Xero sync', lightyear: '✅', winner: 'tie' },
+      { metric: 'Invoice Capture', comp: '✅ Add-on (extra cost)', lightyear: '✅ Included', winner: 'lightyear' },
+      { metric: 'Approval Levels', comp: 'Unlimited steps', lightyear: 'Up to 8 levels', winner: 'comp' },
+      { metric: 'Unlimited Users', comp: '✅ Per org', lightyear: '✅ All plans', winner: 'tie' },
+    ],
+
+    whenCompWins: [
+      'Lower entry price (£39/mo) for teams that only need approval workflow automation',
+      'Unlimited approval steps with highly flexible custom rules',
+      'Strong audit trail — recommended by auditors for compliance-focused businesses',
+      'Budget checking linked live to Xero before approval',
+      'Confirmation of Payee fraud check on payment execution',
+    ],
+
+    whenLightyearWins: [
+      'Automated price checking against agreed supplier pricelists (prevents overcharging)',
+      'Automated supplier statement reconciliation with one-click copy requests',
+      'Full AP automation in one price — no add-ons needed for capture',
+      'Hospitality POS integrations purpose-built for venues',
+      'Longer free trial (30 days vs 14)',
+      'Better total cost of ownership at scale — no add-on stacking',
+    ],
+
+    salesScripts: [
+      { label: 'Core pitch', script: '"ApprovalMax is purpose-built for approval workflows and does that excellently. But it requires the Capture add-on for invoice scanning, doesn\'t offer automated price checking against supplier agreements, and has no statement reconciliation. Lightyear handles the full AP process from invoice arrival to payment approval at one price."' },
+      { label: 'On total cost', script: '"ApprovalMax Standard is £39/mo — but that\'s before adding Capture for invoice scanning and Pay for payments. Lightyear at £130/mo includes line-item extraction, statement reconciliation, PO management, and price verification by default. For most finance teams, Lightyear is better value."' },
+      { label: 'For compliance-focused teams', script: '"While ApprovalMax has excellent audit trails and is recommended by auditors, Lightyear\'s bank detail fraud verification and automated price checking provide upstream controls that catch errors and fraud before they reach the approver — adding a layer ApprovalMax doesn\'t offer."' },
+    ],
+
+    dataQuality: { high: 24, medium: 3, gaps: 2, note: 'GBP and AUD pricing officially confirmed from Dec 2025 pricing update PDF' },
   },
+
   tipalti: {
-    name: "Tipalti",
-    tagline: "Global AP automation & mass payments",
-    website: "https://tipalti.com",
-    color: "#3b82f6",
-    accent: "tipalti-accent",
-    userBase: "3,000+ companies globally incl. GoDaddy, Twitch",
-    ratings: { capterra: "4.5/5", capterra_count: "160+", g2: "4.5/5", g2_count: "220+" },
-    pricing: {
-      gbp: { amount: "~£79/mo", note: "Converted from $99 USD Select plan — not official GBP. UK office exists but GBP pricing not publicly listed.", confidence: "low" },
-      aud: { amount: "~A$157/mo", note: "Converted from $99 USD Select plan — not official AUD pricing.", confidence: "low" },
-      usd: { amount: "$99/mo Select, $199/mo Advanced, Elevate = custom", note: "USD pricing from official Tipalti website Mar 2026. Plus transaction fees based on payment volume.", confidence: "high" },
-      billing: "Subscription base fee + transaction-based fees. No per-user fees.",
-      trial: "No free trial. Demo available.",
-      overage: "Additional transaction fees layered on top of base subscription",
-      hidden: "Implementation fees for complex setups. Extra entity fees. Per-transaction payment fees vary by method. FX fees on cross-border payments."
+    name: 'Tipalti',
+    lastUpdated: 'March 2, 2026',
+    nextUpdate: 'March 9, 2026',
+
+    changeFlags: [
+      { type: 'new', text: 'AI Agents launched across AP, Mass Payments, Procurement and Expenses modules', date: 'Late 2025', url: 'https://tipalti.com/accounts-payable-software/finance-ai/' },
+      { type: 'new', text: 'Treasury Management module added — real-time cash visibility + AI cash flow forecasting', date: 'Late 2025', url: 'https://tipalti.com/treasury-management/' },
+      { type: 'award', text: 'Named G2 2026 Mid-Market Leader across AP Automation, Purchasing and Invoice Management', date: 'Jan 2026', url: 'https://tipalti.com/company/reviews/' },
+    ],
+
+    pricingData: {
+      gbp: { amount: '~£79', period: 'monthly (Select)', note: 'Converted from USD $99 — no official GBP pricing. UK office exists. Quote required.' },
+      aud: { amount: '~A$157', period: 'monthly (Select)', note: 'Converted from USD $99 — no official AUD pricing published.' },
+      usd: { monthly: '$99 Select / $199 Advanced', annual: 'Custom / request quote', discount: 'N/A', includes: 'Unlimited users. Plus transaction fees on top of base fee.' },
     },
-    features: {
-      invoiceCapture: { val: "✅ AI Smart Scan — invoice capture and auto-coding (Select plan)", conf: "high" },
-      approvals: { val: "✅ Flexible approval rules builder (Advanced plan). Custom workflows.", conf: "high" },
-      po: { val: "✅ PO creation and management (Procurement module, add-on)", conf: "high" },
-      threeWay: { val: "✅ 2-way & 3-way PO matching (Advanced plan)", conf: "high" },
-      statementRecon: { val: "✅ Payment reconciliation. Automated ERP sync.", conf: "high" },
-      priceCheck: { val: "❌ No automated invoice price checking vs agreed supplier pricelists", conf: "medium" },
-      fraudCheck: { val: "✅ Tipalti Detect® fraud monitoring. OFAC & international blacklist screening. Payment fraud detection.", conf: "high" },
-      lineItem: { val: "✅ Invoice data extraction with line-item detail", conf: "high" },
-      multiEntity: { val: "✅ Multi-entity — domestic (Advanced) or global (Elevate)", conf: "high" },
-      mobile: { val: "✅ Mobile app for expense management and approvals", conf: "high" },
-      storage: { val: "✅ Cloud document storage. Duration not publicly specified.", conf: "medium" },
-      expenses: { val: "✅ Full expense management module (add-on) — corporate cards, receipts, reimbursements, global payments to 196 countries", conf: "high" },
-      payments: { val: "✅ Global payments to 200+ countries, 120+ currencies. ACH, wire, PayPal, Tipalti Card (virtual), BACS. 50+ payment methods.", conf: "high" },
-      glCoding: { val: "✅ AI Smart Scan auto-codes invoices. ERP sync.", conf: "high" },
+
+    pricingStructure: {
+      billingModel: 'Base platform fee + transaction-based fees. No per-user fees.',
+      annualDiscount: 'Custom (contact sales)',
+      starterIncludes: 'Select $99/mo: AI Smart Scan, unlimited users, supplier portal, ERP integrations, virtual cards',
+      overagePolicy: 'Transaction fees scale with payment volume — costs increase with usage',
     },
+
+    additionalCosts: [
+      'Transaction fees by payment method and destination country',
+      'FX conversion fees (1.9%–3.5% estimated range)',
+      'Implementation fees for complex ERP setups',
+      'Additional entity fees for multi-entity (Advanced plan only)',
+      'Procurement and Expenses modules are optional add-ons',
+    ],
+
+    salesNote: 'Tipalti is an excellent global mass payments platform — strong for businesses making high-volume cross-border payments. Lightyear\'s focus is AP control upstream: PO management, price verification, and fraud prevention before payment. Different tools for different problems — but where a prospect needs supplier invoice control rather than global payment execution, Lightyear wins.',
+
     integrations: {
-      accounting: ["NetSuite (native bi-directional)", "QuickBooks (native)", "Sage Intacct (native)", "Xero", "SAP Business One", "Microsoft Dynamics 365"],
+      accounting: [
+        { name: 'Oracle NetSuite', rating: 'Native bi-directional', status: 'verified' },
+        { name: 'QuickBooks Online', status: 'verified' },
+        { name: 'Sage Intacct', status: 'verified' },
+        { name: 'Xero', status: 'verified' },
+        { name: 'Microsoft Dynamics 365', status: 'verified' },
+        { name: 'SAP Business One', status: 'verified' },
+      ],
       ecommerce: [],
-      banking: "6 payment methods to 200+ countries. Tipalti Card. BACS, ACH, Wire, PayPal, pre-paid debit.",
-      api: "Yes — REST API + developer hub",
-      other: "Affiliate/influencer platforms (Everflow, LinkTrust). Performance marketing integrations."
+      banking: '200+ countries, 120+ currencies. ACH, Wire, PayPal, BACS, Tipalti Card, 50+ payment methods.',
+      api: 'Yes — REST API + developer hub',
     },
-    changes: ["AI Agents launched across AP, Mass Payments, Procurement (late 2025)", "Treasury management module (real-time cash visibility + AI forecasting) added", "Tipalti Card (virtual cards with cashback) expanded", "Named G2 2026 Mid-Market Leader — AP Automation, Purchasing, Invoice Management", "Named Forbes 2025 Fintech 50"]
+
+    features: {
+      hasFeature: [
+        { name: 'Invoice Capture (AI Smart Scan)', detail: 'AI auto-extraction and auto-coding. Included in Select plan.', confidence: 'high', tooltip: 'ocr' },
+        { name: 'Approval Workflows', detail: 'Flexible approval rules builder. Advanced plan.', confidence: 'high', tooltip: null },
+        { name: 'PO Creation & Management', detail: 'Procurement module (add-on). PO creation and tracking.', confidence: 'high', tooltip: 'po' },
+        { name: '2-Way & 3-Way PO Matching', detail: 'Available on Advanced plan', confidence: 'high', tooltip: '3way' },
+        { name: 'Fraud & Compliance Detection', detail: 'Tipalti Detect® — OFAC/blacklist screening, payment fraud monitoring', confidence: 'high', tooltip: 'fraud-check' },
+        { name: 'Line-item Extraction', detail: 'Invoice data extraction with line-item detail', confidence: 'high', tooltip: 'line-item' },
+        { name: 'Multi-entity Support', detail: 'Domestic (Advanced) or global (Elevate). Custom workflows per entity.', confidence: 'high', tooltip: 'multi-entity' },
+        { name: 'Global Payments', detail: '200+ countries, 120+ currencies, 50+ payment methods', confidence: 'high', tooltip: null },
+        { name: 'Expense Management', detail: 'Full module (add-on) — corporate cards, receipts, global reimbursements', confidence: 'high', tooltip: null },
+        { name: 'Tax Compliance', detail: 'W-9/W-8 collection, TIN validation, global tax IDs, Zenwork integration', confidence: 'high', tooltip: null },
+        { name: 'Automated GL Coding', detail: 'AI Smart Scan auto-codes. Bi-directional ERP sync.', confidence: 'high', tooltip: null },
+        { name: 'Supplier Self-Onboarding Portal', detail: 'Multi-language supplier portal for self-service setup', confidence: 'high', tooltip: null },
+      ],
+      missing: [
+        { name: 'Price Checking vs Agreed Supplier Pricelists', tooltip: 'price-check' },
+        { name: 'Supplier Statement Reconciliation', tooltip: 'statement-recon' },
+        { name: 'Hospitality POS Integrations', tooltip: null },
+        { name: 'Free Trial', tooltip: null },
+      ],
+    },
+
+    stats: [
+      { icon: 'users', label: 'Scale', value: '3,000+', sub: 'Companies globally' },
+      { icon: 'package', label: 'Savings', value: '$31K+', sub: 'Avg monthly per customer' },
+      { icon: 'star', label: 'G2 Rating', value: '4.5★', sub: '220+ reviews' },
+    ],
+
+    keyStrengths: [
+      'Best-in-class global mass payments (200+ countries, 120+ currencies)',
+      'Built-in tax compliance (W-9, W-8, OFAC screening, global tax IDs)',
+      'Tipalti Detect® proactive payment fraud monitoring',
+      'Strong enterprise ERP integrations — NetSuite, Dynamics, SAP',
+      'Tipalti Card with cashback on invoice payments',
+      'AI Agents launched — autonomous AP automation across modules',
+    ],
+
+    competitiveGaps: [
+      'No automated price checking against agreed supplier pricelists',
+      'No supplier statement reconciliation',
+      'No free trial — demo only',
+      'Transaction fees stack on top of base fee — costs scale with volume',
+      'No hospitality POS integrations',
+      'Complex pricing — difficult to compare without a custom quote',
+    ],
+
+    vsLightyear: [
+      { metric: 'Entry Price', comp: '~£79/mo (converted)', lightyear: '£130/mo', winner: 'comp' },
+      { metric: 'Free Trial', comp: '❌ Demo only', lightyear: '✅ 30 days', winner: 'lightyear' },
+      { metric: 'PO Creation', comp: '✅ Add-on module', lightyear: '✅ Included', winner: 'lightyear', tooltip: 'po' },
+      { metric: '3-Way Matching', comp: '✅ Advanced plan', lightyear: '✅ Line-level', winner: 'tie', tooltip: '3way' },
+      { metric: 'Statement Recon', comp: '❌', lightyear: '✅ Automated', winner: 'lightyear', tooltip: 'statement-recon' },
+      { metric: 'Price Checking', comp: '❌', lightyear: '✅', winner: 'lightyear', tooltip: 'price-check' },
+      { metric: 'Global Payments', comp: '✅ 200+ countries', lightyear: '❌', winner: 'comp' },
+      { metric: 'Tax Compliance', comp: '✅ W-9/W-8, OFAC', lightyear: '❌', winner: 'comp' },
+      { metric: 'Fraud Detection', comp: '✅ Tipalti Detect®', lightyear: '✅ Bank detail check', winner: 'tie', tooltip: 'fraud-check' },
+      { metric: 'Unlimited Users', comp: '✅ All plans', lightyear: '✅ All plans', winner: 'tie' },
+      { metric: 'Pricing Transparency', comp: '❌ Quote-based', lightyear: '✅ Published online', winner: 'lightyear' },
+    ],
+
+    whenCompWins: [
+      'Global mass payments to 200+ countries — unmatched reach',
+      'Built-in global tax compliance (W-9, W-8, OFAC, international tax IDs)',
+      'Better for businesses making high-volume payments to affiliates, contractors, or partners globally',
+      'Tipalti Detect® fraud monitoring for large payment volumes',
+      'Strong US mid-market and enterprise positioning',
+    ],
+
+    whenLightyearWins: [
+      'Automated price checking against agreed supplier pricelists',
+      'Automated supplier statement reconciliation',
+      'Free 30-day trial vs demo-only for Tipalti',
+      'Transparent published pricing — Tipalti requires a custom quote',
+      'Hospitality POS integrations for venue-based businesses',
+      'Full AP automation included at one price — Tipalti stacks module costs',
+    ],
+
+    salesScripts: [
+      { label: 'Core pitch', script: '"Tipalti is the go-to solution for businesses making high-volume cross-border payments to affiliates or contractors globally. Lightyear\'s strength is upstream AP control — purchase orders, price verification, and statement reconciliation for businesses with complex supplier workflows. If the challenge is controlling what you buy, not just automating how you pay, Lightyear is the better fit."' },
+      { label: 'For UK/AUS SMEs', script: '"Tipalti\'s pricing transparency is limited — you need a custom quote, and transaction fees stack on top of the base fee. Lightyear\'s credit-based pricing is fully published, predictable, and includes unlimited users and entities. For mid-market businesses without complex global payment needs, Lightyear offers better value clarity."' },
+      { label: 'On trial', script: '"Tipalti doesn\'t offer a free trial — you go straight to a sales process. Lightyear offers a 30-day free trial with full access so your team can test with real invoices before any commitment."' },
+    ],
+
+    dataQuality: { high: 20, medium: 5, gaps: 4, note: 'GBP/AUD pricing converted from USD $99 — no official regional pricing. Tipalti pricing is modular; actual costs require a custom quote.' },
   },
+
   zahara: {
-    name: "Zahara",
-    tagline: "Purchase-to-pay for SMEs & multi-site",
-    website: "https://www.zaharasoftware.com",
-    color: "#10b981",
-    accent: "zahara-accent",
-    userBase: "UK-focused SMEs. Clients incl. McDonald's UK, Lush Cosmetics, Blackpool FC.",
-    ratings: { capterra: "4.5/5", capterra_count: "80+", g2: "4.3/5", g2_count: "20+" },
-    pricing: {
-      gbp: { amount: "£142/mo Teams (monthly)", note: "Official GBP pricing from Capterra/official site. Annual: ~£119/mo (~17% saving). Business: £219/mo or £178/mo annual.", confidence: "high" },
-      aud: { amount: "~A$225/mo", note: "Converted from £142 GBP — Zahara has AU pricing page but specific amounts not publicly confirmed at time of research.", confidence: "medium" },
-      usd: { amount: "$142/mo Teams, $267/mo Business (USD)", note: "USD pricing from Zahara's website pricing tool. Enterprise: custom.", confidence: "medium" },
-      billing: "Per organisation tier. Limits on users (10/18/35), orders (120/250/800), invoices (250/500/1200). Add-ons available.",
-      trial: "30 days (free trial)",
-      overage: "Add-on packs for extra invoices, users, business units. Modular add-ons.",
-      hidden: "Onboarding package optional (additional fee). Premium integrations (Sage 200, Sage Intacct, Business Central) only on Enterprise. SmartSync+ tool POA."
+    name: 'Zahara',
+    lastUpdated: 'March 2, 2026',
+    nextUpdate: 'March 9, 2026',
+
+    changeFlags: [
+      { type: 'new', text: 'AI Expenses Management module launched', date: '2025', url: 'https://www.zaharasoftware.com/ai-expenses/' },
+      { type: 'new', text: 'Microsoft Dynamics 365 Business Central integration — coming soon', date: '2025', url: 'https://www.zaharasoftware.com/help-page/' },
+      { type: 'new', text: 'Shared custom line item coding fields between PO and Invoice — API also updated', date: 'Late 2025', url: 'https://www.zaharasoftware.com/help-page/' },
+    ],
+
+    pricingData: {
+      gbp: { amount: '£142', period: 'monthly (Teams). Annual: ~£119/mo', note: 'Official GBP pricing — verified Capterra UK & Zahara website' },
+      aud: { amount: '~A$225', period: 'monthly', note: 'Zahara has AU pricing page — specific AUD amount not confirmed at time of research. Converted from GBP.' },
+      usd: { monthly: '$142 Teams / $267 Business', annual: '~$119 Teams / ~$219 Business', discount: '~17%', includes: 'Teams: 10 users, 120 orders, 250 invoices/mo. Business: 18 users, 250 orders, 500 invoices/mo.' },
     },
-    features: {
-      invoiceCapture: { val: "✅ AI OCR — processes invoices up to 9x faster. Upgrading to advanced AI (in progress).", conf: "high" },
-      approvals: { val: "✅ Infinitely customisable multi-step approval workflows. Mobile app.", conf: "high" },
-      po: { val: "✅ Purchase order creation. GRN receipting. Invoice-to-PO matching.", conf: "high" },
-      threeWay: { val: "✅ 3-way matching (PO + GRN + Invoice)", conf: "high" },
-      statementRecon: { val: "❌ No automated supplier statement reconciliation mentioned", conf: "medium" },
-      priceCheck: { val: "❌ No automated price checking vs pricelists", conf: "medium" },
-      fraudCheck: { val: "❌ No specific bank detail fraud verification stated", conf: "medium" },
-      lineItem: { val: "✅ Line-item coding with custom fields", conf: "high" },
-      multiEntity: { val: "✅ Multiple business units/divisions. Separate budgets per division.", conf: "high" },
-      mobile: { val: "✅ iOS & Android app. Quick Order for counter orders.", conf: "high" },
-      storage: { val: "✅ 7+ years cloud document storage (add-on for extra GB)", conf: "high" },
-      expenses: { val: "✅ AI Expenses Management module (recently launched)", conf: "medium" },
-      payments: { val: "✅ Supplier payments via Comma integration (UK GBP). Currencies Direct for FX payments.", conf: "high" },
-      glCoding: { val: "✅ Custom line item coding fields. Shared fields between PO and Invoice.", conf: "high" },
+
+    pricingStructure: {
+      billingModel: 'Per-organisation tier with user, order, and invoice limits. Add-ons for extras.',
+      annualDiscount: '~17%',
+      starterIncludes: 'Teams: 10 users, 120 orders/mo, 250 invoices/mo, 2 business units',
+      overagePolicy: 'Add-on packs for additional invoices, users, business units, and orders',
     },
+
+    additionalCosts: [
+      'Extra users (per user add-on)',
+      'Additional invoice/order volume packs',
+      'Premium integrations (Sage 200, Sage Intacct, Business Central) — Enterprise plan only',
+      'SmartSync+ on-premise sync tool (POA)',
+      'Optional onboarding package (additional fee)',
+    ],
+
+    salesNote: 'Zahara and Lightyear are the closest competitors — both include POs, 3-way matching, multi-entity, and approval workflows at similar price points. Lightyear differentiates through automated price checking vs supplier pricelists, automated statement reconciliation with one-click requests, and hospitality POS integrations. Zahara is strong for construction, care, and education; Lightyear is purpose-built for hospitality.',
+
     integrations: {
-      accounting: ["Xero", "QuickBooks Online", "Sage 50", "MYOB", "Sage 200 (Enterprise)", "Sage Intacct (Enterprise)", "Pegasus Opera", "Exchequer"],
+      accounting: [
+        { name: 'Xero', status: 'verified' },
+        { name: 'QuickBooks Online', status: 'verified' },
+        { name: 'Sage 50', status: 'verified' },
+        { name: 'MYOB', status: 'verified' },
+        { name: 'Sage 200', rating: 'Enterprise only', status: 'verified' },
+        { name: 'Sage Intacct', rating: 'Enterprise only', status: 'verified' },
+        { name: 'Pegasus Opera', status: 'verified' },
+      ],
       ecommerce: [],
-      banking: "Comma (GBP payments). Currencies Direct (FX). SmartSync+ for on-premise sync.",
-      api: "Yes — public API. Custom line item coding fields exposed via API.",
-      other: "Microsoft Dynamics 365 Business Central (coming soon), Zapier, Twinfield"
+      banking: 'Comma (GBP supplier payments, UK). Currencies Direct (FX international payments).',
+      api: 'Yes — public API. Custom line item coding fields exposed.',
     },
-    changes: ["AI Expenses Management module launched", "Microsoft Dynamics 365 Business Central integration coming soon", "Shared custom line item coding fields (PO + Invoice) added", "Currency column visibility in invoice list added", "Advanced AI OCR upgrade in progress"]
-  },
-  compleat: {
-    name: "Compleat Software",
-    tagline: "Purchase-to-pay & procurement automation",
-    website: "https://www.compleatsoftware.com",
-    color: "#ef4444",
-    accent: "compleat-accent",
-    userBase: "500+ companies across EMEA, APAC & Americas",
-    ratings: { capterra: "4.6/5", capterra_count: "50+", g2: "4.5/5", g2_count: "30+" },
-    pricing: {
-      gbp: { amount: "❌ Not publicly listed", note: "Quote-based pricing only. Capterra describes as 'among the most affordable in the market'. Contact vendor for pricing.", confidence: "gap" },
-      aud: { amount: "❌ Not publicly listed", note: "Compleat has an Australian office but pricing not disclosed. Quote-based.", confidence: "gap" },
-      usd: { amount: "❌ Not publicly listed", note: "No public pricing page. Modular SaaS — pay for modules used. Custom quotes only.", confidence: "gap" },
-      billing: "Modular SaaS — start with invoice capture, add modules (approvals, POs, online buying) as needed.",
-      trial: "Yes — free trial. No credit card required.",
-      overage: "Modular pricing — scale by adding modules",
-      hidden: "Implementation can take several months for complex setups. Professional services additional."
-    },
+
     features: {
-      invoiceCapture: { val: "✅ AI-powered invoice capture via email or upload. Auto-extract & auto-code.", conf: "high" },
-      approvals: { val: "✅ Customisable multi-level approval workflows. Real-time invoice approvals.", conf: "high" },
-      po: { val: "✅ Purchase order creation, approval & tracking. PO-to-invoice matching.", conf: "high" },
-      threeWay: { val: "✅ 3-way matching (PO + receipt + invoice)", conf: "high" },
-      statementRecon: { val: "❌ Not a stated feature", conf: "medium" },
-      priceCheck: { val: "❌ No automated price checking vs agreed supplier pricelists stated", conf: "medium" },
-      fraudCheck: { val: "❌ Not a stated feature. Audit trails and controls exist.", conf: "medium" },
-      lineItem: { val: "✅ Line-item data extraction and coding", conf: "high" },
-      multiEntity: { val: "✅ Multi-entity, multi-division support", conf: "high" },
-      mobile: { val: "✅ iOS & Android mobile app", conf: "high" },
-      storage: { val: "✅ Cloud document management and storage. Duration not specified.", conf: "medium" },
-      expenses: { val: "❌ Not prominently featured — primarily AP/procurement focused", conf: "medium" },
-      payments: { val: "❌ No built-in payment capability mentioned publicly", conf: "medium" },
-      glCoding: { val: "✅ Auto GL coding. Budget holder management.", conf: "high" },
+      hasFeature: [
+        { name: 'AI Invoice Processing', detail: 'OCR — 9x faster than manual. Advanced AI OCR upgrade in progress.', confidence: 'high', tooltip: 'ocr' },
+        { name: 'PO Creation & Management', detail: 'Full PO creation, approval, send to supplier, GRN receipting', confidence: 'high', tooltip: 'po' },
+        { name: '3-Way Matching', detail: 'PO + GRN + Invoice matching', confidence: 'high', tooltip: '3way' },
+        { name: 'Multi-step Approvals', detail: 'Infinitely customisable. Mobile app. Value and rule-based.', confidence: 'high', tooltip: null },
+        { name: 'Budget Control', detail: 'Precise budget tracking per division/project. Overspend alerts.', confidence: 'high', tooltip: null },
+        { name: 'Line-item Coding', detail: 'Custom line item coding fields. Shared between PO and Invoice.', confidence: 'high', tooltip: 'line-item' },
+        { name: 'Multi-entity Support', detail: 'Multiple business units and divisions', confidence: 'high', tooltip: 'multi-entity' },
+        { name: 'Mobile App', detail: 'iOS & Android. Quick Order feature for counter orders.', confidence: 'high', tooltip: null },
+        { name: 'Document Storage', detail: '7+ years cloud storage (add-on for more)', confidence: 'high', tooltip: null },
+        { name: 'Expense Management', detail: 'AI Expenses module — recently launched', confidence: 'medium', tooltip: null },
+        { name: 'Supplier Payments', detail: 'Via Comma integration (UK GBP). Currencies Direct for FX.', confidence: 'high', tooltip: null },
+        { name: 'Automated GL Coding', detail: 'Custom line item coding fields. PO-to-invoice field transfer.', confidence: 'high', tooltip: null },
+      ],
+      missing: [
+        { name: 'Supplier Statement Reconciliation', tooltip: 'statement-recon' },
+        { name: 'Price Checking vs Agreed Pricelists', tooltip: 'price-check' },
+        { name: 'Bank Detail Fraud Verification', tooltip: 'fraud-check' },
+        { name: 'Hospitality POS Integrations', tooltip: null },
+        { name: 'Unlimited Users (all plans)', tooltip: null },
+      ],
     },
+
+    stats: [
+      { icon: 'users', label: 'Clients', value: 'SME Focus', sub: 'UK, AU, global' },
+      { icon: 'package', label: 'Speed', value: '9x', sub: 'Faster invoice processing' },
+      { icon: 'star', label: 'Capterra Rating', value: '4.5★', sub: '80+ reviews' },
+    ],
+
+    keyStrengths: [
+      'Full PO + 3-way matching + approvals in similar price bracket to Lightyear',
+      'Flexible budget control per division and project',
+      'Strong Sage 50 integration — widely used in UK SMEs',
+      'Supplier payments built-in via Comma (UK GBP) and Currencies Direct',
+      'Infinitely customisable approval workflows',
+      'Cyber Essentials Plus certified',
+    ],
+
+    competitiveGaps: [
+      'No automated supplier statement reconciliation',
+      'No automated price checking against agreed supplier pricelists',
+      'No bank detail fraud verification',
+      'No hospitality POS integrations',
+      'User and invoice limits per plan tier (Lightyear is credit-based with unlimited users)',
+      'Issues reported with Sage 50 Cloud/remote sync',
+    ],
+
+    vsLightyear: [
+      { metric: 'Entry Price', comp: '£142/mo', lightyear: '£130/mo', winner: 'lightyear' },
+      { metric: 'Free Trial', comp: '30 days', lightyear: '30 days', winner: 'tie' },
+      { metric: 'PO Creation', comp: '✅', lightyear: '✅', winner: 'tie', tooltip: 'po' },
+      { metric: '3-Way Matching', comp: '✅', lightyear: '✅ Line-level', winner: 'lightyear', tooltip: '3way' },
+      { metric: 'Statement Recon', comp: '❌', lightyear: '✅ Automated', winner: 'lightyear', tooltip: 'statement-recon' },
+      { metric: 'Price Checking', comp: '❌', lightyear: '✅', winner: 'lightyear', tooltip: 'price-check' },
+      { metric: 'Fraud Verification', comp: '❌', lightyear: '✅', winner: 'lightyear', tooltip: 'fraud-check' },
+      { metric: 'Budget Control', comp: '✅ Per division', lightyear: '✅', winner: 'tie' },
+      { metric: 'Supplier Payments', comp: '✅ Comma (GBP)', lightyear: '❌', winner: 'comp' },
+      { metric: 'Unlimited Users', comp: '❌ Per-tier limits', lightyear: '✅ All plans', winner: 'lightyear' },
+      { metric: 'Hospitality POS', comp: '❌', lightyear: '✅ 10+ systems', winner: 'lightyear' },
+    ],
+
+    whenCompWins: [
+      'Supplier payments built-in via Comma (UK GBP) without add-on',
+      'Strong project costing and budget control per division',
+      'Good for construction, care homes, education — their core verticals',
+      'Flexible approval workflows for non-hospitality service businesses',
+      'Strong Sage 50 integration for UK SME accountants',
+    ],
+
+    whenLightyearWins: [
+      'Automated price checking vs agreed supplier pricelists (prevents overcharging)',
+      'Automated supplier statement reconciliation with one-click copy requests',
+      'Bank detail fraud verification before payment',
+      'Hospitality POS integrations (Bepoz, Idealpos, Fedelta, OrderMate etc.)',
+      'Unlimited users on all plans — Zahara has per-tier user limits',
+      'Lightyear is cheaper at entry (£130 vs £142)',
+    ],
+
+    salesScripts: [
+      { label: 'Core pitch', script: '"Zahara and Lightyear are similar at first glance — both include POs, 3-way matching, and multi-entity support. The key differences: Lightyear adds automated price checking against supplier pricelists, automated statement reconciliation, and bank detail fraud verification — features Zahara doesn\'t have. And if you\'re in hospitality, Lightyear\'s POS integrations are unmatched."' },
+      { label: 'On price', script: '"Zahara starts at £142/mo — slightly more than Lightyear at £130/mo — but Zahara has user and invoice limits per tier. Lightyear\'s credit model gives you unlimited users and sub-entities on every plan, which is more predictable at scale."' },
+      { label: 'For hospitality', script: '"Zahara is built for construction, care, and property management. Lightyear is purpose-built for hospitality — with native integrations to Bepoz, Idealpos, Fedelta, and OrderMate. For venues managing food, beverage, and supply costs, that connection between POS and AP is a game-changer."' },
+    ],
+
+    dataQuality: { high: 21, medium: 5, gaps: 3, note: 'GBP confirmed from Capterra UK and official site. AUD converted from GBP — Zahara has AU pricing page but exact AUD amounts not publicly confirmed.' },
+  },
+
+  compleat: {
+    name: 'Compleat Software',
+    lastUpdated: 'March 2, 2026',
+    nextUpdate: 'March 9, 2026',
+
+    changeFlags: [
+      { type: 'new', text: 'UK government e-invoicing mandate (2029) — Compleat actively positioning for compliance opportunity', date: 'Jan 2026', url: 'https://www.compleatsoftware.com/news-blog/' },
+      { type: 'new', text: 'US education market expansion — targeting school districts under budget pressure', date: '2025', url: 'https://www.compleatsoftware.com/news-blog/' },
+    ],
+
+    pricingData: {
+      gbp: { amount: '❌ Not published', period: 'Quote required', note: 'No public pricing. Described as "among the most affordable in the market" by customers.' },
+      aud: { amount: '❌ Not published', period: 'Quote required', note: 'Australian office exists but pricing not publicly disclosed. Contact vendor.' },
+      usd: { monthly: '❌ Not published', annual: '❌ Not published', discount: 'N/A', includes: 'Modular SaaS — price depends on modules selected and company size.' },
+    },
+
+    pricingStructure: {
+      billingModel: 'Modular SaaS — start with invoice capture, add approvals, POs, online buying as needed',
+      annualDiscount: 'Unknown (not published)',
+      starterIncludes: 'Unknown — modular pricing means you select which modules to activate',
+      overagePolicy: 'Unknown — scale by adding modules',
+    },
+
+    additionalCosts: [
+      'Implementation typically takes several months for complex setups — professional services cost unknown',
+      'All pricing by custom quote only',
+    ],
+
+    salesNote: 'Compleat doesn\'t publish pricing — always a custom quote. Customers describe it as affordable, but the lack of transparency is a disadvantage in competitive situations. Lightyear\'s pricing is fully published online — a real differentiator when prospects are doing initial research and comparison.',
+
     integrations: {
-      accounting: ["Sage (Business Cloud, Intacct, 50/200)", "QuickBooks Online", "Xero", "AccountsIQ", "Microsoft Dynamics"],
-      ecommerce: ["Amazon Business (Punch-In integration)", "Other supplier websites (built-in punchout)"],
-      banking: "No built-in payments mentioned",
-      api: "Yes — API available",
-      other: "EDI supplier communication. Online buying from supplier catalogs (400+ suppliers)."
+      accounting: [
+        { name: 'Sage (Business Cloud, Intacct, 50/200)', status: 'verified' },
+        { name: 'QuickBooks Online', status: 'verified' },
+        { name: 'Xero', status: 'verified' },
+        { name: 'AccountsIQ', status: 'verified' },
+        { name: 'Microsoft Dynamics', status: 'verified' },
+      ],
+      ecommerce: ['Amazon Business (Punch-In)', '400+ supplier websites (punchout catalog)'],
+      banking: 'No built-in payment execution mentioned',
+      api: 'Yes — API available',
     },
-    changes: ["No major announcements found in last 3 months", "UK government e-invoicing mandate (2029) mentioned in their blog — positioning for compliance", "Active in US education market expansion"]
-  }
+
+    features: {
+      hasFeature: [
+        { name: 'AI Invoice Capture', detail: 'Email or upload. Auto-extract and auto-code. Word/Excel/PDF formats.', confidence: 'high', tooltip: 'ocr' },
+        { name: 'Approval Workflows', detail: 'Customisable multi-level. Real-time routing.', confidence: 'high', tooltip: null },
+        { name: 'PO Creation & Tracking', detail: 'Full PO creation, approval and tracking. Supplier communication via email/EDI.', confidence: 'high', tooltip: 'po' },
+        { name: '3-Way Matching', detail: 'PO + delivery receipt + invoice', confidence: 'high', tooltip: '3way' },
+        { name: 'Online Buying / Punchout', detail: 'Amazon Business Punch-In. 400+ supplier websites. Catalog-based purchasing.', confidence: 'high', tooltip: null },
+        { name: 'Line-item Extraction', detail: 'Line-item data extraction and coding', confidence: 'high', tooltip: 'line-item' },
+        { name: 'Multi-entity Support', detail: 'Multi-entity, multi-division', confidence: 'high', tooltip: 'multi-entity' },
+        { name: 'Mobile App', detail: 'iOS & Android', confidence: 'high', tooltip: null },
+        { name: 'Automated GL Coding', detail: 'Auto GL coding. Budget holder management. Spend analytics.', confidence: 'high', tooltip: null },
+        { name: 'Savings as a Service', detail: 'Uses captured spend data to identify savings opportunities — unique differentiator', confidence: 'medium', tooltip: null },
+      ],
+      missing: [
+        { name: 'Supplier Statement Reconciliation', tooltip: 'statement-recon' },
+        { name: 'Price Checking vs Agreed Pricelists', tooltip: 'price-check' },
+        { name: 'Bank Detail Fraud Verification', tooltip: 'fraud-check' },
+        { name: 'Built-in Supplier Payments', tooltip: null },
+        { name: 'Published Pricing', tooltip: null },
+        { name: 'Free Trial (clear offering)', tooltip: null },
+      ],
+    },
+
+    stats: [
+      { icon: 'users', label: 'Customers', value: '500+', sub: 'EMEA, APAC, Americas' },
+      { icon: 'package', label: 'Processing', value: '000s daily', sub: 'e-invoices processed' },
+      { icon: 'star', label: 'Capterra Rating', value: '4.6★', sub: '50+ reviews' },
+    ],
+
+    keyStrengths: [
+      'Amazon Business Punch-In integration — direct catalog buying within the platform',
+      '400+ supplier website punchout integrations',
+      '"Savings as a Service" — uses spend data to identify procurement savings',
+      'Modular approach — start small and add capabilities over time',
+      'Offices in UK, US, and Australia — global presence',
+      'Strong in education, non-profit, and professional services',
+    ],
+
+    competitiveGaps: [
+      'No published pricing — always requires a custom quote',
+      'No automated supplier statement reconciliation',
+      'No automated price checking against agreed supplier pricelists',
+      'No bank detail fraud verification',
+      'No built-in payment execution',
+      'Implementation typically takes several months for complex setups',
+    ],
+
+    vsLightyear: [
+      { metric: 'Entry Price', comp: '❌ Not published', lightyear: '£130/mo', winner: 'lightyear' },
+      { metric: 'Free Trial', comp: '✅ (details unclear)', lightyear: '✅ 30 days', winner: 'lightyear' },
+      { metric: 'PO Creation', comp: '✅', lightyear: '✅', winner: 'tie', tooltip: 'po' },
+      { metric: '3-Way Matching', comp: '✅', lightyear: '✅ Line-level', winner: 'lightyear', tooltip: '3way' },
+      { metric: 'Statement Recon', comp: '❌', lightyear: '✅ Automated', winner: 'lightyear', tooltip: 'statement-recon' },
+      { metric: 'Price Checking', comp: '❌', lightyear: '✅', winner: 'lightyear', tooltip: 'price-check' },
+      { metric: 'Fraud Verification', comp: '❌', lightyear: '✅', winner: 'lightyear', tooltip: 'fraud-check' },
+      { metric: 'Online Buying / Punchout', comp: '✅ Amazon + 400 suppliers', lightyear: '❌', winner: 'comp' },
+      { metric: 'Supplier Payments', comp: '❌', lightyear: '❌', winner: 'tie' },
+      { metric: 'Transparent Pricing', comp: '❌ Quote only', lightyear: '✅ Published online', winner: 'lightyear' },
+      { metric: 'Unlimited Users', comp: '✅', lightyear: '✅ All plans', winner: 'tie' },
+    ],
+
+    whenCompWins: [
+      'Amazon Business Punch-In and 400+ supplier punchout integrations — unique in the market',
+      '"Savings as a Service" leverages spend data for procurement cost reduction',
+      'Good modular approach — businesses can start with invoice capture only',
+      'Strong in education, non-profit, and professional services verticals',
+      'Global offices (UK, US, AU) for larger multi-national deployments',
+    ],
+
+    whenLightyearWins: [
+      'Automated price checking vs agreed supplier pricelists (prevents overcharging)',
+      'Automated supplier statement reconciliation with one-click copy requests',
+      'Bank detail fraud verification before payment',
+      'Fully transparent pricing published online — no sales process needed to get a price',
+      'Free trial clearly defined (30 days) — Compleat\'s trial terms are unclear',
+      'Hospitality POS integrations for venue-based businesses',
+    ],
+
+    salesScripts: [
+      { label: 'Core pitch', script: '"Compleat\'s unique strength is its Amazon Business punchout and 400+ supplier catalog integrations — excellent for procurement-led organisations. Lightyear\'s differentiation is in AP controls: automated price verification against agreed pricing, statement reconciliation, and fraud prevention upstream. Compleat also doesn\'t publish pricing, which makes comparisons difficult for prospects."' },
+      { label: 'On transparency', script: '"Compleat requires a custom quote for pricing — you can\'t evaluate costs without engaging their sales team. Lightyear\'s pricing is fully published on the website. For finance teams doing their own research and comparisons, that transparency matters."' },
+      { label: 'For hospitality', script: '"Compleat is strong in education and non-profits. Lightyear is purpose-built for hospitality — with native POS integrations to Bepoz, Idealpos, Fedelta, and 10+ other systems. For venue-based businesses where AP and front-of-house data need to connect, Lightyear is the clear choice."' },
+    ],
+
+    dataQuality: { high: 16, medium: 6, gaps: 6, note: 'Pricing is entirely gap — Compleat does not publish pricing anywhere publicly. Feature data from G2, Capterra, and official website.' },
+  },
 };
 
-const FEATURE_CATEGORIES = [
-  { key: "invoiceCapture", label: "Invoice Capture & OCR", tooltip: "ocr" },
-  { key: "approvals", label: "Approval Workflows", tooltip: "approvals" },
-  { key: "po", label: "Purchase Orders (PO)", tooltip: "po" },
-  { key: "threeWay", label: "3-Way Matching", tooltip: "3way" },
-  { key: "statementRecon", label: "Supplier Statement Recon", tooltip: "statement-recon" },
-  { key: "priceCheck", label: "Price Checking vs Pricelists", tooltip: "price-check" },
-  { key: "fraudCheck", label: "Fraud / Bank Detail Verification", tooltip: "fraud-check" },
-  { key: "lineItem", label: "Line-Item Extraction", tooltip: "line-item" },
-  { key: "multiEntity", label: "Multi-Entity Support", tooltip: "multi-entity" },
-  { key: "mobile", label: "Mobile App", tooltip: null },
-  { key: "storage", label: "Document Storage", tooltip: null },
-  { key: "expenses", label: "Expense Management", tooltip: null },
-  { key: "payments", label: "Supplier Payments", tooltip: null },
-  { key: "glCoding", label: "Automated GL Coding", tooltip: "gl" },
-];
+// ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
+const CompetitorDashboard = () => {
+  const [activeTab, setActiveTab] = useState('overview');
+  const [hoveredTerm, setHoveredTerm] = useState(null);
+  const [selectedComp, setSelectedComp] = useState('dext');
 
-const LIGHTYEAR_FEATURES = {
-  invoiceCapture: "✅ Smart Extract+ AI — 100% accurate PDF + handwritten. Multiple submission methods.",
-  approvals: "✅ Up to 8 approval levels. Value-based rules, proxy approvals, departments. Mobile.",
-  po: "✅ Full PO creation, approval, send to suppliers. Direct supplier ordering.",
-  threeWay: "✅ Automated 3-way matching at line-item level (PO + GRN + Invoice).",
-  statementRecon: "✅ Automated — one-click copy requests to suppliers for missing bills.",
-  priceCheck: "✅ Automated price checking vs agreed supplier pricelists. Flags overcharging.",
-  fraudCheck: "✅ Supplier bank detail verification before payment.",
-  lineItem: "✅ Full line-item extraction by default (included in all plans).",
-  multiEntity: "✅ Unlimited sub-entities (parent/child). All plans include this.",
-  mobile: "✅ iOS & Android. Receipt capture and approvals.",
-  storage: "✅ 7 years compliant archive (UK) / 8 years (Capterra).",
-  expenses: "✅ Expense management module included.",
-  payments: "❌ No built-in payment execution (AP focus — controls before payment).",
-  glCoding: "✅ Automated bookkeeping rules. GL coding by supplier, product code, keyword.",
-};
+  const data = ALL_DATA[selectedComp];
 
-const TOOLTIPS = {
-  ocr: "Optical Character Recognition — technology that reads text from images and PDFs automatically, so you don't have to type invoice data manually",
-  approvals: "The process of routing invoices or purchase orders to the right people in the right order for sign-off before payment",
-  po: "Purchase Order — a document your company sends to a supplier to formally request and authorise the purchase of goods or services",
-  "3way": "3-way matching compares three documents: (1) the purchase order you raised, (2) the goods receipt note confirming delivery, and (3) the supplier's invoice — to catch errors or undelivered items before payment",
-  "statement-recon": "Supplier Statement Reconciliation — automatically checking your supplier's statement of what they say you owe against your own records, to find missing invoices or discrepancies",
-  "price-check": "Automated price checking compares each line on an invoice against the prices you've agreed with that supplier — and flags any overcharges before you pay",
-  "fraud-check": "Bank detail fraud verification checks that the supplier's bank account number on an invoice matches the account you have on file — helping prevent payment fraud from fake or altered invoices",
-  "line-item": "Line-item extraction pulls each individual product or service from an invoice (not just the total), giving you detailed spend analysis and enabling more accurate matching",
-  "multi-entity": "Multi-entity support lets you manage multiple companies, locations or divisions under one login, with separate approval rules, budgets and reporting for each",
-  gl: "General Ledger coding — automatically assigns the right accounting categories to invoices, so your accounts are coded consistently without manual entry",
-  gbp: "GBP — British Pounds Sterling (£). Prices shown are the UK market rate.",
-  aud: "AUD — Australian Dollars (A$). Prices shown are the Australian market rate.",
-};
+  const tooltips = {
+    'ocr': 'Optical Character Recognition — technology that reads text from images/PDFs automatically, so you don\'t have to type invoice data manually',
+    'po': 'Purchase Order — a document your company sends to a supplier to formally request and authorise the purchase of goods or services',
+    '2way': 'Compares invoice to purchase order only (2 documents)',
+    '3way': 'Compares invoice, purchase order, AND goods receipt note (3 documents) — catches if items weren\'t actually delivered before you pay',
+    'statement-recon': 'Automatically checks your supplier\'s statement of what they say you owe against your own records — finds missing invoices or discrepancies',
+    'price-check': 'Automatically compares each invoice line against the prices you\'ve agreed with that supplier — flags any overcharges before you pay',
+    'fraud-check': 'Verifies the supplier\'s bank details on an invoice match what you have on record — prevents payment fraud from altered or fake invoices',
+    'line-item': 'Extracts individual products/services from an invoice (not just the total) — enables detailed cost analysis and more accurate PO matching',
+    'multi-entity': 'Manage multiple companies or locations under one login, with separate rules, budgets, and reporting for each',
+    'gbp': 'British Pounds Sterling (£) — UK market pricing',
+    'aud': 'Australian Dollars (A$) — Australian market pricing',
+    'overage': 'What happens when you process more documents than your monthly plan allows',
+    'credits': 'Pre-paid units used for processing documents — 1 credit typically = 1 exported invoice or PO',
+    'api': 'Application Programming Interface — allows your developers to connect other software systems directly to this platform',
+  };
 
-// ===== COMPONENTS =====
-
-function ConfBadge({ level }) {
-  if (level === "high") return <span className="conf-high">✅ HIGH</span>;
-  if (level === "medium") return <span className="conf-medium">⚠️ MEDIUM</span>;
-  if (level === "low") return <span className="conf-low">⚠️ LOW</span>;
-  return <span className="conf-gap">❌ GAP</span>;
-}
-
-function Tooltip({ term, children }) {
-  const [show, setShow] = useState(false);
-  if (!term || !TOOLTIPS[term]) return <>{children}</>;
-  return (
-    <span className="tooltip-container" onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)}>
+  const Tooltip = ({ term, children }) => (
+    <div className="relative inline-flex items-center gap-1">
       {children}
-      <span style={{ cursor: "help", marginLeft: "3px", color: "#9ca3af" }}>ⓘ</span>
-      {show && <span className="tooltip-box">{TOOLTIPS[term]}</span>}
-    </span>
-  );
-}
-
-function StarRating({ score }) {
-  const num = parseFloat(score);
-  return (
-    <span style={{ color: "#f59e0b", fontWeight: 700 }}>
-      {"★".repeat(Math.floor(num))}{"☆".repeat(5 - Math.floor(num))} {score}
-    </span>
-  );
-}
-
-// ===== MAIN APP =====
-
-function App() {
-  const [activeTab, setActiveTab] = useState("overview");
-  const [selectedComp, setSelectedComp] = useState("dext");
-  const [showChanges, setShowChanges] = useState(true);
-
-  const compKeys = Object.keys(COMPETITORS);
-
-  return (
-    <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "24px 16px" }}>
-      
-      {/* HEADER */}
-      <div style={{ marginBottom: "20px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px" }}>
-          <div>
-            <h1 style={{ fontSize: "26px", fontWeight: 800, color: "#111827", margin: 0 }}>Lightyear Competitive Intelligence Dashboard</h1>
-            <p style={{ color: "#6b7280", marginTop: "4px" }}>5 Competitors: Dext · ApprovalMax · Tipalti · Zahara · Compleat Software</p>
-          </div>
-          <div style={{ textAlign: "right" }}>
-            <div style={{ fontSize: "13px", color: "#6b7280" }}>Last researched</div>
-            <div style={{ fontWeight: 700, color: "#111827" }}>March 2, 2026</div>
-            <div style={{ fontSize: "12px", color: "#6b7280" }}>Next update: March 9, 2026</div>
-          </div>
-        </div>
-
-        {/* LIGHTYEAR BASELINE */}
-        <div style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: "8px", padding: "12px 16px", marginTop: "12px" }}>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "20px", alignItems: "center" }}>
-            <div style={{ fontWeight: 700, color: "#166534", fontSize: "14px" }}>🟢 Lightyear Baseline (Verified March 2, 2026)</div>
-            <div style={{ fontSize: "13px", color: "#166534" }}>
-              <Tooltip term="gbp"><span>GBP: £130/mo (125 credits)</span></Tooltip>
-              {" · "}
-              <Tooltip term="aud"><span>AUD: A$155/mo (125 credits)</span></Tooltip>
-              {" · "}
-              <span>30-day free trial</span>
-              {" · "}
-              <span>Up to 8 approval levels</span>
-              {" · "}
-              <span>Unlimited users & sub-entities</span>
-            </div>
-            <div style={{ fontSize: "12px", background: "#dcfce7", padding: "2px 8px", borderRadius: "4px", color: "#166534" }}>
-              ✅ AUD confirmed at A$155/mo — verified from official pricing page
-            </div>
-          </div>
-        </div>
-
-        {/* CHANGES BANNER */}
-        {showChanges && (
-          <div style={{ background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: "8px", padding: "14px 16px", marginTop: "12px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
-              <span style={{ fontWeight: 700, color: "#9a3412", fontSize: "15px" }}>📢 Changes Detected This Week</span>
-              <button onClick={() => setShowChanges(false)} style={{ color: "#9a3412", background: "none", border: "none", cursor: "pointer", fontSize: "18px" }}>×</button>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-              {CHANGES.map((c, i) => (
-                <div key={i} className={c.color} style={{ border: "1px solid", borderRadius: "5px", padding: "6px 10px", fontSize: "13px" }}>
-                  <span style={{ fontWeight: 600 }}>{c.text}</span>
-                  <span style={{ marginLeft: "8px", opacity: 0.75 }}>— {c.date}</span>
-                  {c.url && <a href={c.url} target="_blank" rel="noopener noreferrer" style={{ marginLeft: "8px", fontSize: "12px" }}>Source ↗</a>}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+      <div
+        onMouseEnter={() => setHoveredTerm(term)}
+        onMouseLeave={() => setHoveredTerm(null)}
+        className="cursor-help"
+      >
+        <Info size={14} className="text-gray-400 hover:text-blue-600" />
       </div>
+      {hoveredTerm === term && (
+        <div className="absolute left-0 top-full mt-1 w-64 bg-gray-900 text-white text-xs rounded p-2 shadow-lg z-10">
+          {tooltips[term]}
+        </div>
+      )}
+    </div>
+  );
 
-      {/* TABS */}
-      <div style={{ background: "white", borderRadius: "10px", boxShadow: "0 1px 4px rgba(0,0,0,0.08)", marginBottom: "16px" }}>
-        <div style={{ display: "flex", borderBottom: "2px solid #e5e7eb", padding: "0 8px" }}>
-          {[
-            { id: "overview", label: "📊 Overview" },
-            { id: "pricing", label: "💰 Pricing" },
-            { id: "features", label: "⚙️ Features" },
-            { id: "vs-lightyear", label: "⚔️ VS Lightyear" },
-          ].map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              style={{
-                padding: "14px 18px",
-                fontSize: "14px",
-                background: "none",
-                cursor: "pointer",
-                borderBottom: activeTab === tab.id ? "3px solid #2563eb" : "3px solid transparent",
-                color: activeTab === tab.id ? "#2563eb" : "#6b7280",
-                fontWeight: activeTab === tab.id ? 700 : 400,
-                marginBottom: "-2px",
-                border: "none",
-                borderBottom: activeTab === tab.id ? "3px solid #2563eb" : "3px solid transparent",
-              }}
-            >
-              {tab.label}
-            </button>
-          ))}
+  const getConfidenceBadge = (level) => {
+    const styles = {
+      high: 'bg-green-100 text-green-700 border-green-300',
+      medium: 'bg-yellow-100 text-yellow-700 border-yellow-300',
+      low: 'bg-orange-100 text-orange-700 border-orange-300',
+      gap: 'bg-red-100 text-red-700 border-red-300',
+    };
+    const icons = { high: '✅', medium: '⚠️', low: '⚠️', gap: '❌' };
+    return (
+      <span className={`px-2 py-0.5 rounded text-xs border ${styles[level] || styles.medium}`}>
+        {icons[level] || '⚠️'} {level.toUpperCase()}
+      </span>
+    );
+  };
+
+  const compKeys = Object.keys(ALL_DATA);
+  const compColors = { dext: 'bg-amber-500', approvalmax: 'bg-purple-500', tipalti: 'bg-blue-500', zahara: 'bg-emerald-500', compleat: 'bg-red-500' };
+  const compName = { dext: 'Dext', approvalmax: 'ApprovalMax', tipalti: 'Tipalti', zahara: 'Zahara', compleat: 'Compleat' };
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-7xl mx-auto">
+
+        {/* ── COMPETITOR SELECTOR ── */}
+        <div className="bg-white rounded-lg shadow p-4 mb-6">
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="text-sm font-semibold text-gray-600">Select competitor:</span>
+            {compKeys.map(key => (
+              <button
+                key={key}
+                onClick={() => { setSelectedComp(key); setActiveTab('overview'); }}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all border-2 ${
+                  selectedComp === key
+                    ? 'border-blue-600 bg-blue-50 text-blue-700'
+                    : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                }`}
+              >
+                <span className={`inline-block w-2 h-2 rounded-full ${compColors[key]} mr-2`}></span>
+                {compName[key]}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <div style={{ padding: "20px" }}>
-
-          {/* OVERVIEW TAB */}
-          {activeTab === "overview" && (
+        {/* ── HEADER ── */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-4">
             <div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: "16px" }}>
-                {compKeys.map(key => {
-                  const c = COMPETITORS[key];
-                  return (
-                    <div key={key} className={`comp-card ${c.accent}`} style={{ background: "white", border: "1px solid #e5e7eb", padding: "16px", borderRadius: "0 8px 8px 0" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "10px" }}>
-                        <div>
-                          <h3 style={{ fontSize: "18px", fontWeight: 700, color: "#111827", margin: 0 }}>{c.name}</h3>
-                          <div style={{ fontSize: "12px", color: "#6b7280", marginTop: "2px" }}>{c.tagline}</div>
-                        </div>
-                        <a href={c.website} target="_blank" rel="noopener noreferrer" style={{ fontSize: "11px" }}>Website ↗</a>
-                      </div>
-                      
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginBottom: "12px" }}>
-                        <div style={{ background: "#f8fafc", borderRadius: "6px", padding: "8px" }}>
-                          <div style={{ fontSize: "11px", color: "#6b7280" }}><Tooltip term="gbp">GBP</Tooltip></div>
-                          <div style={{ fontSize: "15px", fontWeight: 700, color: "#111827" }}>{c.pricing.gbp.amount}</div>
-                          <ConfBadge level={c.pricing.gbp.confidence} />
-                        </div>
-                        <div style={{ background: "#f8fafc", borderRadius: "6px", padding: "8px" }}>
-                          <div style={{ fontSize: "11px", color: "#6b7280" }}><Tooltip term="aud">AUD</Tooltip></div>
-                          <div style={{ fontSize: "15px", fontWeight: 700, color: "#111827" }}>{c.pricing.aud.amount}</div>
-                          <ConfBadge level={c.pricing.aud.confidence} />
-                        </div>
-                      </div>
+              <h1 className="text-3xl font-bold text-gray-900">{data.name} Competitive Intelligence</h1>
+              <p className="text-gray-600">Last updated: {data.lastUpdated} · vs Lightyear AP Automation</p>
+            </div>
+            <div className="text-right">
+              <div className="text-sm text-gray-500">Next update</div>
+              <div className="font-semibold">{data.nextUpdate}</div>
+            </div>
+          </div>
 
-                      <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "10px" }}>
-                        <span style={{ background: "#f3f4f6", borderRadius: "12px", padding: "2px 10px", fontSize: "12px" }}>
-                          🧪 Trial: {c.pricing.trial.split("(")[0].trim()}
-                        </span>
-                        <span style={{ background: "#f3f4f6", borderRadius: "12px", padding: "2px 10px", fontSize: "12px" }}>
-                          👤 {c.userBase.split(".")[0]}
-                        </span>
-                      </div>
-
-                      <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
-                        <div style={{ fontSize: "12px" }}>
-                          Capterra: <StarRating score={c.ratings.capterra} />
-                          <span style={{ color: "#9ca3af" }}> ({c.ratings.capterra_count})</span>
-                        </div>
-                        <div style={{ fontSize: "12px" }}>
-                          G2: <StarRating score={c.ratings.g2} />
-                          <span style={{ color: "#9ca3af" }}> ({c.ratings.g2_count})</span>
-                        </div>
-                      </div>
-
-                      {c.changes.length > 0 && (
-                        <div style={{ borderTop: "1px solid #f3f4f6", paddingTop: "8px" }}>
-                          <div style={{ fontSize: "11px", color: "#6b7280", fontWeight: 600, marginBottom: "4px" }}>RECENT CHANGES</div>
-                          {c.changes.slice(0, 2).map((ch, i) => (
-                            <div key={i} style={{ fontSize: "12px", color: "#374151", marginBottom: "2px" }}>• {ch}</div>
-                          ))}
-                        </div>
+          {/* ── CHANGE ALERTS ── */}
+          {data.changeFlags.length > 0 && (
+            <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="text-orange-600 mt-0.5" size={20} />
+                <div className="flex-1">
+                  <h3 className="font-semibold text-orange-900 mb-2">Changes This Week</h3>
+                  {data.changeFlags.map((flag, i) => (
+                    <div key={i} className="text-sm text-orange-800 mb-1">
+                      <span className="font-medium">{flag.text}</span>
+                      <span className="text-orange-600"> — {flag.date}</span>
+                      {flag.url && (
+                        <a href={flag.url} target="_blank" rel="noopener noreferrer" className="text-orange-600 underline ml-2 text-xs">
+                          Source ↗
+                        </a>
                       )}
                     </div>
-                  );
-                })}
-              </div>
-
-              {/* Quick summary table */}
-              <div style={{ marginTop: "20px", background: "white", border: "1px solid #e5e7eb", borderRadius: "8px", overflow: "hidden" }}>
-                <div style={{ padding: "12px 16px", background: "#f8fafc", fontWeight: 700, fontSize: "14px", borderBottom: "1px solid #e5e7eb" }}>
-                  Quick Comparison vs Lightyear
-                </div>
-                <div style={{ overflowX: "auto" }}>
-                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "13px" }}>
-                    <thead>
-                      <tr style={{ background: "#f1f5f9" }}>
-                        <th style={{ padding: "8px 12px", textAlign: "left", borderBottom: "1px solid #e5e7eb" }}>Competitor</th>
-                        <th style={{ padding: "8px 12px", textAlign: "center", borderBottom: "1px solid #e5e7eb" }}><Tooltip term="gbp">GBP Entry</Tooltip></th>
-                        <th style={{ padding: "8px 12px", textAlign: "center", borderBottom: "1px solid #e5e7eb" }}>Free Trial</th>
-                        <th style={{ padding: "8px 12px", textAlign: "center", borderBottom: "1px solid #e5e7eb" }}>PO Creation</th>
-                        <th style={{ padding: "8px 12px", textAlign: "center", borderBottom: "1px solid #e5e7eb" }}><Tooltip term="3way">3-Way Match</Tooltip></th>
-                        <th style={{ padding: "8px 12px", textAlign: "center", borderBottom: "1px solid #e5e7eb" }}><Tooltip term="price-check">Price Check</Tooltip></th>
-                        <th style={{ padding: "8px 12px", textAlign: "center", borderBottom: "1px solid #e5e7eb" }}>Payments</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr style={{ background: "#f0fdf4" }}>
-                        <td style={{ padding: "8px 12px", fontWeight: 700, color: "#166534", borderBottom: "1px solid #e5e7eb" }}>⚡ Lightyear</td>
-                        <td style={{ padding: "8px 12px", textAlign: "center", borderBottom: "1px solid #e5e7eb" }}>£130/mo</td>
-                        <td style={{ padding: "8px 12px", textAlign: "center", borderBottom: "1px solid #e5e7eb" }}>✅ 30 days</td>
-                        <td style={{ padding: "8px 12px", textAlign: "center", borderBottom: "1px solid #e5e7eb" }}>✅</td>
-                        <td style={{ padding: "8px 12px", textAlign: "center", borderBottom: "1px solid #e5e7eb" }}>✅ Line-level</td>
-                        <td style={{ padding: "8px 12px", textAlign: "center", borderBottom: "1px solid #e5e7eb" }}>✅</td>
-                        <td style={{ padding: "8px 12px", textAlign: "center", borderBottom: "1px solid #e5e7eb" }}>❌</td>
-                      </tr>
-                      {compKeys.map(key => {
-                        const c = COMPETITORS[key];
-                        const f = c.features;
-                        return (
-                          <tr key={key} className="feature-row" style={{ borderBottom: "1px solid #f3f4f6" }}>
-                            <td style={{ padding: "8px 12px", fontWeight: 600 }}>{c.name}</td>
-                            <td style={{ padding: "8px 12px", textAlign: "center" }}>{c.pricing.gbp.amount}</td>
-                            <td style={{ padding: "8px 12px", textAlign: "center" }}>{c.pricing.trial}</td>
-                            <td style={{ padding: "8px 12px", textAlign: "center" }}>{f.po.val.startsWith("✅") ? "✅" : f.po.val.startsWith("⚠️") ? "⚠️" : "❌"}</td>
-                            <td style={{ padding: "8px 12px", textAlign: "center" }}>{f.threeWay.val.startsWith("✅") ? "✅" : "❌"}</td>
-                            <td style={{ padding: "8px 12px", textAlign: "center" }}>{f.priceCheck.val.startsWith("✅") ? "✅" : "❌"}</td>
-                            <td style={{ padding: "8px 12px", textAlign: "center" }}>{f.payments.val.startsWith("✅") ? "✅" : "❌"}</td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
+                  ))}
                 </div>
               </div>
             </div>
           )}
+        </div>
 
-          {/* PRICING TAB */}
-          {activeTab === "pricing" && (
-            <div>
-              <div style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: "8px", padding: "12px 16px", marginBottom: "20px" }}>
-                <span style={{ fontWeight: 700, color: "#166534" }}>⚡ Lightyear Pricing (Verified March 2, 2026):</span>
-                <span style={{ color: "#166534", marginLeft: "8px" }}>
-                  <Tooltip term="gbp">GBP</Tooltip>: £130 (125cr) → £179 (250cr) → £295 (500cr) → £529 (1000cr) · 
-                  <Tooltip term="aud"> AUD</Tooltip>: A$155 (125cr) · Unlimited users + sub-entities on every plan · 30-day rolling contract
-                </span>
-              </div>
+        {/* ── TABS ── */}
+        <div className="bg-white rounded-lg shadow mb-6">
+          <div className="border-b border-gray-200">
+            <nav className="flex -mb-px">
+              {['overview', 'pricing', 'features', 'vs-lightyear'].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
+                    activeTab === tab
+                      ? 'border-blue-600 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  {tab.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+                </button>
+              ))}
+            </nav>
+          </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                {compKeys.map(key => {
-                  const c = COMPETITORS[key];
-                  return (
-                    <div key={key} style={{ background: "white", border: "1px solid #e5e7eb", borderRadius: "8px", overflow: "hidden" }}>
-                      <div style={{ background: "#f8fafc", padding: "10px 16px", borderBottom: "1px solid #e5e7eb", display: "flex", alignItems: "center", gap: "12px" }}>
-                        <span style={{ width: "12px", height: "12px", borderRadius: "50%", background: c.color, display: "inline-block" }}></span>
-                        <span style={{ fontWeight: 700, fontSize: "16px" }}>{c.name}</span>
-                        <span style={{ fontSize: "12px", color: "#6b7280" }}>{c.tagline}</span>
-                      </div>
-                      <div style={{ padding: "16px" }}>
-                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "12px", marginBottom: "12px" }}>
-                          <div style={{ background: "#f8fafc", borderRadius: "6px", padding: "12px" }}>
-                            <div style={{ fontSize: "11px", color: "#6b7280", marginBottom: "4px" }}><Tooltip term="gbp">GBP (UK)</Tooltip></div>
-                            <div style={{ fontSize: "18px", fontWeight: 700 }}>{c.pricing.gbp.amount}</div>
-                            <ConfBadge level={c.pricing.gbp.confidence} />
-                            {c.pricing.gbp.confidence !== "high" && (
-                              <div style={{ fontSize: "11px", color: "#9a3412", marginTop: "4px" }}>⚠️ {c.pricing.gbp.note}</div>
-                            )}
-                            {c.pricing.gbp.confidence === "high" && (
-                              <div style={{ fontSize: "11px", color: "#166534", marginTop: "4px" }}>{c.pricing.gbp.note}</div>
-                            )}
-                          </div>
-                          <div style={{ background: "#f8fafc", borderRadius: "6px", padding: "12px" }}>
-                            <div style={{ fontSize: "11px", color: "#6b7280", marginBottom: "4px" }}><Tooltip term="aud">AUD (Australia)</Tooltip></div>
-                            <div style={{ fontSize: "18px", fontWeight: 700 }}>{c.pricing.aud.amount}</div>
-                            <ConfBadge level={c.pricing.aud.confidence} />
-                            {c.pricing.aud.confidence !== "high" && (
-                              <div style={{ fontSize: "11px", color: "#9a3412", marginTop: "4px" }}>⚠️ {c.pricing.aud.note}</div>
-                            )}
-                          </div>
-                          <div style={{ background: "#eff6ff", borderRadius: "6px", padding: "12px" }}>
-                            <div style={{ fontSize: "11px", color: "#6b7280", marginBottom: "4px" }}>USD (Reference)</div>
-                            <div style={{ fontSize: "14px", fontWeight: 600 }}>{c.pricing.usd.amount.split("(")[0]}</div>
-                            <ConfBadge level={c.pricing.usd.confidence} />
-                          </div>
-                        </div>
-                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: "8px", fontSize: "13px" }}>
-                          <div><span style={{ color: "#6b7280" }}>Billing model:</span> <span style={{ fontWeight: 500 }}>{c.pricing.billing}</span></div>
-                          <div><span style={{ color: "#6b7280" }}>Free trial:</span> <span style={{ fontWeight: 500 }}>{c.pricing.trial}</span></div>
-                          <div><span style={{ color: "#6b7280" }}>Overage policy:</span> <span style={{ fontWeight: 500 }}>{c.pricing.overage}</span></div>
-                        </div>
-                        {c.pricing.hidden && (
-                          <div style={{ marginTop: "8px", background: "#fefce8", border: "1px solid #fde047", borderRadius: "5px", padding: "8px 10px", fontSize: "12px", color: "#854d0e" }}>
-                            💡 <strong>Watch for hidden costs:</strong> {c.pricing.hidden}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+          <div className="p-6">
 
-              <div style={{ background: "#e0f2fe", border: "1px solid #7dd3fc", borderRadius: "8px", padding: "14px 16px", marginTop: "16px" }}>
-                <div style={{ fontWeight: 700, color: "#0c4a6e", marginBottom: "6px" }}>💡 Sales Pricing Note</div>
-                <div style={{ fontSize: "13px", color: "#0c4a6e" }}>
-                  Lightyear's £130/mo entry price sits in the same bracket as Zahara (£142/mo) and is significantly more affordable than Tipalti's Advanced tier ($199/mo ≈ £158). 
-                  ApprovalMax is cheaper at the entry level (£39/mo) but that's for approval workflows only — add Capture and Pay add-ons and the gap closes. 
-                  Dext is the lowest-cost option (~£25/mo) but covers only receipt/expense capture, not full AP automation.
-                  Lightyear's unlimited users + sub-entities on all plans is a key differentiator — most competitors charge per user or per entity at scale.
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* FEATURES TAB */}
-          {activeTab === "features" && (
-            <div>
-              <div style={{ overflowX: "auto" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12px", minWidth: "900px" }}>
-                  <thead>
-                    <tr style={{ background: "#1e293b", color: "white" }}>
-                      <th style={{ padding: "10px 12px", textAlign: "left", fontWeight: 600, minWidth: "160px" }}>Feature</th>
-                      <th style={{ padding: "10px 8px", textAlign: "center", fontWeight: 600, minWidth: "140px", background: "#166534" }}>⚡ Lightyear</th>
-                      {compKeys.map(key => (
-                        <th key={key} style={{ padding: "10px 8px", textAlign: "center", fontWeight: 600, minWidth: "130px" }}>{COMPETITORS[key].name}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {FEATURE_CATEGORIES.map((cat, idx) => (
-                      <tr key={cat.key} style={{ background: idx % 2 === 0 ? "#f8fafc" : "white", borderBottom: "1px solid #e5e7eb" }}>
-                        <td style={{ padding: "8px 12px", fontWeight: 600, color: "#374151" }}>
-                          <Tooltip term={cat.tooltip}>{cat.label}</Tooltip>
-                        </td>
-                        <td style={{ padding: "6px 8px", textAlign: "center", background: "#f0fdf4", fontSize: "11px" }}>
-                          {LIGHTYEAR_FEATURES[cat.key]}
-                        </td>
-                        {compKeys.map(key => {
-                          const feat = COMPETITORS[key].features[cat.key];
-                          return (
-                            <td key={key} style={{ padding: "6px 8px", textAlign: "center", fontSize: "11px", verticalAlign: "top" }}>
-                              <div>{feat.val}</div>
-                              <div style={{ marginTop: "3px" }}><ConfBadge level={feat.conf} /></div>
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Integrations section */}
-              <div style={{ marginTop: "20px" }}>
-                <h3 style={{ fontSize: "16px", fontWeight: 700, color: "#111827", marginBottom: "12px" }}>Software Integrations</h3>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "12px" }}>
-                  {compKeys.map(key => {
-                    const c = COMPETITORS[key];
+            {/* ══ OVERVIEW TAB ══ */}
+            {activeTab === 'overview' && (
+              <div className="space-y-6">
+                <div className="grid grid-cols-3 gap-4">
+                  {data.stats.map((stat, i) => {
+                    const colors = ['bg-blue-50', 'bg-green-50', 'bg-purple-50'];
+                    const iconColors = ['text-blue-600', 'text-green-600', 'text-purple-600'];
+                    const IconComp = stat.icon === 'users' ? Users : stat.icon === 'package' ? Package : Star;
                     return (
-                      <div key={key} style={{ background: "white", border: "1px solid #e5e7eb", borderRadius: "8px", padding: "14px" }}>
-                        <div style={{ fontWeight: 700, color: "#111827", marginBottom: "8px" }}>{c.name}</div>
-                        <div style={{ marginBottom: "6px" }}>
-                          <div style={{ fontSize: "11px", color: "#6b7280", fontWeight: 600, marginBottom: "4px" }}>ACCOUNTING</div>
-                          <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
-                            {c.integrations.accounting.map((a, i) => (
-                              <span key={i} style={{ background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: "4px", padding: "2px 6px", fontSize: "11px" }}>{a}</span>
-                            ))}
-                          </div>
+                      <div key={i} className={`${colors[i]} p-4 rounded-lg`}>
+                        <div className="flex items-center gap-2 mb-2">
+                          <IconComp className={iconColors[i]} size={20} />
+                          <span className="text-sm text-gray-600">{stat.label}</span>
                         </div>
-                        {c.integrations.ecommerce.length > 0 && (
-                          <div style={{ marginBottom: "6px" }}>
-                            <div style={{ fontSize: "11px", color: "#6b7280", fontWeight: 600, marginBottom: "4px" }}>E-COMMERCE</div>
-                            <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
-                              {c.integrations.ecommerce.map((e, i) => (
-                                <span key={i} style={{ background: "#f3f4f6", borderRadius: "4px", padding: "2px 6px", fontSize: "11px" }}>{e}</span>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                        <div style={{ fontSize: "12px", marginTop: "6px" }}>
-                          <span style={{ color: "#6b7280" }}>Banking/Payments: </span><span>{c.integrations.banking || "N/A"}</span>
-                        </div>
-                        <div style={{ fontSize: "12px", marginTop: "4px" }}>
-                          <span style={{ color: "#6b7280" }}><Tooltip term="gl">API</Tooltip>: </span>
-                          <span style={{ color: c.integrations.api !== "No public API" && c.integrations.api !== "No built-in payments mentioned" ? "#166534" : "#991b1b" }}>
-                            {c.integrations.api}
-                          </span>
-                        </div>
+                        <div className="text-2xl font-bold text-gray-900">{stat.value}</div>
+                        <div className="text-xs text-gray-500">{stat.sub}</div>
                       </div>
                     );
                   })}
                 </div>
-              </div>
-            </div>
-          )}
 
-          {/* VS LIGHTYEAR TAB */}
-          {activeTab === "vs-lightyear" && (
-            <div>
-              {/* Competitor selector */}
-              <div style={{ display: "flex", gap: "8px", marginBottom: "20px", flexWrap: "wrap" }}>
-                {compKeys.map(key => {
-                  const c = COMPETITORS[key];
-                  return (
-                    <button
-                      key={key}
-                      onClick={() => setSelectedComp(key)}
-                      style={{
-                        padding: "8px 16px",
-                        borderRadius: "6px",
-                        border: selectedComp === key ? `2px solid ${c.color}` : "2px solid #e5e7eb",
-                        background: selectedComp === key ? c.color + "15" : "white",
-                        cursor: "pointer",
-                        fontWeight: selectedComp === key ? 700 : 400,
-                        fontSize: "14px",
-                      }}
-                    >
-                      {c.name}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {(() => {
-                const c = COMPETITORS[selectedComp];
-                return (
-                  <div>
-                    <div style={{ background: "linear-gradient(to right, #eff6ff, #f0fdf4)", borderRadius: "10px", padding: "16px", marginBottom: "16px" }}>
-                      <h2 style={{ fontSize: "20px", fontWeight: 800, margin: "0 0 6px 0" }}>Lightyear vs {c.name}</h2>
-                      <p style={{ color: "#6b7280", margin: 0, fontSize: "14px" }}>{c.tagline}</p>
-                    </div>
-
-                    {/* Head-to-head table */}
-                    <div style={{ background: "white", border: "1px solid #e5e7eb", borderRadius: "8px", overflow: "hidden", marginBottom: "16px" }}>
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 80px", background: "#f1f5f9", padding: "10px 16px", fontWeight: 700, fontSize: "13px" }}>
-                        <div>Feature</div>
-                        <div style={{ textAlign: "center", color: "#166534" }}>⚡ Lightyear</div>
-                        <div style={{ textAlign: "center", color: "#374151" }}>{c.name}</div>
-                        <div style={{ textAlign: "center" }}>Winner</div>
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-3">Key Strengths</h3>
+                  <div className="space-y-2">
+                    {data.keyStrengths.map((s, i) => (
+                      <div key={i} className="flex items-start gap-2">
+                        <CheckCircle className="text-green-600 mt-0.5 flex-shrink-0" size={16} />
+                        <span className="text-sm">{s}</span>
                       </div>
-                      {FEATURE_CATEGORIES.map((cat, idx) => {
-                        const lf = LIGHTYEAR_FEATURES[cat.key];
-                        const cf = c.features[cat.key];
-                        const lyHas = lf.startsWith("✅");
-                        const cfHas = cf.val.startsWith("✅");
-                        const lyWins = lyHas && !cfHas;
-                        const cfWins = cfHas && !lyHas;
-                        const tie = lyHas && cfHas;
-                        return (
-                          <div key={cat.key} style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 80px", padding: "10px 16px", borderTop: "1px solid #f3f4f6", background: idx % 2 === 0 ? "#fafafa" : "white" }}>
-                            <div style={{ fontWeight: 500, fontSize: "13px" }}><Tooltip term={cat.tooltip}>{cat.label}</Tooltip></div>
-                            <div className={lyWins ? "winner-lightyear" : ""} style={{ textAlign: "center", fontSize: "12px", padding: "4px 8px", borderRadius: "4px" }}>{lf}</div>
-                            <div className={cfWins ? "winner-comp" : ""} style={{ textAlign: "center", fontSize: "12px", padding: "4px 8px", borderRadius: "4px" }}>{cf.val}</div>
-                            <div style={{ textAlign: "center", fontSize: "12px", fontWeight: 700 }}>
-                              {lyWins && <span style={{ color: "#166534" }}>Lightyear</span>}
-                              {cfWins && <span style={{ color: "#2563eb" }}>{c.name}</span>}
-                              {tie && <span style={{ color: "#9ca3af" }}>Tie</span>}
-                              {!lyHas && !cfHas && <span style={{ color: "#9ca3af" }}>—</span>}
-                            </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-3">Competitive Gaps vs Lightyear</h3>
+                  <div className="space-y-2">
+                    {data.competitiveGaps.map((g, i) => (
+                      <div key={i} className="flex items-start gap-2">
+                        <XCircle className="text-red-600 mt-0.5 flex-shrink-0" size={16} />
+                        <span className="text-sm">{g}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ══ PRICING TAB ══ */}
+            {activeTab === 'pricing' && (
+              <div className="space-y-6">
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="border border-gray-200 rounded-lg p-4">
+                    <div className="flex items-center gap-1 mb-1">
+                      <Tooltip term="gbp">
+                        <span className="text-sm text-gray-500">GBP (UK)</span>
+                      </Tooltip>
+                    </div>
+                    <div className="text-2xl font-bold text-gray-900">{data.pricingData.gbp.amount}</div>
+                    <div className="text-sm text-gray-600 mt-1">{data.pricingData.gbp.period}</div>
+                    <div className={`text-xs mt-2 ${data.pricingData.gbp.note.includes('Official') ? 'text-green-600' : 'text-orange-600'}`}>
+                      {data.pricingData.gbp.note.includes('Official') ? '✅' : '⚠️'} {data.pricingData.gbp.note}
+                    </div>
+                  </div>
+                  <div className="border border-gray-200 rounded-lg p-4">
+                    <div className="flex items-center gap-1 mb-1">
+                      <Tooltip term="aud">
+                        <span className="text-sm text-gray-500">AUD (Australia)</span>
+                      </Tooltip>
+                    </div>
+                    <div className="text-2xl font-bold text-gray-900">{data.pricingData.aud.amount}</div>
+                    <div className="text-sm text-gray-600 mt-1">{data.pricingData.aud.period}</div>
+                    <div className={`text-xs mt-2 ${data.pricingData.aud.note.includes('Official') ? 'text-green-600' : 'text-orange-600'}`}>
+                      {data.pricingData.aud.note.includes('Official') ? '✅' : '⚠️'} {data.pricingData.aud.note}
+                    </div>
+                  </div>
+                  <div className="border border-blue-200 rounded-lg p-4 bg-blue-50">
+                    <div className="text-sm text-gray-500 mb-1">USD (Reference)</div>
+                    <div className="text-2xl font-bold text-gray-900">{data.pricingData.usd.monthly}</div>
+                    <div className="text-sm text-gray-600 mt-1">monthly</div>
+                    <div className="text-xs text-blue-600 mt-2">ℹ️ {data.pricingData.usd.includes}</div>
+                  </div>
+                </div>
+
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h3 className="font-semibold mb-3">Pricing Structure</h3>
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span className="text-gray-600">Billing Model:</span>
+                      <span className="ml-2 font-medium">{data.pricingStructure.billingModel}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Annual Discount:</span>
+                      <span className="ml-2 font-medium text-green-600">{data.pricingStructure.annualDiscount}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Starter Plan Includes:</span>
+                      <span className="ml-2 font-medium">{data.pricingStructure.starterIncludes}</span>
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-1">
+                        <Tooltip term="overage">
+                          <span className="text-gray-600">If You Exceed Limit:</span>
+                        </Tooltip>
+                      </div>
+                      <span className="ml-2 font-medium text-red-600">{data.pricingStructure.overagePolicy}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <div className="flex items-center gap-1 mb-2">
+                    <Tooltip term="credits">
+                      <h4 className="font-semibold text-yellow-900">Additional Costs to Watch For</h4>
+                    </Tooltip>
+                  </div>
+                  <ul className="text-sm text-yellow-800 space-y-1">
+                    {data.additionalCosts.map((c, i) => (
+                      <li key={i}>• {c}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="border-l-4 border-blue-600 bg-blue-50 p-4">
+                  <div className="text-sm text-blue-900">
+                    <strong>Sales Note:</strong> {data.salesNote}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ══ FEATURES TAB ══ */}
+            {activeTab === 'features' && (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-4">Features Available</h3>
+
+                  {/* Table Header */}
+                  <div className="grid grid-cols-3 gap-4 px-3 pb-2 mb-2 border-b-2 border-gray-300">
+                    <div className="font-semibold text-gray-700">Feature</div>
+                    <div className="font-semibold text-gray-700">Details</div>
+                    <div className="font-semibold text-gray-700">Data Confidence</div>
+                  </div>
+
+                  <div className="space-y-3">
+                    {data.features.hasFeature.map((feature, i) => (
+                      <div key={i} className="grid grid-cols-3 gap-4 items-center p-3 bg-gray-50 rounded-lg">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle className="text-green-600 flex-shrink-0" size={18} />
+                          {feature.tooltip ? (
+                            <Tooltip term={feature.tooltip}>
+                              <div className="font-medium text-gray-900">{feature.name}</div>
+                            </Tooltip>
+                          ) : (
+                            <div className="font-medium text-gray-900">{feature.name}</div>
+                          )}
+                        </div>
+                        <div className="text-sm text-gray-600">{feature.detail}</div>
+                        <div>
+                          {getConfidenceBadge(feature.confidence)}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-4">Features NOT Available (vs Lightyear)</h3>
+                  <div className="space-y-2">
+                    {data.features.missing.map((feature, i) => (
+                      <div key={i} className="flex items-center gap-3 p-3 bg-red-50 rounded-lg">
+                        <XCircle className="text-red-600 flex-shrink-0" size={18} />
+                        {feature.tooltip ? (
+                          <Tooltip term={feature.tooltip}>
+                            <span className="text-gray-900">{feature.name}</span>
+                          </Tooltip>
+                        ) : (
+                          <span className="text-gray-900">{feature.name}</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-white border border-gray-200 rounded-lg p-4">
+                  <h3 className="font-semibold mb-3">Software Integrations</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="text-sm text-gray-600 mb-2">Accounting Software</div>
+                      <div className="flex flex-wrap gap-2">
+                        {data.integrations.accounting.map((int, i) => (
+                          <div key={i} className="bg-blue-50 border border-blue-200 rounded px-3 py-1.5 text-sm">
+                            <span className="font-medium">{int.name}</span>
+                            {int.rating && <span className="text-blue-600 ml-2">{int.rating}</span>}
                           </div>
-                        );
-                      })}
+                        ))}
+                      </div>
                     </div>
-
-                    {/* Pricing head-to-head */}
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "16px" }}>
-                      <div style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: "8px", padding: "14px" }}>
-                        <div style={{ fontWeight: 700, color: "#166534", marginBottom: "8px" }}>⚡ Lightyear Pricing</div>
-                        <div style={{ fontSize: "13px", color: "#166534" }}>
-                          <div>GBP: £130/mo (125 credits, unlimited users)</div>
-                          <div>AUD: A$155/mo</div>
-                          <div>Trial: 30 days, no card</div>
-                          <div>Contract: 30-day rolling</div>
+                    {data.integrations.ecommerce.length > 0 && (
+                      <div>
+                        <div className="text-sm text-gray-600 mb-2">E-commerce / Online Buying</div>
+                        <div className="flex flex-wrap gap-2">
+                          {data.integrations.ecommerce.map((name, i) => (
+                            <span key={i} className="bg-gray-100 rounded px-2 py-1 text-sm">{name}</span>
+                          ))}
                         </div>
                       </div>
-                      <div style={{ background: "#eff6ff", border: "1px solid #93c5fd", borderRadius: "8px", padding: "14px" }}>
-                        <div style={{ fontWeight: 700, color: "#1e40af", marginBottom: "8px" }}>{c.name} Pricing</div>
-                        <div style={{ fontSize: "13px", color: "#1e40af" }}>
-                          <div>GBP: {c.pricing.gbp.amount} <ConfBadge level={c.pricing.gbp.confidence} /></div>
-                          <div>AUD: {c.pricing.aud.amount} <ConfBadge level={c.pricing.aud.confidence} /></div>
-                          <div>Trial: {c.pricing.trial}</div>
-                          <div>Billing: {c.pricing.billing.substring(0, 50)}...</div>
-                        </div>
-                      </div>
+                    )}
+                    <div className="pt-2 border-t">
+                      <span className="text-sm font-medium text-gray-900">Banking / Payments: </span>
+                      <span className="text-sm text-green-600">{data.integrations.banking}</span>
                     </div>
-
-                    {/* Win/lose boxes */}
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "16px" }}>
-                      <div style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: "8px", padding: "14px" }}>
-                        <div style={{ fontWeight: 700, color: "#166534", marginBottom: "8px" }}>🏆 When Lightyear Wins vs {c.name}</div>
-                        <ul style={{ fontSize: "13px", color: "#166534", paddingLeft: "16px", margin: 0 }}>
-                          {!c.features.priceCheck.val.startsWith("✅") && <li>Automated price checking vs agreed supplier prices (prevents overcharging)</li>}
-                          {!c.features.fraudCheck.val.startsWith("✅") && <li>Supplier bank detail verification (fraud prevention)</li>}
-                          {!c.features.statementRecon.val.startsWith("✅") && <li>Automated supplier statement reconciliation with one-click copy requests</li>}
-                          {!c.features.threeWay.val.startsWith("✅") && <li>Full 3-way matching at line-item level</li>}
-                          {!c.features.po.val.startsWith("✅") && <li>Native PO creation and management</li>}
-                          <li>Unlimited users on all plans (no per-seat charges)</li>
-                          <li>Unlimited sub-entities on all plans</li>
-                          <li>Hospitality POS integrations (Bepoz, Idealpos, Fedelta etc.)</li>
-                          <li>30-day free trial (no credit card)</li>
-                        </ul>
-                      </div>
-                      <div style={{ background: "#eff6ff", border: "1px solid #93c5fd", borderRadius: "8px", padding: "14px" }}>
-                        <div style={{ fontWeight: 700, color: "#1e40af", marginBottom: "8px" }}>📊 When {c.name} May Win</div>
-                        <ul style={{ fontSize: "13px", color: "#1e40af", paddingLeft: "16px", margin: 0 }}>
-                          {c.pricing.gbp.amount.includes("~£") && parseFloat(c.pricing.gbp.amount.replace(/[^0-9.]/g, "")) < 130 && (
-                            <li>Lower entry price ({c.pricing.gbp.amount} vs £130)</li>
-                          )}
-                          {c.pricing.gbp.amount.includes("£39") && <li>Lower entry price (£39/mo vs £130) for approval-only workflow needs</li>}
-                          {selectedComp === "dext" && (
-                            <>
-                              <li>11,500+ banking connections for bank feeds</li>
-                              <li>E-commerce platform integrations (Shopify, Amazon etc.)</li>
-                              <li>10-year document storage (vs 7 years)</li>
-                              <li>Better fit for pure receipt/expense capture at volume</li>
-                            </>
-                          )}
-                          {selectedComp === "tipalti" && (
-                            <>
-                              <li>Global mass payments to 200+ countries, 120+ currencies</li>
-                              <li>Better for businesses making large volumes of cross-border payments</li>
-                              <li>Built-in tax compliance (W-9, W-8, global tax IDs)</li>
-                              <li>Strong US mid-market positioning</li>
-                            </>
-                          )}
-                          {selectedComp === "zahara" && (
-                            <>
-                              <li>Similar price bracket (£142/mo vs £130/mo)</li>
-                              <li>Strong focus on budget controls and project costing</li>
-                              <li>Good for non-hospitality construction/care SMEs</li>
-                            </>
-                          )}
-                          {selectedComp === "approvalmax" && (
-                            <>
-                              <li>Cheaper approval-only entry (£39/mo)</li>
-                              <li>Best-in-class approval workflow design (unlimited steps)</li>
-                              <li>Strong audit trail for compliance-focused businesses</li>
-                              <li>Confirmation of Payee fraud check for payments</li>
-                            </>
-                          )}
-                          {selectedComp === "compleat" && (
-                            <>
-                              <li>Amazon Business punchout integration (direct ordering)</li>
-                              <li>400+ supplier catalog integrations</li>
-                              <li>Strong in UK education and non-profit sectors</li>
-                            </>
-                          )}
-                        </ul>
-                      </div>
-                    </div>
-
-                    {/* Sales script */}
-                    <div style={{ background: "#faf5ff", border: "1px solid #d8b4fe", borderRadius: "8px", padding: "16px" }}>
-                      <div style={{ fontWeight: 700, color: "#6b21a8", marginBottom: "10px", fontSize: "15px" }}>🎯 Sales Positioning Scripts vs {c.name}</div>
-                      <div style={{ display: "flex", flexDirection: "column", gap: "10px", fontSize: "13px", color: "#4c1d95" }}>
-                        {selectedComp === "dext" && (
-                          <>
-                            <div><strong>Core pitch:</strong> "While Dext excels at receipt and expense scanning — and they've now added payments via Airwallex — Lightyear provides complete AP automation with purchase order management, automated price checking against supplier agreements, and bank detail fraud verification. Dext captures data; Lightyear controls the entire spend lifecycle before money leaves."</div>
-                            <div><strong>On price:</strong> "Dext is cheaper at the entry level (~£25/mo). But Dext doesn't include PO management, 3-way matching, or price verification. For businesses managing suppliers and controlling spend, the ROI from preventing overcharging alone typically pays for Lightyear within months."</div>
-                            <div><strong>For hospitality/multi-site:</strong> "Dext has multi-entity support, but Lightyear's hospitality POS integrations (Bepoz, Idealpos, OrderMate etc.) mean AP data flows directly from your point-of-sale systems — critical for venues processing high volumes of supplier invoices tied to specific sales periods."</div>
-                          </>
-                        )}
-                        {selectedComp === "approvalmax" && (
-                          <>
-                            <div><strong>Core pitch:</strong> "ApprovalMax is purpose-built for approval workflows and does that excellently. But it requires additional tools for invoice capture (Capture add-on), and doesn't offer automated price checking against supplier agreements or automated statement reconciliation. Lightyear handles the full AP process from invoice arrival to payment approval in one platform."</div>
-                            <div><strong>On price:</strong> "ApprovalMax's Standard plan is £39/mo, but that's before adding the Capture add-on for invoice scanning. Lightyear at £130/mo includes line-item extraction, statement reconciliation, price checking, and 8-level approvals by default — typically lower total cost of ownership."</div>
-                            <div><strong>For finance controls:</strong> "While ApprovalMax offers Confirmation of Payee via their Pay add-on, Lightyear's bank detail fraud verification is built-in. Combined with automated price checking, Lightyear provides layered fraud and error prevention upstream — before approval, not just at payment."</div>
-                          </>
-                        )}
-                        {selectedComp === "tipalti" && (
-                          <>
-                            <div><strong>Core pitch:</strong> "Tipalti is an excellent global payments platform — particularly strong for businesses making high-volume cross-border payments to affiliates or contractors. Lightyear focuses on controlling what you buy from suppliers before payment, with purchase orders, 3-way matching, and price verification. They solve different parts of the AP problem."</div>
-                            <div><strong>For UK SMEs and mid-market:</strong> "Tipalti's strength is global mass payments and compliance (W-9, OFAC screening). Lightyear's strength is supplier invoice controls for businesses with complex procurement workflows — particularly in hospitality, construction, retail, and multi-site businesses. If your challenge is controlling supplier spend rather than paying large numbers of partners globally, Lightyear is purpose-built for that."</div>
-                            <div><strong>On pricing transparency:</strong> "Tipalti's pricing is base fee + transaction fees — costs can scale significantly with volume. Lightyear's credit-based pricing is predictable and based purely on document volume, with unlimited users and entities included."</div>
-                          </>
-                        )}
-                        {selectedComp === "zahara" && (
-                          <>
-                            <div><strong>Core pitch:</strong> "Zahara and Lightyear are the most similar competitors — both include POs, 3-way matching, and multi-entity support in a similar price bracket. Lightyear differentiates through automated price checking vs supplier agreed pricelists, automated statement reconciliation with one-click copy requests, and deep hospitality POS integrations that Zahara doesn't offer."</div>
-                            <div><strong>For hospitality:</strong> "Zahara is built for construction, care, and property management. Lightyear is built for hospitality — with native POS integrations to Bepoz, Idealpos, Fedelta, and others. For venues managing food, beverage, and supply costs, Lightyear connects AP directly to your front-of-house sales data."</div>
-                            <div><strong>On automation depth:</strong> "Zahara processes invoices 9x faster than manual. Lightyear claims 100% accurate extraction with Smart Extract+ AI — and uniquely verifies invoice prices against your agreed supplier pricelists automatically, flagging overcharges before approval."</div>
-                          </>
-                        )}
-                        {selectedComp === "compleat" && (
-                          <>
-                            <div><strong>Core pitch:</strong> "Compleat and Lightyear both automate the full purchase-to-pay cycle. Compleat's strength is its Amazon Business punchout and supplier catalog integrations. Lightyear's differentiation is automated price verification against supplier agreed pricing, bank fraud detection, and deep hospitality POS integrations."</div>
-                            <div><strong>On pricing transparency:</strong> "Compleat doesn't publish pricing — you need a custom quote. Lightyear's pricing is fully transparent on the website with no hidden costs. For businesses comparing options, Lightyear's predictable credit-based pricing makes budgeting straightforward."</div>
-                            <div><strong>For multi-site:</strong> "Both platforms support multi-entity. Lightyear's parent/child dashboard structure with unlimited sub-entities on all plans is particularly strong for franchises and multi-location businesses in hospitality and retail."</div>
-                          </>
-                        )}
+                    <div className="pt-2 border-t">
+                      <div className="flex items-center gap-1">
+                        <Tooltip term="api">
+                          <span className="text-sm font-medium text-gray-900">API Access:</span>
+                        </Tooltip>
+                        <span className={`text-sm ml-2 ${data.integrations.api.startsWith('Yes') ? 'text-green-600' : 'text-red-600'}`}>
+                          {data.integrations.api}
+                        </span>
                       </div>
                     </div>
                   </div>
-                );
-              })()}
-            </div>
-          )}
+                </div>
+              </div>
+            )}
 
+            {/* ══ VS LIGHTYEAR TAB ══ */}
+            {activeTab === 'vs-lightyear' && (
+              <div className="space-y-6">
+                <div className="bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-lg">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Head-to-Head: {data.name} vs Lightyear</h3>
+                  <p className="text-gray-700">Direct feature comparison to inform sales positioning</p>
+                </div>
+
+                {/* Column Headers */}
+                <div className="grid grid-cols-4 gap-4 px-4 pb-2 border-b-2 border-gray-300">
+                  <div className="font-semibold text-gray-700">Feature</div>
+                  <div className="text-center font-semibold text-blue-700">{data.name}</div>
+                  <div className="text-center font-semibold text-green-700">Lightyear</div>
+                  <div className="text-center font-semibold text-gray-700">Winner</div>
+                </div>
+
+                <div className="space-y-2">
+                  {data.vsLightyear.map((item, i) => (
+                    <div key={i} className="grid grid-cols-4 gap-4 p-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+                      <div className="font-medium text-gray-900 flex items-center gap-1">
+                        {item.tooltip ? (
+                          <Tooltip term={item.tooltip}>
+                            <span>{item.metric}</span>
+                          </Tooltip>
+                        ) : (
+                          <span>{item.metric}</span>
+                        )}
+                      </div>
+                      <div className={`text-center ${item.winner === 'comp' ? 'bg-blue-50 font-semibold text-blue-900' : 'text-gray-600'} rounded px-2 py-1`}>
+                        {item.comp}
+                      </div>
+                      <div className={`text-center ${item.winner === 'lightyear' ? 'bg-green-50 font-semibold text-green-900' : 'text-gray-600'} rounded px-2 py-1`}>
+                        {item.lightyear}
+                      </div>
+                      <div className="text-center">
+                        {item.winner === 'comp' && <span className="text-blue-600 font-medium">{data.name}</span>}
+                        {item.winner === 'lightyear' && <span className="text-green-600 font-medium">Lightyear</span>}
+                        {item.winner === 'tie' && <span className="text-gray-500">Tie</span>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="grid grid-cols-2 gap-6 mt-6">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h4 className="font-semibold text-blue-900 mb-3">When {data.name} Wins</h4>
+                    <ul className="text-sm text-blue-800 space-y-2">
+                      {data.whenCompWins.map((w, i) => (
+                        <li key={i}>• {w}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <h4 className="font-semibold text-green-900 mb-3">When Lightyear Wins</h4>
+                    <ul className="text-sm text-green-800 space-y-2">
+                      {data.whenLightyearWins.map((w, i) => (
+                        <li key={i}>• {w}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-5">
+                  <h4 className="font-semibold text-purple-900 mb-3">🎯 Sales Positioning Scripts</h4>
+                  <div className="space-y-3 text-sm text-purple-900">
+                    {data.salesScripts.map((s, i) => (
+                      <div key={i}>
+                        <strong>{s.label}:</strong> {s.script}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+          </div>
         </div>
-      </div>
 
-      {/* DATA QUALITY FOOTER */}
-      <div style={{ background: "white", borderRadius: "8px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)", padding: "14px 16px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "10px" }}>
-          <div>
-            <div style={{ fontWeight: 700, color: "#111827", fontSize: "14px" }}>Data Quality Summary</div>
-            <div style={{ fontSize: "12px", color: "#6b7280", marginTop: "2px" }}>
-              Lightyear baseline verified from official website. GBP pricing confirmed for Dext (USD converted), ApprovalMax, Zahara, Lightyear. 
-              Tipalti and Compleat pricing require vendor quotes. AUD pricing confirmed for Lightyear (A$155) and ApprovalMax; others are conversions.
+        {/* ── DATA QUALITY INDICATOR ── */}
+        <div className="bg-white rounded-lg shadow p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-semibold text-gray-900">Data Quality Summary — {data.name}</h3>
+              <p className="text-sm text-gray-600">{data.dataQuality.note}</p>
+            </div>
+            <div className="flex gap-2">
+              <span className="px-3 py-1 bg-green-100 text-green-700 rounded text-sm">✅ High: {data.dataQuality.high} items</span>
+              <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded text-sm">⚠️ Medium: {data.dataQuality.medium} items</span>
+              <span className="px-3 py-1 bg-red-100 text-red-700 rounded text-sm">❌ Gaps: {data.dataQuality.gaps} items</span>
             </div>
           </div>
-          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-            <span className="conf-high">✅ HIGH confidence: Official sources</span>
-            <span className="conf-medium">⚠️ MEDIUM: Single source / converted</span>
-            <span className="conf-low">⚠️ LOW: Outdated / indirect</span>
-            <span className="conf-gap">❌ GAP: Not found</span>
-          </div>
         </div>
+
       </div>
     </div>
   );
-}
+};
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<CompetitorDashboard />, document.getElementById('root'));
 </script>
 </body>
 </html>
