@@ -72,9 +72,9 @@ const DATA = {
     ],
     salesNote: "Dext's lower entry price (~£30 vs Lightyear's £130) is compelling, but lacks full AP automation. Now offers in-app payments (UK Xero only). Position Lightyear's higher price as investment in upstream AP controls — price checking, fraud detection, PO management — that Dext doesn't provide.",
     stats: [
-      { icon: 'users', color: 'blue', label: 'User Base', value: '700K+', sub: 'Businesses worldwide' },
-      { icon: 'package', color: 'green', label: 'Processed', value: '320M+', sub: 'Documents annually' },
-      { icon: 'star', color: 'purple', label: 'Capterra Rating', value: '4.2★', sub: '160+ reviews' }
+      { icon: 'star', color: 'blue', label: 'G2 Rating', value: '4.2★', sub: '160+ reviews (Capterra)' },
+      { icon: 'gbp', color: 'green', label: 'Entry Price (GBP)', value: '~£30/mo', sub: 'Converted from USD — not official' },
+      { icon: 'trial', color: 'purple', label: 'Free Trial', value: '14 days', sub: 'No credit card required' }
     ],
     strengths: [
       'Massive banking ecosystem (11,500+ institutions)',
@@ -188,8 +188,8 @@ const DATA = {
     salesNote: "⚠️ Update sales messaging: ApprovalMax now has 3-way matching (Advanced plan+) and free OCR Capture in UK. To get 3-way matching you need Advanced at £64/mo — still without price checking or bank fraud protection. Lightyear Standard at £130 includes all of that.",
     stats: [
       { icon: 'star', color: 'blue', label: 'G2 Rating', value: '4.6★', sub: '200+ reviews' },
-      { icon: 'users', color: 'green', label: 'Billing Model', value: 'Per Org', sub: 'Unlimited users' },
-      { icon: 'package', color: 'purple', label: 'Plans', value: '3', sub: 'Standard / Advanced / Premium' }
+      { icon: 'gbp', color: 'green', label: 'Entry Price (GBP)', value: '£39/mo', sub: 'Annual billing — Standard plan' },
+      { icon: 'trial', color: 'purple', label: 'Free Trial', value: 'Yes', sub: 'No credit card required' }
     ],
     strengths: [
       'Now offers 3-way matching on Advanced/Premium plans (late 2025)',
@@ -302,8 +302,8 @@ const DATA = {
     salesNote: "Tipalti is an enterprise global payments platform — not a direct AP automation competitor for most Lightyear prospects. Tipalti wins when the primary need is paying contractors across 50+ countries. Lightyear wins when the need is controlling what you're paying UK/APAC suppliers before money moves.",
     stats: [
       { icon: 'star', color: 'blue', label: 'G2 Rating', value: '4.5★', sub: '250+ reviews' },
-      { icon: 'package', color: 'green', label: 'Countries', value: '196', sub: 'Payment destinations' },
-      { icon: 'users', color: 'purple', label: 'Free Trial', value: 'None', sub: 'Demo only' }
+      { icon: 'gbp', color: 'green', label: 'Entry Price (GBP)', value: 'Contact sales', sub: 'No GBP pricing published' },
+      { icon: 'trial', color: 'purple', label: 'Free Trial', value: 'None', sub: 'Demo only' }
     ],
     strengths: [
       'Global mass payments — 196 countries, 120 currencies, 50+ payment methods',
@@ -412,8 +412,8 @@ const DATA = {
     salesNote: "Zahara controls your budget before you commit to spending — strong on PO control and departmental budgets. Lightyear controls what suppliers charge you after you've committed. Position on: automated price checking vs agreed pricelists, bank detail fraud detection, statement reconciliation, and unlimited sub-entities vs Zahara's capped business units.",
     stats: [
       { icon: 'star', color: 'blue', label: 'Capterra Rating', value: '4.5★', sub: '50+ reviews' },
-      { icon: 'users', color: 'green', label: 'HQ', value: 'Bath, UK', sub: 'UK-focused product' },
-      { icon: 'package', color: 'purple', label: 'Free Trial', value: 'Yes', sub: 'Length not published' }
+      { icon: 'gbp', color: 'green', label: 'Entry Price (GBP)', value: '~£142/mo', sub: 'Capterra — not confirmed via scrape' },
+      { icon: 'trial', color: 'purple', label: 'Free Trial', value: 'Yes', sub: 'Length not published' }
     ],
     strengths: [
       'Strong departmental and project budget control before spending',
@@ -519,8 +519,8 @@ const DATA = {
     salesNote: "Compleat manages what you're buying — excellent online purchasing tools including Amazon Business integration and the new EcoSystem supplier marketplace. Lightyear controls what you're being charged for it. After purchase is committed, Lightyear's price checking verifies every invoice line against agreed prices.",
     stats: [
       { icon: 'star', color: 'blue', label: 'G2 Rating', value: '4.4★', sub: '100+ reviews' },
-      { icon: 'users', color: 'green', label: 'Customers', value: '500+', sub: 'Global businesses' },
-      { icon: 'package', color: 'purple', label: 'Free Trial', value: 'Yes', sub: 'No credit card required' }
+      { icon: 'gbp', color: 'green', label: 'Entry Price (GBP)', value: 'Contact sales', sub: 'No pricing published' },
+      { icon: 'trial', color: 'purple', label: 'Free Trial', value: 'Yes', sub: 'No credit card required' }
     ],
     strengths: [
       'Online buying — Amazon Business Punch-In and 70+ supplier EcoSystem (Dec 2024)',
@@ -674,15 +674,20 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* ── CHANGES THIS WEEK (always visible, updates per competitor) ── */}
+        {/* ── CHANGES THIS WEEK — all competitors, always visible ── */}
         <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
           <div className="flex items-start gap-3">
             <AlertCircle className="text-orange-600 mt-0.5 flex-shrink-0" size={20} />
             <div className="flex-1">
-              <h3 className="font-semibold text-orange-900 mb-2">Changes This Week</h3>
-              {d.changeFlags.map((flag, i) => (
-                <div key={i} className="text-sm text-orange-800">
-                  <span className="font-medium">{flag.text}</span> - {flag.date}
+              <h3 className="font-semibold text-orange-900 mb-3">Changes This Week — All Competitors</h3>
+              {Object.keys(DATA).map(key => (
+                <div key={key} className="mb-3">
+                  <div className="text-xs font-bold text-orange-700 uppercase tracking-wide mb-1">{DATA[key].name}</div>
+                  {DATA[key].changeFlags.map((flag, i) => (
+                    <div key={i} className="text-sm text-orange-800 mb-0.5">
+                      <span className="font-medium">{flag.text}</span> — {flag.date}
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>
@@ -721,9 +726,11 @@ const Dashboard = () => {
                     return (
                       <div key={i} className={`${bg[s.color]} p-4 rounded-lg`}>
                         <div className="flex items-center gap-2 mb-2">
+                          {s.icon === 'star'  && <Star    className={ic[s.color]} size={20} />}
+                          {s.icon === 'gbp'   && <span className={`text-lg font-bold ${ic[s.color]}`}>£</span>}
+                          {s.icon === 'trial' && <Package className={ic[s.color]} size={20} />}
                           {s.icon === 'users'   && <Users   className={ic[s.color]} size={20} />}
                           {s.icon === 'package' && <Package className={ic[s.color]} size={20} />}
-                          {s.icon === 'star'    && <Star    className={ic[s.color]} size={20} />}
                           <span className="text-sm text-gray-600">{s.label}</span>
                         </div>
                         <div className="text-2xl font-bold text-gray-900">{s.value}</div>
