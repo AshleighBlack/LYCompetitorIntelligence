@@ -3,1296 +3,1123 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lightyear Competitive Intelligence Dashboard — 30 March 2026</title>
+<title>Lightyear Competitor Intelligence Dashboard - 6 April 2026</title>
 <style>
   :root {
-    --navy: #0f1e35;
-    --navy-light: #1a2f4a;
-    --green: #00b67a;
-    --green-light: #e6f9f2;
-    --green-mid: #b3edd8;
-    --blue: #1d6fd8;
-    --blue-light: #e8f1fd;
-    --blue-mid: #bdd4f7;
-    --amber: #f59e0b;
-    --amber-light: #fef3c7;
-    --red: #ef4444;
-    --red-light: #fee2e2;
-    --orange: #f97316;
-    --orange-light: #fff7ed;
-    --gray-50: #f8fafc;
-    --gray-100: #f1f5f9;
-    --gray-200: #e2e8f0;
-    --gray-300: #cbd5e1;
-    --gray-400: #94a3b8;
-    --gray-500: #64748b;
-    --gray-600: #475569;
-    --gray-700: #334155;
-    --gray-800: #1e293b;
-    --gray-900: #0f172a;
+    --navy: #1a2744;
+    --navy-light: #253557;
+    --blue-comp: #2563eb;
+    --blue-light: #eff6ff;
+    --green-ly: #16a34a;
+    --green-light: #f0fdf4;
+    --amber: #d97706;
+    --amber-light: #fffbeb;
+    --red: #dc2626;
+    --red-light: #fef2f2;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-500: #6b7280;
+    --gray-700: #374151;
+    --gray-900: #111827;
     --white: #ffffff;
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
-    --shadow-md: 0 4px 12px rgba(0,0,0,0.10);
-    --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
-    --radius-sm: 6px;
-    --radius-md: 10px;
-    --radius-lg: 14px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.05);
   }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--gray-50); color: var(--gray-800); font-size: 14px; line-height: 1.5; }
-  a { color: var(--blue); text-decoration: none; }
-  a:hover { text-decoration: underline; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--gray-50); color: var(--gray-900); font-size: 14px; line-height: 1.5; }
+  
+  /* HEADER */
+  .header { background: var(--navy); color: white; padding: 20px 24px; }
+  .header-inner { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .header h1 { font-size: 22px; font-weight: 700; }
+  .header p { font-size: 13px; opacity: 0.7; margin-top: 2px; }
+  .header-meta { text-align: right; font-size: 12px; opacity: 0.8; }
+  
+  /* CHANGE BANNER */
+  .change-banner { background: #fff7ed; border-left: 4px solid #f97316; padding: 12px 24px; }
+  .change-banner-inner { max-width: 1400px; margin: 0 auto; }
+  .change-banner h3 { font-size: 13px; font-weight: 700; color: #9a3412; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .change-item { font-size: 12px; color: #7c2d12; margin-bottom: 4px; padding-left: 16px; position: relative; }
+  .change-item::before { content: '•'; position: absolute; left: 4px; }
+  .change-item a { color: #c2410c; text-decoration: underline; }
+  .change-tag { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 10px; font-weight: 700; margin-right: 4px; }
+  .tag-new { background: #dcfce7; color: #166534; }
+  .tag-update { background: #dbeafe; color: #1e40af; }
+  .tag-pricing { background: #fef9c3; color: #854d0e; }
+  .tag-announcement { background: #fce7f3; color: #9d174d; }
+  .tag-ly { background: #ecfdf5; color: #065f46; border: 1px solid #6ee7b7; }
 
-  /* ── LAYOUT ── */
-  .page-header { background: var(--navy); color: #fff; padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; }
-  .page-header h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
-  .page-header .meta { text-align: right; font-size: 12px; opacity: 0.7; }
-  .page-header .meta strong { display: block; font-size: 13px; opacity: 1; }
+  /* MAIN LAYOUT */
+  .main { max-width: 1400px; margin: 0 auto; padding: 16px 24px; }
 
-  .container { max-width: 1300px; margin: 0 auto; padding: 24px 24px 48px; }
+  /* COMPETITOR TABS */
+  .comp-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+  .comp-tab { padding: 7px 16px; border-radius: 6px; border: 1.5px solid var(--gray-200); background: white; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--gray-700); transition: all 0.15s; }
+  .comp-tab:hover { border-color: var(--blue-comp); color: var(--blue-comp); }
+  .comp-tab.active { background: var(--blue-comp); border-color: var(--blue-comp); color: white; }
+  .comp-tab.all-tab.active { background: var(--navy); border-color: var(--navy); }
 
-  /* ── CHANGE ALERTS ── */
-  .change-banner { background: var(--orange-light); border: 1px solid #fed7aa; border-radius: var(--radius-md); padding: 16px 20px; margin-bottom: 24px; }
-  .change-banner h2 { font-size: 13px; font-weight: 700; color: #9a3412; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; }
-  .change-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; font-size: 13px; color: #7c2d12; }
-  .change-item:last-child { margin-bottom: 0; }
-  .change-badge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 99px; white-space: nowrap; margin-top: 1px; }
-  .badge-new { background: #dcfce7; color: #14532d; }
-  .badge-update { background: #dbeafe; color: #1e3a5f; }
-  .badge-announce { background: #fef3c7; color: #78350f; }
-  .badge-change { background: #f3e8ff; color: #581c87; }
-  .change-source { font-size: 11px; color: var(--blue); margin-top: 2px; }
+  /* SECTION TABS */
+  .section-tabs { display: flex; border-bottom: 2px solid var(--gray-200); margin-bottom: 16px; }
+  .section-tab { padding: 10px 20px; font-size: 13px; font-weight: 600; color: var(--gray-500); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.15s; }
+  .section-tab:hover { color: var(--gray-900); }
+  .section-tab.active { color: var(--blue-comp); border-bottom-color: var(--blue-comp); }
 
-  /* ── LIGHTYEAR BASELINE CARD ── */
-  .ly-baseline { background: var(--green-light); border: 1.5px solid var(--green-mid); border-radius: var(--radius-md); padding: 16px 20px; margin-bottom: 24px; }
-  .ly-baseline h2 { font-size: 12px; font-weight: 700; color: #064e35; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
-  .ly-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
-  .ly-stat { background: #fff; border-radius: var(--radius-sm); padding: 10px 14px; }
-  .ly-stat .label { font-size: 11px; color: var(--gray-500); margin-bottom: 2px; }
-  .ly-stat .value { font-size: 15px; font-weight: 700; color: var(--navy); }
-  .ly-stat .note { font-size: 10px; color: var(--gray-400); margin-top: 1px; }
+  /* CARDS */
+  .card { background: white; border-radius: 10px; box-shadow: var(--shadow); padding: 16px; margin-bottom: 16px; }
+  .card-title { font-size: 14px; font-weight: 700; color: var(--gray-900); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  
+  /* GRID LAYOUTS */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  @media(max-width: 900px) { .grid-2, .grid-3, .grid-4, .grid-5 { grid-template-columns: 1fr 1fr; } }
+  @media(max-width: 600px) { .grid-2, .grid-3, .grid-4, .grid-5 { grid-template-columns: 1fr; } }
 
-  /* ── COMPETITOR TABS ── */
-  .comp-tabs { display: flex; gap: 4px; background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: 4px; margin-bottom: 20px; box-shadow: var(--shadow-sm); overflow-x: auto; }
-  .comp-tab { padding: 8px 20px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--gray-500); white-space: nowrap; transition: all 0.15s; }
-  .comp-tab:hover { background: var(--gray-100); color: var(--gray-700); }
-  .comp-tab.active { background: var(--navy); color: #fff; }
-
-  /* ── INNER TABS ── */
-  .inner-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--gray-200); margin-bottom: 20px; }
-  .inner-tab { padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--gray-500); border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.15s; }
-  .inner-tab:hover { color: var(--gray-700); }
-  .inner-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
-
-  /* ── CARD ── */
-  .card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 20px; box-shadow: var(--shadow-sm); }
-  .card h3 { font-size: 14px; font-weight: 700; color: var(--gray-800); margin-bottom: 14px; }
-
-  /* ── OVERVIEW STATS ROW ── */
-  .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 20px; }
-  .stat-box { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: 14px 16px; box-shadow: var(--shadow-sm); }
+  /* STAT BOXES */
+  .stat-box { background: var(--gray-50); border-radius: 8px; padding: 12px; text-align: center; }
   .stat-box .label { font-size: 11px; color: var(--gray-500); margin-bottom: 4px; }
-  .stat-box .value { font-size: 22px; font-weight: 800; color: var(--navy); }
-  .stat-box .sub { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+  .stat-box .value { font-size: 20px; font-weight: 700; color: var(--gray-900); }
+  .stat-box .sublabel { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
 
-  /* ── PRICING CARDS ── */
-  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px; }
-  .pricing-card { border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: 16px; }
-  .pricing-card.highlight { border-color: var(--blue-mid); background: var(--blue-light); }
-  .pricing-card .currency-label { font-size: 11px; color: var(--gray-500); margin-bottom: 4px; font-weight: 600; }
-  .pricing-card .price { font-size: 26px; font-weight: 800; color: var(--navy); }
-  .pricing-card .period { font-size: 12px; color: var(--gray-500); }
-  .pricing-card .conf-note { margin-top: 8px; font-size: 11px; }
+  /* PRICING BOXES */
+  .price-box { border: 1.5px solid var(--gray-200); border-radius: 8px; padding: 14px; }
+  .price-box.featured { border-color: var(--blue-comp); background: var(--blue-light); }
+  .price-box .currency-label { font-size: 11px; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.05em; }
+  .price-box .price-value { font-size: 24px; font-weight: 800; color: var(--gray-900); margin: 4px 0; }
+  .price-box .price-period { font-size: 11px; color: var(--gray-500); }
+  .price-box .price-note { font-size: 11px; color: var(--amber); margin-top: 6px; }
+  .price-box .price-verified { font-size: 11px; color: var(--green-ly); margin-top: 6px; }
 
-  /* ── CONFIDENCE BADGES ── */
-  .conf-high { background: #dcfce7; color: #14532d; padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: 700; }
-  .conf-medium { background: #fef3c7; color: #78350f; padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: 700; }
-  .conf-low { background: #fee2e2; color: #7f1d1d; padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: 700; }
-  .conf-gap { background: var(--gray-100); color: var(--gray-500); padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: 700; }
+  /* CONFIDENCE BADGES */
+  .conf { display: inline-flex; align-items: center; gap: 3px; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 700; letter-spacing: 0.03em; }
+  .conf-high { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+  .conf-medium { background: #fef9c3; color: #854d0e; border: 1px solid #fde68a; }
+  .conf-low { background: #ffedd5; color: #9a3412; border: 1px solid #fed7aa; }
+  .conf-gap { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
 
-  /* ── FEATURES TABLE ── */
+  /* FEATURE ROWS */
   .feature-table { width: 100%; border-collapse: collapse; }
-  .feature-table th { background: var(--gray-100); padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 700; color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.4px; border-bottom: 2px solid var(--gray-200); }
-  .feature-table td { padding: 10px 12px; border-bottom: 1px solid var(--gray-100); font-size: 13px; vertical-align: top; }
+  .feature-table th { background: var(--navy); color: white; padding: 10px 12px; font-size: 12px; font-weight: 600; text-align: left; }
+  .feature-table th:first-child { border-radius: 6px 0 0 0; }
+  .feature-table th:last-child { border-radius: 0 6px 0 0; }
+  .feature-table td { padding: 9px 12px; border-bottom: 1px solid var(--gray-100); font-size: 12px; vertical-align: middle; }
   .feature-table tr:hover td { background: var(--gray-50); }
-  .feature-table .feat-name { font-weight: 600; color: var(--gray-800); }
-  .feat-check { color: #16a34a; font-size: 16px; }
-  .feat-cross { color: #dc2626; font-size: 16px; }
-  .feat-partial { color: var(--amber); font-size: 16px; }
+  .feature-table tr:last-child td { border-bottom: none; }
+  .feat-yes { color: var(--green-ly); font-weight: 600; }
+  .feat-no { color: var(--red); }
+  .feat-partial { color: var(--amber); font-weight: 500; }
+  .feat-gap { color: var(--gray-300); }
 
-  /* ── VS TABLE ── */
+  /* VS TABLE */
   .vs-table { width: 100%; border-collapse: collapse; }
-  .vs-table th { padding: 10px 14px; text-align: center; font-size: 12px; font-weight: 700; border-bottom: 2px solid var(--gray-200); }
-  .vs-table th:first-child { text-align: left; }
-  .vs-table td { padding: 10px 14px; border-bottom: 1px solid var(--gray-100); font-size: 13px; text-align: center; }
-  .vs-table td:first-child { text-align: left; font-weight: 600; color: var(--gray-700); }
-  .vs-table tr:hover td { background: var(--gray-50); }
-  .vs-comp { background: #eff6ff; font-weight: 700; color: #1e40af; border-radius: 4px; padding: 2px 6px; }
-  .vs-ly { background: var(--green-light); font-weight: 700; color: #065f46; border-radius: 4px; padding: 2px 6px; }
-  .vs-tie { color: var(--gray-500); font-style: italic; }
+  .vs-table th { padding: 10px 14px; font-size: 12px; font-weight: 700; }
+  .vs-table th.comp-col { background: #dbeafe; color: var(--blue-comp); text-align: center; }
+  .vs-table th.ly-col { background: #dcfce7; color: var(--green-ly); text-align: center; }
+  .vs-table th.metric-col { background: var(--gray-100); color: var(--gray-700); }
+  .vs-table th.winner-col { background: var(--gray-100); color: var(--gray-700); text-align: center; }
+  .vs-table td { padding: 10px 14px; border-bottom: 1px solid var(--gray-100); font-size: 12px; vertical-align: middle; }
+  .vs-table td.comp-win { background: #eff6ff; font-weight: 600; color: #1e40af; text-align: center; }
+  .vs-table td.ly-win { background: #f0fdf4; font-weight: 600; color: #166534; text-align: center; }
+  .vs-table td.tie-cell { text-align: center; color: var(--gray-500); }
+  .vs-table td.neutral { text-align: center; color: var(--gray-700); }
+  .vs-table td.metric-cell { font-weight: 600; color: var(--gray-700); }
+  .vs-table tr:hover td { filter: brightness(0.97); }
 
-  /* ── POSITIONING BOX ── */
-  .position-box { background: #f5f3ff; border: 1px solid #e9d5ff; border-radius: var(--radius-md); padding: 18px; margin-top: 16px; }
-  .position-box h4 { font-size: 13px; font-weight: 700; color: #581c87; margin-bottom: 12px; }
-  .position-item { margin-bottom: 10px; font-size: 13px; color: #3b0764; }
-  .position-item strong { color: #581c87; }
-  .position-item:last-child { margin-bottom: 0; }
+  /* PILL TAGS */
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+  .pill-blue { background: var(--blue-light); color: var(--blue-comp); }
+  .pill-green { background: var(--green-light); color: var(--green-ly); }
+  .pill-gray { background: var(--gray-100); color: var(--gray-700); }
+  .pill-amber { background: var(--amber-light); color: var(--amber); }
+  .pill-red { background: var(--red-light); color: var(--red); }
 
-  /* ── WIN/LOSE BOXES ── */
-  .win-lose-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
-  .win-box { border-radius: var(--radius-md); padding: 14px; }
-  .win-box h4 { font-size: 12px; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.4px; }
-  .win-box ul { list-style: none; }
-  .win-box ul li { margin-bottom: 6px; font-size: 12px; display: flex; align-items: flex-start; gap: 6px; }
-  .win-box ul li::before { content: "•"; font-size: 16px; line-height: 1.2; flex-shrink: 0; }
-  .win-comp { background: var(--blue-light); border: 1px solid var(--blue-mid); }
-  .win-comp h4 { color: #1e3a8a; }
-  .win-comp ul li { color: #1e40af; }
-  .win-comp ul li::before { color: #3b82f6; }
-  .win-ly { background: var(--green-light); border: 1px solid var(--green-mid); }
-  .win-ly h4 { color: #065f46; }
-  .win-ly ul li { color: #047857; }
-  .win-ly ul li::before { color: var(--green); }
+  /* TOOLTIP */
+  .tooltip-wrap { position: relative; display: inline-flex; align-items: center; gap: 3px; cursor: help; }
+  .tooltip-icon { width: 14px; height: 14px; border-radius: 50%; background: var(--gray-300); color: white; font-size: 9px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; cursor: help; flex-shrink: 0; }
+  .tooltip-icon:hover { background: var(--blue-comp); }
+  .tooltip-box { display: none; position: absolute; left: 0; top: 100%; margin-top: 4px; width: 220px; background: var(--navy); color: white; font-size: 11px; border-radius: 6px; padding: 8px 10px; z-index: 100; line-height: 1.4; box-shadow: var(--shadow-md); }
+  .tooltip-wrap:hover .tooltip-box { display: block; }
 
-  /* ── DATA QUALITY FOOTER ── */
-  .quality-footer { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: gap; box-shadow: var(--shadow-sm); }
-  .quality-footer .label { font-size: 13px; font-weight: 600; color: var(--gray-700); }
-  .quality-footer .note { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
-  .quality-badges { display: flex; gap: 8px; flex-wrap: wrap; }
-  .q-badge { padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; }
-  .q-high { background: #dcfce7; color: #14532d; }
-  .q-med { background: #fef3c7; color: #78350f; }
-  .q-low { background: #fee2e2; color: #7f1d1d; }
-  .q-gap { background: var(--gray-100); color: var(--gray-500); }
-
-  /* ── TOOLTIP ── */
-  .tt-wrap { position: relative; display: inline-flex; align-items: center; gap: 4px; cursor: help; }
-  .tt-icon { width: 14px; height: 14px; border-radius: 50%; background: var(--gray-300); color: var(--gray-600); font-size: 9px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; cursor: help; }
-  .tt-icon:hover + .tt-text, .tt-wrap:hover .tt-text { display: block; }
-  .tt-text { display: none; position: absolute; bottom: calc(100% + 6px); left: 0; width: 220px; background: var(--gray-900); color: #fff; font-size: 11px; padding: 8px 10px; border-radius: var(--radius-sm); z-index: 100; line-height: 1.4; box-shadow: var(--shadow-lg); }
-  .tt-text::after { content: ""; position: absolute; top: 100%; left: 12px; border: 5px solid transparent; border-top-color: var(--gray-900); }
-
-  /* ── SECTION HEADING ── */
-  .section-h { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--gray-500); margin-bottom: 10px; margin-top: 20px; }
-  .section-h:first-child { margin-top: 0; }
-
-  /* ── INTEGRATION CHIPS ── */
-  .chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
-  .chip { background: var(--blue-light); border: 1px solid var(--blue-mid); border-radius: 99px; padding: 3px 10px; font-size: 11px; color: #1e40af; font-weight: 500; }
-  .chip.gray { background: var(--gray-100); border-color: var(--gray-200); color: var(--gray-600); }
-
-  /* ── UTILITIES ── */
-  .flex { display: flex; }
-  .items-center { align-items: center; }
-  .gap-2 { gap: 8px; }
-  .gap-1 { gap: 4px; }
-  .mt-1 { margin-top: 4px; }
-  .mt-2 { margin-top: 8px; }
-  .mt-3 { margin-top: 12px; }
-  .text-sm { font-size: 12px; }
-  .text-xs { font-size: 11px; }
-  .text-gray { color: var(--gray-500); }
-  .text-orange { color: #c2410c; }
-  .font-bold { font-weight: 700; }
-  .hidden { display: none; }
+  /* POSITIONING SCRIPTS */
+  .script-box { background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 8px; padding: 14px; margin-bottom: 10px; }
+  .script-box .script-title { font-size: 12px; font-weight: 700; color: #5b21b6; margin-bottom: 6px; }
+  .script-box p { font-size: 12px; color: #4c1d95; line-height: 1.5; }
+  
+  /* SECTION HEADERS */
+  .section-header { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--gray-200); display: flex; align-items: center; gap: 8px; }
+  
+  /* DATA QUALITY BAR */
+  .dq-bar { background: white; border-radius: 8px; padding: 12px 16px; box-shadow: var(--shadow); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .dq-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+  .dq-badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  
+  /* INTEGRATIONS */
+  .int-tag { display: inline-block; background: var(--blue-light); border: 1px solid #bfdbfe; color: var(--blue-comp); border-radius: 4px; padding: 3px 8px; font-size: 11px; margin: 2px; }
+  
+  /* RATINGS */
   .rating-star { color: #f59e0b; }
-  .warn { font-size: 11px; color: #c2410c; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 4px; padding: 3px 8px; display: inline-block; margin-top: 4px; }
-  .ok { font-size: 11px; color: #065f46; background: var(--green-light); border: 1px solid var(--green-mid); border-radius: 4px; padding: 3px 8px; display: inline-block; margin-top: 4px; }
 
-  @media (max-width: 768px) {
-    .win-lose-grid { grid-template-columns: 1fr; }
-    .pricing-grid { grid-template-columns: 1fr 1fr; }
-    .stat-row { grid-template-columns: 1fr 1fr; }
-  }
+  /* SHOW/HIDE */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  .comp-section { display: none; }
+  .comp-section.active { display: block; }
+
+  /* OVERVIEW CARDS */
+  .overview-card { border: 1.5px solid var(--gray-200); border-radius: 10px; padding: 16px; background: white; position: relative; overflow: hidden; }
+  .overview-card .comp-name { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .overview-card .comp-tagline { font-size: 11px; color: var(--gray-500); margin-bottom: 12px; }
+  .overview-card .divider { border: none; border-top: 1px solid var(--gray-100); margin: 10px 0; }
+  .overview-card .meta-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--gray-600); margin-bottom: 6px; }
+  .overview-card .meta-label { font-weight: 600; }
+  
+  /* SUMMARY BAR */
+  .summary-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+  .summary-stat { background: white; border-radius: 8px; padding: 10px 14px; box-shadow: var(--shadow); flex: 1; min-width: 120px; }
+  .summary-stat .ss-label { font-size: 10px; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.05em; }
+  .summary-stat .ss-value { font-size: 18px; font-weight: 800; color: var(--navy); }
+  .summary-stat .ss-sub { font-size: 10px; color: var(--gray-500); }
+
+  /* LIGHTYEAR NOTE BOX */
+  .ly-note { background: var(--green-light); border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px 14px; font-size: 12px; color: #166534; }
+  .ly-note strong { display: block; margin-bottom: 4px; }
+
+  /* STRENGTHS / GAPS */
+  .strength-item { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 6px; font-size: 12px; }
+  .strength-item .icon { flex-shrink: 0; margin-top: 1px; }
+
+  /* COMPETITOR SELECTOR for VS tab */
+  .vs-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .vs-btn { padding: 6px 14px; border-radius: 6px; border: 1.5px solid var(--gray-200); background: white; cursor: pointer; font-size: 12px; font-weight: 500; color: var(--gray-700); transition: all 0.15s; }
+  .vs-btn:hover { border-color: var(--blue-comp); color: var(--blue-comp); }
+  .vs-btn.active { background: var(--blue-comp); border-color: var(--blue-comp); color: white; }
+
+  hr.section-divider { border: none; border-top: 2px solid var(--gray-100); margin: 20px 0; }
 </style>
 </head>
 <body>
-
 <script>
-// PASSWORD PROTECTION
 const correctPassword = "T0InfinityAndBey0nd";
-const enteredPassword = prompt("Enter password to access the Lightyear Competitive Intelligence Dashboard:");
+const enteredPassword = prompt("Enter password to access dashboard:");
 if (enteredPassword !== correctPassword) {
-  document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;font-size:18px;color:#ef4444;">Access Denied. Incorrect password.</div>';
+  document.body.innerHTML = "<div style=\"font-family:sans-serif;text-align:center;padding:60px;\"><h2>Access Denied</h2><p>Incorrect password.</p></div>";
   throw new Error("Access denied");
 }
 </script>
 
-<!-- PAGE HEADER -->
-<div class="page-header">
-  <div>
-    <h1>🔎 Lightyear Competitive Intelligence Dashboard</h1>
-    <div style="font-size:12px;opacity:0.6;margin-top:2px;">Weekly research cadence — covering Dext · ApprovalMax · Tipalti · Zahara · Compleat</div>
-  </div>
-  <div class="meta">
-    <strong>30 March 2026</strong>
-    Next update: 6 April 2026
+<!-- Header -->
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <h1>⚡ Lightyear Competitor Intelligence Dashboard</h1>
+      <p>Tracking: Dext · ApprovalMax · Tipalti · Zahara · Compleat Software</p>
+    </div>
+    <div class="header-meta">
+      <div style="font-weight:700;font-size:15px;">6 April 2026</div>
+      <div>Next update: 13 April 2026</div>
+    </div>
   </div>
 </div>
 
-<div class="container">
-
-<!-- CHANGE ALERTS -->
+<!-- Change Banner -->
 <div class="change-banner">
-  <h2>⚠ Changes This Week</h2>
+  <div class="change-banner-inner">
+    <h3>🔔 Changes This Week / Since Last Scrape</h3>
+    <div class="change-item"><span class="change-tag tag-new">NEW</span><strong>Dext Payments</strong> fully launched for UK Xero users — pay supplier invoices, expenses &amp; payroll without leaving Dext — 2 Feb 2026 | <a href="https://dext.com/us/news/dext-launches-payments-bringing-supplier-invoice-expense-and-payroll-payments-into-one-trusted-platform" target="_blank">Source: dext.com</a></div>
+    <div class="change-item"><span class="change-tag tag-update">UPDATE</span><strong>Dext AI Agent</strong> Beta launched globally (Dec 2025) — agentic bookkeeping automation | <a href="https://dext.com/us/news/dext-delivers-strong-global-growth-and-launches-ai-agent-beta-to-power-the-next-era-of-bookkeeping-automation" target="_blank">Source: dext.com</a></div>
+    <div class="change-item"><span class="change-tag tag-new">NEW</span><strong>ApprovalMax Capture</strong> now bundled FREE for all new UK sign-ups as of March 2026 (global rollout Summer 2026) | <a href="https://approvalmax.com/features/approvalmax-capture" target="_blank">Source: approvalmax.com</a></div>
+    <div class="change-item"><span class="change-tag tag-update">UPDATE</span><strong>ApprovalMax 3-way matching</strong> now available on Advanced/Premium plans for Xero &amp; NetSuite (launched late 2025) | <a href="https://approvalmax.com/feature-releases" target="_blank">Source: approvalmax.com</a></div>
+    <div class="change-item"><span class="change-tag tag-update">UPDATE</span><strong>ApprovalMax Pay</strong> (in-app supplier payments via open banking) now in UK beta | <a href="https://www.approvalmax.com/3-way-matching" target="_blank">Source: approvalmax.com</a></div>
+    <div class="change-item"><span class="change-tag tag-ly">LIGHTYEAR</span>No changes detected — UK pricing £130/mo, AU A$155/mo confirmed current as of today | <a href="https://www.lightyear.cloud/en-gb/pricing/" target="_blank">Source: lightyear.cloud</a></div>
+    <div class="change-item"><span class="change-tag tag-announcement">NOTE</span><strong>Dext payroll payments</strong> targeted for Q1 2026 (no public launch announcement found yet as of 6 April 2026) — monitor dext.com for launch confirmation</div>
+  </div>
+</div>
 
-  <div class="change-item">
-    <span class="change-badge badge-new">NEW</span>
+<!-- Main Content -->
+<div class="main">
+
+  <!-- Summary stats bar -->
+  <div class="summary-bar">
+    <div class="summary-stat"><div class="ss-label">Competitors Tracked</div><div class="ss-value">5</div><div class="ss-sub">Active monitoring</div></div>
+    <div class="summary-stat"><div class="ss-label">Changes Detected</div><div class="ss-value">6</div><div class="ss-sub">Since last scrape</div></div>
+    <div class="summary-stat"><div class="ss-label">Lightyear UK Entry</div><div class="ss-value">£130</div><div class="ss-sub">per month, 125 credits</div></div>
+    <div class="summary-stat"><div class="ss-label">Lightyear AU Entry</div><div class="ss-value">A$155</div><div class="ss-sub">per month, 125 credits</div></div>
+    <div class="summary-stat"><div class="ss-label">Free Trial</div><div class="ss-value">30 days</div><div class="ss-sub">No credit card needed</div></div>
+  </div>
+
+  <!-- Section tab bar -->
+  <div class="section-tabs">
+    <div class="section-tab active" onclick="switchSection('overview')">📊 Overview</div>
+    <div class="section-tab" onclick="switchSection('pricing')">💷 Pricing</div>
+    <div class="section-tab" onclick="switchSection('features')">🔧 Features</div>
+    <div class="section-tab" onclick="switchSection('vs')">⚔️ VS Lightyear</div>
+  </div>
+
+  <!-- ===================== OVERVIEW TAB ===================== -->
+  <div class="tab-content active" id="tab-overview">
+    <div class="grid-3" style="margin-bottom:16px;">
+      <!-- Dext Card -->
+      <div class="overview-card">
+        <div class="comp-name">Dext <span style="font-size:11px;font-weight:400;color:#6b7280;">(formerly Receipt Bank)</span></div>
+        <div class="comp-tagline">AI-powered bookkeeping automation for accountants &amp; SMBs</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
+          <span class="change-tag tag-announcement" style="border-radius:4px;">IRIS Group (Dec 2024)</span>
+          <span class="change-tag tag-new" style="border-radius:4px;">Payments Live</span>
+        </div>
+        <hr class="divider">
+        <div class="meta-row"><span class="meta-label">Starting Price (GBP)</span><span>~£30/mo <span class="conf conf-medium">⚠ MEDIUM</span></span></div>
+        <div class="meta-row"><span class="meta-label">Starting Price (AUD)</span><span>~A$42/mo <span class="conf conf-medium">⚠ MEDIUM</span></span></div>
+        <div class="meta-row"><span class="meta-label">Free Trial</span><span>14 days, no card required</span></div>
+        <div class="meta-row"><span class="meta-label">Capterra Rating</span><span>⭐ 4.2 (160+ reviews)</span></div>
+        <div class="meta-row"><span class="meta-label">User Base</span><span>700K+ businesses</span></div>
+        <div class="meta-row"><span class="meta-label">Key Strength</span><span>11,500+ bank connections</span></div>
+      </div>
+      <!-- ApprovalMax Card -->
+      <div class="overview-card">
+        <div class="comp-name">ApprovalMax</div>
+        <div class="comp-tagline">Approval workflow automation with OCR capture &amp; payments</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
+          <span class="change-tag tag-new" style="border-radius:4px;">Capture Free UK</span>
+          <span class="change-tag tag-update" style="border-radius:4px;">3-Way Matching</span>
+        </div>
+        <hr class="divider">
+        <div class="meta-row"><span class="meta-label">Starting Price (GBP)</span><span>£39/mo annual <span class="conf conf-high">✅ HIGH</span></span></div>
+        <div class="meta-row"><span class="meta-label">Starting Price (AUD)</span><span>A$72/mo annual <span class="conf conf-high">✅ HIGH</span></span></div>
+        <div class="meta-row"><span class="meta-label">Free Trial</span><span>Yes, no credit card</span></div>
+        <div class="meta-row"><span class="meta-label">G2 Rating</span><span>⭐ 4.6 (200+ reviews)</span></div>
+        <div class="meta-row"><span class="meta-label">Plans</span><span>Standard / Advanced / Premium</span></div>
+        <div class="meta-row"><span class="meta-label">Key Strength</span><span>Deep Xero / QBO / NetSuite integration</span></div>
+      </div>
+      <!-- Tipalti Card -->
+      <div class="overview-card">
+        <div class="comp-name">Tipalti</div>
+        <div class="comp-tagline">Enterprise global payables — 196 countries, 120 currencies</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
+          <span class="change-tag tag-update" style="border-radius:4px;">AI Agents 2025</span>
+          <span class="change-tag tag-new" style="border-radius:4px;">Tipalti Card</span>
+        </div>
+        <hr class="divider">
+        <div class="meta-row"><span class="meta-label">Starting Price (GBP)</span><span>Contact sales <span class="conf conf-gap">— GAP</span></span></div>
+        <div class="meta-row"><span class="meta-label">Starting Price (AUD)</span><span>Contact sales <span class="conf conf-gap">— GAP</span></span></div>
+        <div class="meta-row"><span class="meta-label">USD Reference</span><span>~$149-299/mo platform fee</span></div>
+        <div class="meta-row"><span class="meta-label">Free Trial</span><span>❌ No free trial</span></div>
+        <div class="meta-row"><span class="meta-label">G2 Rating</span><span>⭐ 4.5 (250+ reviews)</span></div>
+        <div class="meta-row"><span class="meta-label">Key Strength</span><span>Global mass payments &amp; tax compliance</span></div>
+      </div>
+      <!-- Zahara Card -->
+      <div class="overview-card">
+        <div class="comp-name">Zahara</div>
+        <div class="comp-tagline">UK-based AP automation — purchase orders, approvals &amp; payments</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
+          <span class="change-tag tag-new" style="border-radius:4px;">AI Expenses</span>
+          <span class="change-tag tag-update" style="border-radius:4px;">In-app Payments</span>
+        </div>
+        <hr class="divider">
+        <div class="meta-row"><span class="meta-label">Starting Price (GBP)</span><span>~£142/mo <span class="conf conf-medium">⚠ MEDIUM</span></span></div>
+        <div class="meta-row"><span class="meta-label">Starting Price (AUD)</span><span>AU pricing available <span class="conf conf-medium">⚠ MEDIUM</span></span></div>
+        <div class="meta-row"><span class="meta-label">Free Trial</span><span>Yes (length not specified)</span></div>
+        <div class="meta-row"><span class="meta-label">Capterra Rating</span><span>⭐ 4.5 (50+ reviews)</span></div>
+        <div class="meta-row"><span class="meta-label">HQ</span><span>Bath, UK</span></div>
+        <div class="meta-row"><span class="meta-label">Key Strength</span><span>Budget control &amp; multi-step workflows</span></div>
+      </div>
+      <!-- Compleat Card -->
+      <div class="overview-card">
+        <div class="comp-name">Compleat Software</div>
+        <div class="comp-tagline">Modular purchase-to-pay — invoice capture through online buying</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
+          <span class="change-tag tag-new" style="border-radius:4px;">EcoSystem Launch</span>
+          <span class="change-tag tag-update" style="border-radius:4px;">Amazon Punch-In</span>
+        </div>
+        <hr class="divider">
+        <div class="meta-row"><span class="meta-label">Starting Price (GBP)</span><span>Contact sales <span class="conf conf-gap">— GAP</span></span></div>
+        <div class="meta-row"><span class="meta-label">Starting Price (AUD)</span><span>Contact sales <span class="conf conf-gap">— GAP</span></span></div>
+        <div class="meta-row"><span class="meta-label">Free Trial</span><span>Yes, no credit card</span></div>
+        <div class="meta-row"><span class="meta-label">G2 Rating</span><span>⭐ 4.4 (100+ reviews)</span></div>
+        <div class="meta-row"><span class="meta-label">HQ</span><span>London, UK (+ US &amp; AU)</span></div>
+        <div class="meta-row"><span class="meta-label">Key Strength</span><span>Online buying &amp; Amazon Business integration</span></div>
+      </div>
+      <!-- Lightyear Baseline Card -->
+      <div class="overview-card" style="border-color:#6ee7b7;background:#f0fdf4;">
+        <div class="comp-name" style="color:#065f46;">⚡ Lightyear <span style="font-size:11px;font-weight:400;color:#6b7280;">(your product)</span></div>
+        <div class="comp-tagline">AP automation — invoice capture, approvals, PO &amp; price checking</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
+          <span class="change-tag tag-ly" style="border-radius:4px;">No changes this week</span>
+        </div>
+        <hr class="divider">
+        <div class="meta-row"><span class="meta-label">Starting Price (GBP)</span><span>£130/mo <span class="conf conf-high">✅ HIGH</span></span></div>
+        <div class="meta-row"><span class="meta-label">Starting Price (AUD)</span><span>A$155/mo <span class="conf conf-high">✅ HIGH</span></span></div>
+        <div class="meta-row"><span class="meta-label">Free Trial</span><span>30 days, no credit card</span></div>
+        <div class="meta-row"><span class="meta-label">Capterra Rating</span><span>⭐ 4.8 (190+ reviews)</span></div>
+        <div class="meta-row"><span class="meta-label">Plans</span><span>Essentials / Standard / Professional</span></div>
+        <div class="meta-row"><span class="meta-label">Key Differentiators</span><span>Price checking, fraud detection, 3-way matching</span></div>
+      </div>
+    </div>
+
+    <!-- Strengths/Gaps summary -->
+    <div class="card">
+      <div class="card-title">🎯 Competitive Landscape at a Glance</div>
+      <div class="grid-2">
+        <div>
+          <div style="font-weight:700;font-size:13px;color:#dc2626;margin-bottom:8px;">⚠️ Areas Where Competitors Are Moving</div>
+          <div class="strength-item"><span class="icon">🔴</span><span><strong>Dext &amp; ApprovalMax now both offer in-app payments</strong> — closing a previous gap. Lightyear's differentiation must be on upstream AP controls, not just workflow.</span></div>
+          <div class="strength-item"><span class="icon">🟠</span><span><strong>ApprovalMax now has 3-way matching</strong> (Advanced plan+) — this was previously a Lightyear exclusive. Position on line-level matching vs. header-level.</span></div>
+          <div class="strength-item"><span class="icon">🟡</span><span><strong>ApprovalMax Capture now free in UK</strong> — removes the OCR cost friction that previously favoured Dext or Lightyear for entry customers.</span></div>
+        </div>
+        <div>
+          <div style="font-weight:700;font-size:13px;color:#16a34a;margin-bottom:8px;">✅ Lightyear's Durable Advantages</div>
+          <div class="strength-item"><span class="icon">🟢</span><span><strong>Automated price checking against supplier pricelists</strong> — not offered by any tracked competitor. Prevents overcharging at line level.</span></div>
+          <div class="strength-item"><span class="icon">🟢</span><span><strong>Bank detail fraud detection</strong> — verifies supplier bank details on incoming invoices. No direct equivalent found in competitors.</span></div>
+          <div class="strength-item"><span class="icon">🟢</span><span><strong>Longest free trial (30 days)</strong> vs. Dext 14 days, ApprovalMax unspecified, Tipalti none.</span></div>
+          <div class="strength-item"><span class="icon">🟢</span><span><strong>Hospitality POS integrations</strong> (Bepoz, Fedelta, Idealpos, Impos, SENPOS etc.) — no competitor offers this vertical depth.</span></div>
+          <div class="strength-item"><span class="icon">🟢</span><span><strong>Native statement reconciliation with one-click copy requests</strong> — automated and included on all plans.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== PRICING TAB ===================== -->
+  <div class="tab-content" id="tab-pricing">
+
+    <!-- Lightyear baseline first -->
+    <div class="card" style="border: 2px solid #6ee7b7;">
+      <div class="card-title">⚡ Lightyear Pricing Baseline <span class="conf conf-high" style="margin-left:8px;">✅ Verified 6 Apr 2026</span></div>
+      <div class="grid-3" style="margin-bottom:12px;">
+        <div class="price-box featured">
+          <div class="currency-label">🇬🇧 GBP — UK</div>
+          <div class="price-value">£130/mo</div>
+          <div class="price-period">Essentials — 125 credits/mo</div>
+          <div class="price-verified">✅ Official source: lightyear.cloud/en-gb/pricing</div>
+        </div>
+        <div class="price-box featured">
+          <div class="currency-label">🇦🇺 AUD — Australia</div>
+          <div class="price-value">A$155/mo</div>
+          <div class="price-period">Essentials — 125 credits/mo</div>
+          <div class="price-verified">✅ Official source: lightyear.cloud/en-au/pricing</div>
+        </div>
+        <div class="price-box" style="background:#f9fafb;">
+          <div class="currency-label">Credit model</div>
+          <div style="font-size:12px;color:#374151;margin-top:8px;">1 invoice = 1 credit<br>1 statement = 1 credit<br>1 PO = 1 credit<br>1 expense report = 3 credits</div>
+          <div style="font-size:11px;color:#16a34a;margin-top:8px;">✅ Unlimited users on all plans</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:#374151;background:#f0fdf4;padding:10px 12px;border-radius:6px;">
+        <strong>Plans:</strong> Essentials £130 (125 credits) → Standard £179 (250 credits, adds 3-way matching &amp; GRNs) → Professional (500+ credits, custom pricing, white label &amp; SSO). No setup fee required; optional onboarding package available. 30-day rolling contracts. Overage available as opt-in.
+      </div>
+    </div>
+
+    <!-- Competitor pricing comparison table -->
+    <div class="card">
+      <div class="card-title">💷 Competitor Pricing Comparison</div>
+      <div style="overflow-x:auto;">
+        <table class="feature-table">
+          <thead>
+            <tr>
+              <th style="min-width:120px;">Competitor</th>
+              <th style="min-width:150px;">GBP Entry Price</th>
+              <th style="min-width:150px;">AUD Entry Price</th>
+              <th style="min-width:130px;">Billing Model</th>
+              <th style="min-width:120px;">Free Trial</th>
+              <th style="min-width:100px;">Confidence</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background:#f0fdf4;">
+              <td><strong>⚡ Lightyear</strong></td>
+              <td><strong>£130/mo</strong> (125 credits)</td>
+              <td><strong>A$155/mo</strong> (125 credits)</td>
+              <td>Credit-based (per doc)</td>
+              <td>✅ 30 days</td>
+              <td><span class="conf conf-high">✅ HIGH</span></td>
+            </tr>
+            <tr>
+              <td><strong>Dext</strong></td>
+              <td>
+                <div class="tooltip-wrap">~£30/mo<span class="tooltip-icon">i</span><div class="tooltip-box">GBP pricing not published on dext.com. Figure is GBP equivalent of published $31.50 USD (monthly, 5 users, 250 docs). Annual discount available (20%). Source: G2, ThriveOnz360 Mar 2026.</div></div>
+              </td>
+              <td>
+                <div class="tooltip-wrap">~A$42/mo<span class="tooltip-icon">i</span><div class="tooltip-box">AUD equivalent of USD pricing. Dext confirms plans available in AUD but does not publish AUD prices on website. Verify via free trial sign-up.</div></div>
+              </td>
+              <td>Per user + document volume</td>
+              <td>✅ 14 days, no card</td>
+              <td><span class="conf conf-medium">⚠ MEDIUM</span></td>
+            </tr>
+            <tr>
+              <td><strong>ApprovalMax</strong></td>
+              <td>
+                £39/mo (annual)<br>
+                <span style="font-size:11px;color:#6b7280;">£43/mo (monthly)</span><br>
+                <span style="font-size:10px;color:#16a34a;">Standard plan</span>
+              </td>
+              <td>
+                A$72/mo (annual)<br>
+                <span style="font-size:11px;color:#6b7280;">A$82.80/mo (monthly)</span><br>
+                <span style="font-size:10px;color:#16a34a;">Standard plan</span>
+              </td>
+              <td>Per organisation, unlimited users</td>
+              <td>✅ Yes, no card</td>
+              <td><span class="conf conf-high">✅ HIGH</span></td>
+            </tr>
+            <tr>
+              <td><strong>ApprovalMax Advanced</strong></td>
+              <td>£64/mo (annual) / £71/mo (monthly)</td>
+              <td>A$115/mo (annual) / A$132/mo (monthly)</td>
+              <td>Per organisation</td>
+              <td>✅ Yes</td>
+              <td><span class="conf conf-high">✅ HIGH</span></td>
+            </tr>
+            <tr>
+              <td><strong>ApprovalMax Premium</strong></td>
+              <td>£87/mo (annual) / £96/mo (monthly)</td>
+              <td>A$160/mo (annual) / A$184/mo (monthly)</td>
+              <td>Per organisation</td>
+              <td>✅ Yes</td>
+              <td><span class="conf conf-high">✅ HIGH</span></td>
+            </tr>
+            <tr>
+              <td><strong>Tipalti</strong></td>
+              <td>
+                <div class="tooltip-wrap">Contact sales<span class="tooltip-icon">i</span><div class="tooltip-box">GBP pricing not published. USD platform fees reported ~$149-299/mo depending on tier, plus per-invoice and FX fees. Implementation cost $4,000-5,000 typically. Enterprise-grade tool.</div></div>
+              </td>
+              <td>Contact sales</td>
+              <td>Platform fee + per-invoice + FX fees</td>
+              <td>❌ No trial</td>
+              <td><span class="conf conf-gap">— GAP</span></td>
+            </tr>
+            <tr>
+              <td><strong>Zahara</strong></td>
+              <td>
+                <div class="tooltip-wrap">~£142/mo (Teams)<span class="tooltip-icon">i</span><div class="tooltip-box">Capterra UK listing shows starting price £142/mo. Zahara UK pricing page exists (zaharasoftware.com/2025-pricing-uk) but actual GBP amounts are JavaScript-rendered and not accessible in static scrape. Recommend manual verification.</div></div>
+              </td>
+              <td>
+                <div class="tooltip-wrap">AU pricing available<span class="tooltip-icon">i</span><div class="tooltip-box">Zahara has a dedicated AU pricing page (zaharasoftware.com/2025-pricing-au) but values not accessible in static scrape. GAP — verify manually.</div></div>
+              </td>
+              <td>Per user + PO/invoice volume</td>
+              <td>✅ Free trial</td>
+              <td><span class="conf conf-medium">⚠ MEDIUM</span></td>
+            </tr>
+            <tr>
+              <td><strong>Compleat</strong></td>
+              <td>Contact sales only</td>
+              <td>Contact sales only</td>
+              <td>Modular SaaS (contact sales)</td>
+              <td>✅ Yes, no card</td>
+              <td><span class="conf conf-gap">— GAP</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:12px;font-size:11px;color:#6b7280;background:#fafafa;padding:8px 10px;border-radius:6px;">
+        ⚠ <strong>Note on Dext GBP/AUD pricing:</strong> Dext does not publish GBP or AUD prices on its website as of 6 April 2026. Figures above are GBP equivalents of published USD pricing ($31.50/mo monthly, $25.21/mo annual). Actual GBP prices may vary slightly. Source: G2 (Nov 2025), ThriveOnz360 (Mar 2026). Verify via free trial sign-up at dext.com/uk.
+      </div>
+    </div>
+
+    <!-- ApprovalMax full pricing detail -->
+    <div class="card">
+      <div class="card-title">ApprovalMax — Full Plan Breakdown <span class="conf conf-high" style="margin-left:8px;">✅ HIGH (Official PDF Dec 2025)</span></div>
+      <div style="overflow-x:auto;">
+        <table class="feature-table">
+          <thead>
+            <tr>
+              <th>Plan</th>
+              <th>GBP Annual</th>
+              <th>GBP Monthly</th>
+              <th>AUD Annual</th>
+              <th>AUD Monthly</th>
+              <th>Key Additions vs Plan Below</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Standard</strong></td>
+              <td>£39/mo</td>
+              <td>£43/mo</td>
+              <td>A$72/mo</td>
+              <td>A$82.80/mo</td>
+              <td>Approval workflows, Capture (free UK from Mar 2026), audit trail, multi-level approvals</td>
+            </tr>
+            <tr>
+              <td><strong>Advanced</strong></td>
+              <td>£64/mo</td>
+              <td>£71/mo</td>
+              <td>A$115/mo</td>
+              <td>A$132.25/mo</td>
+              <td>+ Bill-to-PO matching, 3-way matching, budget tracking, batch payments</td>
+            </tr>
+            <tr>
+              <td><strong>Premium</strong></td>
+              <td>£87/mo</td>
+              <td>£96/mo</td>
+              <td>A$160/mo</td>
+              <td>A$184/mo</td>
+              <td>+ Full feature set, advanced reporting, all integrations</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="font-size:11px;color:#374151;margin-top:8px;padding:8px;background:#eff6ff;border-radius:6px;">💡 Pricing per organisation — unlimited users, requests and approvals on all plans. Volume discounts available for multiple organisations. Not-for-profit 20% discount available.</div>
+    </div>
+
+    <!-- Zahara pricing detail -->
+    <div class="card">
+      <div class="card-title">Zahara — Plan Structure <span class="conf conf-medium" style="margin-left:8px;">⚠ MEDIUM — GBP values not fully confirmed</span></div>
+      <div style="overflow-x:auto;">
+        <table class="feature-table">
+          <thead>
+            <tr>
+              <th>Plan</th>
+              <th>GBP Starting Price</th>
+              <th>Users</th>
+              <th>Orders/mo</th>
+              <th>Invoices/mo</th>
+              <th>Budget Control</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Teams</strong></td>
+              <td>
+                <div class="tooltip-wrap">~£142/mo<span class="tooltip-icon">i</span><div class="tooltip-box">Capterra UK lists starting at £142/mo. Zahara's UK pricing page uses JavaScript rendering — exact GBP amounts not accessible in this scrape. Recommend manual verification at zaharasoftware.com/2025-pricing-uk/</div></div>
+              </td>
+              <td>Up to 10</td>
+              <td>120</td>
+              <td>250</td>
+              <td>❌</td>
+            </tr>
+            <tr>
+              <td><strong>Business</strong></td>
+              <td>Not confirmed (GBP)</td>
+              <td>Up to 18</td>
+              <td>250</td>
+              <td>500</td>
+              <td>✅</td>
+            </tr>
+            <tr>
+              <td><strong>Enterprise</strong></td>
+              <td>Not confirmed (GBP)</td>
+              <td>Up to 35</td>
+              <td>800</td>
+              <td>1,200</td>
+              <td>✅</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="font-size:11px;color:#6b7280;margin-top:8px;">Premium integrations (Sage 200, Sage Intacct, Microsoft Business Central) are Enterprise-only. Annual billing discount available. Cancel monthly with 30 days notice.</div>
+    </div>
+
+  </div>
+
+  <!-- ===================== FEATURES TAB ===================== -->
+  <div class="tab-content" id="tab-features">
+
+    <div class="card">
+      <div class="card-title">🔧 Feature Comparison — All Competitors vs Lightyear</div>
+      <div style="font-size:11px;color:#6b7280;margin-bottom:12px;">
+        ✅ = Has feature &nbsp;&nbsp; ⚠ = Partial / limited / plan-restricted &nbsp;&nbsp; ❌ = Not available &nbsp;&nbsp; — = Data gap
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="feature-table">
+          <thead>
+            <tr>
+              <th style="min-width:180px;">Feature / Capability</th>
+              <th style="min-width:120px;background:#1e40af;">⚡ Lightyear</th>
+              <th style="min-width:100px;">Dext</th>
+              <th style="min-width:120px;">ApprovalMax</th>
+              <th style="min-width:100px;">Tipalti</th>
+              <th style="min-width:100px;">Zahara</th>
+              <th style="min-width:110px;">Compleat</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- INVOICE CAPTURE -->
+            <tr style="background:#f8fafc;">
+              <td colspan="7" style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.05em;padding:8px 12px;">Invoice Capture &amp; Data Extraction</td>
+            </tr>
+            <tr>
+              <td><div class="tooltip-wrap">AI/OCR Invoice Capture<span class="tooltip-icon">i</span><div class="tooltip-box">Technology that reads text from invoice images and PDFs automatically, without manual typing.</div></div></td>
+              <td class="feat-yes">✅ Smart Extract+ AI<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ 99.5% accuracy<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Capture (free UK Mar 2026)<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Yes<br><span class="conf conf-medium">⚠ MED</span></td>
+              <td class="feat-yes">✅ AI OCR AutoPilot<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ iCompleat OCR<br><span class="conf conf-high">✅ HIGH</span></td>
+            </tr>
+            <tr>
+              <td><div class="tooltip-wrap">Line-item extraction<span class="tooltip-icon">i</span><div class="tooltip-box">Reads individual products/services from an invoice, not just the total amount. Essential for price checking.</div></div></td>
+              <td class="feat-yes">✅ Default on all plans<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-partial">⚠ Credit-based add-on<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Capture feature<br><span class="conf conf-medium">⚠ MED</span></td>
+              <td class="feat-yes">✅ Yes<br><span class="conf conf-medium">⚠ MED</span></td>
+              <td class="feat-yes">✅ Down to line item<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Yes<br><span class="conf conf-medium">⚠ MED</span></td>
+            </tr>
+            <!-- APPROVALS -->
+            <tr style="background:#f8fafc;">
+              <td colspan="7" style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.05em;padding:8px 12px;">Approval Workflows</td>
+            </tr>
+            <tr>
+              <td>Multi-tier approval workflows</td>
+              <td class="feat-yes">✅ Up to 8 levels<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Multi-tier, mobile<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Unlimited steps &amp; roles<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Custom workflows<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Multi-step, custom<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Real-time workflows<br><span class="conf conf-high">✅ HIGH</span></td>
+            </tr>
+            <tr>
+              <td>Mobile approvals</td>
+              <td class="feat-yes">✅ iOS &amp; Android<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ 4.8★ mobile app<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ iOS &amp; Android<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Yes<br><span class="conf conf-medium">⚠ MED</span></td>
+              <td class="feat-yes">✅ Mobile app<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ iOS &amp; Android<br><span class="conf conf-medium">⚠ MED</span></td>
+            </tr>
+            <!-- PURCHASE ORDERS -->
+            <tr style="background:#f8fafc;">
+              <td colspan="7" style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.05em;padding:8px 12px;">Purchase Orders &amp; Matching</td>
+            </tr>
+            <tr>
+              <td><div class="tooltip-wrap">Native PO creation<span class="tooltip-icon">i</span><div class="tooltip-box">Create purchase orders (requests to suppliers to order goods) directly inside the platform, without using a separate system.</div></div></td>
+              <td class="feat-yes">✅ Full PO workflow<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-no">❌ Not available<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Yes (all plans)<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Yes (Procurement module)<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Full PO management<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Core feature<br><span class="conf conf-high">✅ HIGH</span></td>
+            </tr>
+            <tr>
+              <td><div class="tooltip-wrap">3-way matching<span class="tooltip-icon">i</span><div class="tooltip-box">Compares the purchase order, delivery receipt, AND invoice all together to catch discrepancies before paying — e.g. items you ordered but never received.</div></div></td>
+              <td class="feat-yes">✅ Line-level (Standard+)<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-no">❌ Not available<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-partial">⚠ Advanced/Premium plans only<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Yes (2-way &amp; 3-way)<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Yes (GRN receipting)<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Yes<br><span class="conf conf-medium">⚠ MED</span></td>
+            </tr>
+            <!-- SUPPLIER CONTROLS -->
+            <tr style="background:#f8fafc;">
+              <td colspan="7" style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.05em;padding:8px 12px;">Supplier Controls &amp; Intelligence</td>
+            </tr>
+            <tr>
+              <td><div class="tooltip-wrap">Automated price checking<span class="tooltip-icon">i</span><div class="tooltip-box">Automatically compares each invoice line price against your pre-agreed supplier pricelist and flags any overcharging — catches errors before payment.</div></div></td>
+              <td class="feat-yes">✅ Unique differentiator<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-no">❌ Not available<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-no">❌ Not available<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-no">❌ Not available<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-partial">⚠ Budget control only (not pricelist)<br><span class="conf conf-medium">⚠ MED</span></td>
+              <td class="feat-partial">⚠ Budget tracking only<br><span class="conf conf-medium">⚠ MED</span></td>
+            </tr>
+            <tr>
+              <td><div class="tooltip-wrap">Bank detail fraud detection<span class="tooltip-icon">i</span><div class="tooltip-box">When an invoice arrives, the system checks whether the supplier's bank details on that invoice match what you have on file — preventing fraudulent payment redirection.</div></div></td>
+              <td class="feat-yes">✅ Automated<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-no">❌ Not available<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-partial">⚠ Audit trail only (not bank detail check)<br><span class="conf conf-medium">⚠ MED</span></td>
+              <td class="feat-partial">⚠ Sanctions screening only<br><span class="conf conf-medium">⚠ MED</span></td>
+              <td class="feat-gap">— Not confirmed<br><span class="conf conf-gap">— GAP</span></td>
+              <td class="feat-gap">— Not confirmed<br><span class="conf conf-gap">— GAP</span></td>
+            </tr>
+            <tr>
+              <td><div class="tooltip-wrap">Supplier statement reconciliation<span class="tooltip-icon">i</span><div class="tooltip-box">Checks statements your supplier sends (showing all transactions between you) against your own records to catch missing, duplicate, or disputed invoices.</div></div></td>
+              <td class="feat-yes">✅ Automated, one-click requests<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Automated (credit-based)<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-no">❌ Not available<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-gap">— Not confirmed<br><span class="conf conf-gap">— GAP</span></td>
+              <td class="feat-partial">⚠ Invoice matching only<br><span class="conf conf-medium">⚠ MED</span></td>
+              <td class="feat-partial">⚠ Via invoice matching<br><span class="conf conf-medium">⚠ MED</span></td>
+            </tr>
+            <!-- PAYMENTS -->
+            <tr style="background:#f8fafc;">
+              <td colspan="7" style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.05em;padding:8px 12px;">Payments</td>
+            </tr>
+            <tr>
+              <td>In-app supplier payments</td>
+              <td class="feat-no">❌ Not available<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Dext Payments (UK Xero, launched Feb 2026)<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-partial">⚠ ApprovalMax Pay — UK beta via open banking<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Core — 196 countries<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Comma in-app payments<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-partial">⚠ Limited payment capability<br><span class="conf conf-medium">⚠ MED</span></td>
+            </tr>
+            <!-- MULTI-ENTITY -->
+            <tr style="background:#f8fafc;">
+              <td colspan="7" style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.05em;padding:8px 12px;">Multi-entity &amp; Organisation Structure</td>
+            </tr>
+            <tr>
+              <td><div class="tooltip-wrap">Multi-entity support<span class="tooltip-icon">i</span><div class="tooltip-box">The ability to manage multiple separate companies or business locations within one account — important for franchises and groups.</div></div></td>
+              <td class="feat-yes">✅ Unlimited sub-entities<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Multi-entity supported<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Multiple organisations<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Multi-entity (extra fee)<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-partial">⚠ Business units (Teams: 2, Business: 10)<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Multi-entity<br><span class="conf conf-medium">⚠ MED</span></td>
+            </tr>
+            <!-- STORAGE -->
+            <tr style="background:#f8fafc;">
+              <td colspan="7" style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.05em;padding:8px 12px;">Document Storage &amp; Archive</td>
+            </tr>
+            <tr>
+              <td>Document retention</td>
+              <td class="feat-yes">✅ 7 years (UK regulatory)<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ 10 years (GDPR)<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Permanent audit trail in Xero<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Long-term archive<br><span class="conf conf-medium">⚠ MED</span></td>
+              <td class="feat-yes">✅ 7 years minimum<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-gap">— Not confirmed<br><span class="conf conf-gap">— GAP</span></td>
+            </tr>
+            <!-- EXPENSES -->
+            <tr style="background:#f8fafc;">
+              <td colspan="7" style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.05em;padding:8px 12px;">Expenses Management</td>
+            </tr>
+            <tr>
+              <td>Expense management</td>
+              <td class="feat-partial">⚠ Out-of-pocket only<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Full — mileage, claims, approvals<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-partial">⚠ Via Capture (QBO orgs)<br><span class="conf conf-medium">⚠ MED</span></td>
+              <td class="feat-yes">✅ Full expense module<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ AI Expenses (new 2025)<br><span class="conf conf-high">✅ HIGH</span></td>
+              <td class="feat-yes">✅ Invoice &amp; expense capture<br><span class="conf conf-medium">⚠ MED</span></td>
+            </tr>
+            <!-- INTEGRATIONS -->
+            <tr style="background:#f8fafc;">
+              <td colspan="7" style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.05em;padding:8px 12px;">Key Accounting Integrations</td>
+            </tr>
+            <tr>
+              <td>Xero</td>
+              <td class="feat-yes">✅</td><td class="feat-yes">✅ 4.9/5</td><td class="feat-yes">✅ 5.0/5</td><td class="feat-yes">✅</td><td class="feat-yes">✅</td><td class="feat-yes">✅</td>
+            </tr>
+            <tr>
+              <td>QuickBooks Online</td>
+              <td class="feat-yes">✅</td><td class="feat-yes">✅ 4.9/5</td><td class="feat-yes">✅</td><td class="feat-yes">✅</td><td class="feat-yes">✅</td><td class="feat-yes">✅</td>
+            </tr>
+            <tr>
+              <td>NetSuite</td>
+              <td class="feat-yes">✅ Native</td><td class="feat-yes">✅</td><td class="feat-yes">✅</td><td class="feat-yes">✅</td><td class="feat-gap">—</td><td class="feat-gap">—</td>
+            </tr>
+            <tr>
+              <td>Sage 50 / 200 / Intacct</td>
+              <td class="feat-yes">✅ Sage 50</td><td class="feat-yes">✅ Sage</td><td class="feat-gap">— Limited</td><td class="feat-partial">⚠ Intacct only</td><td class="feat-yes">✅ Sage 50, 200, Intacct</td><td class="feat-partial">⚠ Sage Intacct</td>
+            </tr>
+            <tr>
+              <td>MYOB</td>
+              <td class="feat-yes">✅</td><td class="feat-yes">✅</td><td class="feat-gap">—</td><td class="feat-gap">—</td><td class="feat-yes">✅</td><td class="feat-gap">—</td>
+            </tr>
+            <tr>
+              <td>AccountsIQ / iplicit</td>
+              <td class="feat-yes">✅ Native both</td><td class="feat-gap">—</td><td class="feat-gap">—</td><td class="feat-gap">—</td><td class="feat-gap">—</td><td class="feat-yes">✅ AccountsIQ</td>
+            </tr>
+            <tr>
+              <td>Microsoft Business Central</td>
+              <td class="feat-yes">✅ Native</td><td class="feat-gap">—</td><td class="feat-gap">—</td><td class="feat-gap">—</td><td class="feat-partial">⚠ Enterprise tier only</td><td class="feat-gap">—</td>
+            </tr>
+            <tr>
+              <td>Hospitality POS (Fedelta, Idealpos, Impos etc.)</td>
+              <td class="feat-yes">✅ 10+ POS integrations</td>
+              <td class="feat-no">❌</td><td class="feat-no">❌</td><td class="feat-no">❌</td><td class="feat-no">❌</td><td class="feat-no">❌</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== VS LIGHTYEAR TAB ===================== -->
+  <div class="tab-content" id="tab-vs">
+    <div style="margin-bottom:12px;font-size:13px;color:#374151;">Select a competitor to view the head-to-head comparison and sales talking points:</div>
+    <div class="vs-selector">
+      <button class="vs-btn active" onclick="switchVS('dext', this)">vs Dext</button>
+      <button class="vs-btn" onclick="switchVS('approvalmax', this)">vs ApprovalMax</button>
+      <button class="vs-btn" onclick="switchVS('tipalti', this)">vs Tipalti</button>
+      <button class="vs-btn" onclick="switchVS('zahara', this)">vs Zahara</button>
+      <button class="vs-btn" onclick="switchVS('compleat', this)">vs Compleat</button>
+    </div>
+
+    <!-- VS DEXT -->
+    <div class="comp-section active" id="vs-dext">
+      <div class="card">
+        <div class="card-title" style="color:#1e40af;">⚔️ Lightyear vs Dext — Head to Head</div>
+        <div style="overflow-x:auto;">
+          <table class="vs-table">
+            <thead>
+              <tr>
+                <th class="metric-col" style="min-width:160px;">Metric</th>
+                <th class="comp-col" style="min-width:140px;">Dext</th>
+                <th class="ly-col" style="min-width:140px;">⚡ Lightyear</th>
+                <th class="winner-col" style="min-width:80px;">Better for AP</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="metric-cell">Entry Price (GBP)</td><td class="comp-win">~£30/mo</td><td class="neutral">£130/mo</td><td style="text-align:center;"><span style="color:#1e40af;font-weight:600;">Dext</span></td></tr>
+              <tr><td class="metric-cell">Free Trial</td><td class="neutral">14 days</td><td class="ly-win">30 days</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell"><div class="tooltip-wrap">Native PO creation<span class="tooltip-icon">i</span><div class="tooltip-box">Create purchase orders directly inside the platform without switching to another system.</div></div></td><td class="neutral">❌ Not available</td><td class="ly-win">✅ Full workflow</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell"><div class="tooltip-wrap">3-way matching<span class="tooltip-icon">i</span><div class="tooltip-box">Checks PO, delivery note AND invoice together before approving payment.</div></div></td><td class="neutral">❌ Not available</td><td class="ly-win">✅ Line-level</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell"><div class="tooltip-wrap">Automated price checking<span class="tooltip-icon">i</span><div class="tooltip-box">Compares invoice prices against agreed supplier pricelists to catch overcharging.</div></div></td><td class="neutral">❌ Not available</td><td class="ly-win">✅ Unique feature</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell"><div class="tooltip-wrap">Bank fraud detection<span class="tooltip-icon">i</span><div class="tooltip-box">Checks supplier bank details on each invoice match your records to prevent payment fraud.</div></div></td><td class="neutral">❌ Not available</td><td class="ly-win">✅ Automated</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell">Statement reconciliation</td><td class="neutral">✅ Automated (credit-based)</td><td class="ly-win">✅ Automated, included</td><td style="text-align:center;"><span style="color:#6b7280;">Tie</span></td></tr>
+              <tr><td class="metric-cell">In-app payments</td><td class="comp-win">✅ Dext Payments (UK Xero)</td><td class="neutral">❌ Not available</td><td style="text-align:center;"><span style="color:#1e40af;font-weight:600;">Dext</span></td></tr>
+              <tr><td class="metric-cell">Banking connections</td><td class="comp-win">✅ 11,500+ institutions</td><td class="neutral">❌ Not available</td><td style="text-align:center;"><span style="color:#1e40af;font-weight:600;">Dext</span></td></tr>
+              <tr><td class="metric-cell">Document retention</td><td class="comp-win">10 years</td><td class="neutral">7 years</td><td style="text-align:center;"><span style="color:#1e40af;font-weight:600;">Dext</span></td></tr>
+              <tr><td class="metric-cell">Expense management</td><td class="comp-win">✅ Full (mileage, claims)</td><td class="neutral">⚠ Out-of-pocket only</td><td style="text-align:center;"><span style="color:#1e40af;font-weight:600;">Dext</span></td></tr>
+              <tr><td class="metric-cell">Hospitality POS integrations</td><td class="neutral">❌ None</td><td class="ly-win">✅ 10+ POS systems</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell">AccountsIQ / iplicit</td><td class="neutral">❌</td><td class="ly-win">✅ Native both</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card" style="border-color:#bfdbfe;">
+          <div style="font-weight:700;color:#1e40af;margin-bottom:8px;">🔵 When Dext Wins the Deal</div>
+          <div class="strength-item"><span>•</span><span>Customer needs basic receipt/invoice scanning at low cost — £30 vs £130/mo</span></div>
+          <div class="strength-item"><span>•</span><span>Business banks with one of the 11,500+ institutions Dext connects to natively</span></div>
+          <div class="strength-item"><span>•</span><span>Customer wants in-app invoice &amp; expense payments (Dext Payments, UK Xero)</span></div>
+          <div class="strength-item"><span>•</span><span>Accountancy practice managing many clients via Dext's practice dashboard</span></div>
+          <div class="strength-item"><span>•</span><span>Customer needs e-commerce feeds (Shopify, Amazon, Stripe etc.)</span></div>
+        </div>
+        <div class="card" style="border-color:#bbf7d0;">
+          <div style="font-weight:700;color:#16a34a;margin-bottom:8px;">🟢 When Lightyear Wins the Deal</div>
+          <div class="strength-item"><span>•</span><span>Customer has supplier pricelists and needs automated overcharge prevention</span></div>
+          <div class="strength-item"><span>•</span><span>Finance team worried about payment fraud — bank detail verification is essential</span></div>
+          <div class="strength-item"><span>•</span><span>Hospitality, franchise, or multi-site business needing POS integrations</span></div>
+          <div class="strength-item"><span>•</span><span>Customer needs full PO → delivery → invoice matching workflow (Dext has no PO)</span></div>
+          <div class="strength-item"><span>•</span><span>Needs AccountsIQ, iplicit, or Business Central integration</span></div>
+        </div>
+      </div>
+      <div class="card" style="background:#f5f3ff;border-color:#ddd6fe;">
+        <div class="card-title" style="color:#5b21b6;">🎯 Sales Positioning Scripts vs Dext</div>
+        <div class="script-box">
+          <div class="script-title">For CFOs &amp; Finance Directors:</div>
+          <p>"Dext is excellent at capturing and coding invoices. While they now also handle payments through their platform, Lightyear's differentiation is upstream — we prevent the payment errors before they happen. Our automated price checking catches supplier overcharges at the line level before approval, and our bank detail fraud detection flags invoice tampering before any money moves. Dext doesn't do either of these."</p>
+        </div>
+        <div class="script-box">
+          <div class="script-title">For Hospitality &amp; Multi-site Operators:</div>
+          <p>"Dext handles the document capture and banking data well, but they don't connect to your POS systems — Lightyear integrates natively with Idealpos, Impos, Bepoz, SENPOS and more. For franchise or multi-location hospitality, that's essential. Yes, we're roughly 4x the cost, but we automate the full approval-to-matching workflow that Dext still requires manual steps for."</p>
+        </div>
+        <div class="script-box">
+          <div class="script-title">When Price Comes Up:</div>
+          <p>"Dext starts at ~£30 a month — Lightyear is £130. The question worth asking is: what's one supplier overcharge worth? Or one fraudulent payment that slips through? Lightyear typically pays for itself if it prevents a single overcharge or fraud incident per year. We can run an ROI calculation based on your invoice volumes."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- VS APPROVALMAX -->
+    <div class="comp-section" id="vs-approvalmax">
+      <div class="card">
+        <div class="card-title" style="color:#1e40af;">⚔️ Lightyear vs ApprovalMax — Head to Head</div>
+        <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:6px;padding:10px 12px;margin-bottom:12px;font-size:12px;color:#9a3412;">
+          ⚠️ <strong>Important change since last update:</strong> ApprovalMax now offers 3-way matching (Advanced/Premium plans) and Capture is free for UK sign-ups from March 2026. Update your sales positioning to acknowledge these before positioning against them.
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="vs-table">
+            <thead>
+              <tr>
+                <th class="metric-col" style="min-width:160px;">Metric</th>
+                <th class="comp-col" style="min-width:160px;">ApprovalMax</th>
+                <th class="ly-col" style="min-width:140px;">⚡ Lightyear</th>
+                <th class="winner-col" style="min-width:80px;">Better for AP</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="metric-cell">Entry Price (GBP)</td><td class="comp-win">£39/mo (annual, Standard)</td><td class="neutral">£130/mo (Essentials)</td><td style="text-align:center;"><span style="color:#1e40af;font-weight:600;">ApprovalMax</span></td></tr>
+              <tr><td class="metric-cell">Price for 3-way matching (GBP)</td><td class="neutral">£64/mo (Advanced plan)</td><td class="ly-win">£130/mo (Standard plan)</td><td style="text-align:center;"><span style="color:#1e40af;font-weight:600;">ApprovalMax</span></td></tr>
+              <tr><td class="metric-cell">3-way matching</td><td class="neutral">⚠ Advanced/Premium only (£64+/mo)</td><td class="ly-win">✅ Standard plan+, line-level</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell">Invoice capture (OCR)</td><td class="neutral">✅ Capture (free UK Mar 2026)</td><td class="ly-win">✅ Smart Extract+ AI, default</td><td style="text-align:center;"><span style="color:#6b7280;">Tie</span></td></tr>
+              <tr><td class="metric-cell">Automated price checking</td><td class="neutral">❌ Not available</td><td class="ly-win">✅ Unique feature</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell">Bank detail fraud detection</td><td class="neutral">❌ Not available</td><td class="ly-win">✅ Automated</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell">Statement reconciliation</td><td class="neutral">❌ Not available</td><td class="ly-win">✅ Automated, one-click</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell">In-app supplier payments</td><td class="neutral">⚠ ApprovalMax Pay (UK beta)</td><td class="neutral">❌ Not available</td><td style="text-align:center;"><span style="color:#6b7280;">Developing</span></td></tr>
+              <tr><td class="metric-cell">Approval complexity</td><td class="comp-win">✅ Unlimited steps, complex rules</td><td class="neutral">✅ Up to 8 levels</td><td style="text-align:center;"><span style="color:#1e40af;font-weight:600;">ApprovalMax</span></td></tr>
+              <tr><td class="metric-cell">NetSuite integration depth</td><td class="comp-win">✅ Deep native (Sales Orders, 3-way)</td><td class="neutral">✅ Native export</td><td style="text-align:center;"><span style="color:#1e40af;font-weight:600;">ApprovalMax</span></td></tr>
+              <tr><td class="metric-cell">Hospitality POS</td><td class="neutral">❌ None</td><td class="ly-win">✅ 10+ POS systems</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell">Unlimited users</td><td class="comp-win">✅ All plans</td><td class="ly-win">✅ All plans</td><td style="text-align:center;"><span style="color:#6b7280;">Tie</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card" style="background:#f5f3ff;border-color:#ddd6fe;">
+        <div class="card-title" style="color:#5b21b6;">🎯 Sales Positioning Scripts vs ApprovalMax</div>
+        <div class="script-box">
+          <div class="script-title">Core Differentiator:</div>
+          <p>"ApprovalMax makes sure the right people say yes. Lightyear makes sure what they're saying yes to is actually correct. ApprovalMax can now do 3-way matching on their Advanced plan, which is great for catching quantity discrepancies. But what they still don't do is check whether the prices on that invoice match your agreed supplier rates — that's Lightyear's automated price checking. And they don't verify the bank details on that invoice before payment goes out."</p>
+        </div>
+        <div class="script-box">
+          <div class="script-title">When They Lead with ApprovalMax's Cheaper Price:</div>
+          <p>"At £39/month, ApprovalMax Standard is good for approval workflows. But to get the 3-way matching you need, you're at £64/month — and that still doesn't include price checking or statement reconciliation. Lightyear at £130/month includes all of that on the Standard plan. If you're processing 250+ documents per month and have negotiated supplier pricelists, the ROI case is straightforward."</p>
+        </div>
+        <div class="script-box">
+          <div class="script-title">When Prospect Already Uses Dext + ApprovalMax:</div>
+          <p>"That Dext + ApprovalMax combination is popular — Dext reads the invoice, ApprovalMax routes the approval. Lightyear does both in one platform and adds layers they don't: price verification, supplier bank fraud checks, and statement reconciliation. Less complexity, more upstream control."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- VS TIPALTI -->
+    <div class="comp-section" id="vs-tipalti">
+      <div class="card">
+        <div class="card-title" style="color:#1e40af;">⚔️ Lightyear vs Tipalti — Head to Head</div>
+        <div style="overflow-x:auto;">
+          <table class="vs-table">
+            <thead>
+              <tr>
+                <th class="metric-col">Metric</th>
+                <th class="comp-col">Tipalti</th>
+                <th class="ly-col">⚡ Lightyear</th>
+                <th class="winner-col">Depends On</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="metric-cell">Target customer</td><td class="comp-win">Mid-market to enterprise (global)</td><td class="neutral">SME to large SME (UK/APAC)</td><td style="text-align:center;color:#6b7280;">Different markets</td></tr>
+              <tr><td class="metric-cell">Entry price (GBP)</td><td class="neutral">Contact sales (~£120-250+/mo est.)</td><td class="ly-win">£130/mo published</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear (transparent)</span></td></tr>
+              <tr><td class="metric-cell">Global payments</td><td class="comp-win">✅ 196 countries, 120 currencies</td><td class="neutral">❌ Not available</td><td style="text-align:center;"><span style="color:#1e40af;font-weight:600;">Tipalti</span></td></tr>
+              <tr><td class="metric-cell">Automated price checking</td><td class="neutral">❌ Not available</td><td class="ly-win">✅ Unique feature</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell">Bank detail fraud detection</td><td class="neutral">⚠ Sanctions screening only</td><td class="ly-win">✅ Bank detail verification</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell">Statement reconciliation</td><td class="neutral">— Not confirmed</td><td class="ly-win">✅ Automated</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell">Free trial</td><td class="neutral">❌ No free trial</td><td class="ly-win">✅ 30 days</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell">Implementation time</td><td class="neutral">Weeks to months</td><td class="ly-win">Days to weeks</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell">Supplier mass payments</td><td class="comp-win">✅ Core feature</td><td class="neutral">❌ Not available</td><td style="text-align:center;"><span style="color:#1e40af;font-weight:600;">Tipalti</span></td></tr>
+              <tr><td class="metric-cell">Tax compliance (global)</td><td class="comp-win">✅ W-8/W-9, VAT, 196 countries</td><td class="neutral">UK/APAC only</td><td style="text-align:center;"><span style="color:#1e40af;font-weight:600;">Tipalti</span></td></tr>
+              <tr><td class="metric-cell">Hospitality POS</td><td class="neutral">❌</td><td class="ly-win">✅ 10+ POS</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card" style="background:#f5f3ff;border-color:#ddd6fe;">
+        <div class="card-title" style="color:#5b21b6;">🎯 Sales Positioning Scripts vs Tipalti</div>
+        <div class="script-box">
+          <div class="script-title">Core Differentiator:</div>
+          <p>"Tipalti moves money globally — that's what it's built for. Lightyear controls what you're actually paying for before the money moves. If you're a UK or APAC business processing supplier invoices and need to know you're paying the right price to the right supplier, Lightyear is purpose-built for that. Tipalti is the right choice if you're paying contractors across 50 countries."</p>
+        </div>
+        <div class="script-box">
+          <div class="script-title">When Tipalti Is Being Evaluated for AP Automation:</div>
+          <p>"Tipalti is primarily a payments &amp; mass payout platform with AP automation added on. It has no published GBP pricing, no free trial, and typically takes months to implement. Lightyear is up and running in days, has transparent pricing from £130/month, and a 30-day trial. For UK SMEs managing supplier invoices and approvals, Lightyear is a much better fit without the enterprise complexity."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- VS ZAHARA -->
+    <div class="comp-section" id="vs-zahara">
+      <div class="card">
+        <div class="card-title" style="color:#1e40af;">⚔️ Lightyear vs Zahara — Head to Head</div>
+        <div style="overflow-x:auto;">
+          <table class="vs-table">
+            <thead>
+              <tr>
+                <th class="metric-col">Metric</th>
+                <th class="comp-col">Zahara</th>
+                <th class="ly-col">⚡ Lightyear</th>
+                <th class="winner-col">Better for AP</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="metric-cell">Entry Price (GBP)</td><td class="neutral">~£142/mo (Teams, unconfirmed)</td><td class="comp-win">£130/mo (confirmed)</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell">Price transparency</td><td class="neutral">⚠ JS-rendered, hard to verify</td><td class="ly-win">✅ Fully published</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell">Automated price checking</td><td class="neutral">❌ Budget control only</td><td class="ly-win">✅ Pricelist comparison</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell">Bank detail fraud detection</td><td class="neutral">— Not confirmed</td><td class="ly-win">✅ Automated</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell">Statement reconciliation</td><td class="neutral">⚠ Invoice matching only</td><td class="ly-win">✅ Supplier statement recon</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell">PO creation &amp; management</td><td class="ly-win">✅ Full PO workflow</td><td class="ly-win">✅ Full PO workflow</td><td style="text-align:center;"><span style="color:#6b7280;">Tie</span></td></tr>
+              <tr><td class="metric-cell">Budget control</td><td class="comp-win">✅ Strong — departmental &amp; project</td><td class="neutral">⚠ Limited vs Zahara</td><td style="text-align:center;"><span style="color:#1e40af;font-weight:600;">Zahara</span></td></tr>
+              <tr><td class="metric-cell">In-app payments</td><td class="comp-win">✅ Comma integration</td><td class="neutral">❌ Not available</td><td style="text-align:center;"><span style="color:#1e40af;font-weight:600;">Zahara</span></td></tr>
+              <tr><td class="metric-cell">AI Expenses module</td><td class="comp-win">✅ New 2025</td><td class="neutral">⚠ Out-of-pocket only</td><td style="text-align:center;"><span style="color:#1e40af;font-weight:600;">Zahara</span></td></tr>
+              <tr><td class="metric-cell">Multi-entity</td><td class="neutral">⚠ Limited (2-10 units by plan)</td><td class="ly-win">✅ Unlimited sub-entities</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell">Hospitality POS</td><td class="neutral">❌</td><td class="ly-win">✅ 10+ POS systems</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card" style="background:#f5f3ff;border-color:#ddd6fe;">
+        <div class="card-title" style="color:#5b21b6;">🎯 Sales Positioning Scripts vs Zahara</div>
+        <div class="script-box">
+          <div class="script-title">Core Differentiator:</div>
+          <p>"Zahara controls your budget before you spend — it's great at stopping overspending at the PO stage. Lightyear controls what suppliers charge you after you've committed to buy. Both matter, but Lightyear's automated price checking and bank fraud detection protect you from the supplier side, which is where most invoice errors and fraud actually occur."</p>
+        </div>
+        <div class="script-box">
+          <div class="script-title">For Multi-entity or Franchise Operators:</div>
+          <p>"Zahara's Teams plan limits you to 2 business units — you'd need Business or Enterprise for more. Lightyear includes unlimited sub-entities on every plan from £130/month. For franchise groups or school groups with 10, 20 or 50 entities, that makes a significant difference in total cost."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- VS COMPLEAT -->
+    <div class="comp-section" id="vs-compleat">
+      <div class="card">
+        <div class="card-title" style="color:#1e40af;">⚔️ Lightyear vs Compleat — Head to Head</div>
+        <div style="overflow-x:auto;">
+          <table class="vs-table">
+            <thead>
+              <tr>
+                <th class="metric-col">Metric</th>
+                <th class="comp-col">Compleat</th>
+                <th class="ly-col">⚡ Lightyear</th>
+                <th class="winner-col">Better for AP</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="metric-cell">Published pricing</td><td class="neutral">❌ Contact sales only</td><td class="ly-win">✅ Fully transparent</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell">Online buying integration</td><td class="comp-win">✅ Amazon Business + 70+ industry suppliers</td><td class="neutral">❌ Not available</td><td style="text-align:center;"><span style="color:#1e40af;font-weight:600;">Compleat</span></td></tr>
+              <tr><td class="metric-cell">Automated price checking</td><td class="neutral">⚠ Budget tracking only</td><td class="ly-win">✅ Supplier pricelist comparison</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell">Bank detail fraud detection</td><td class="neutral">— Not confirmed</td><td class="ly-win">✅ Automated</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell">Statement reconciliation</td><td class="neutral">⚠ Via invoice matching</td><td class="ly-win">✅ Automated supplier statements</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell">PO creation</td><td class="ly-win">✅ Full P2P including online buying</td><td class="ly-win">✅ Full PO workflow</td><td style="text-align:center;"><span style="color:#6b7280;">Tie</span></td></tr>
+              <tr><td class="metric-cell">Free trial</td><td class="ly-win">✅ Yes, no card</td><td class="ly-win">✅ 30 days, no card</td><td style="text-align:center;"><span style="color:#6b7280;">Tie</span></td></tr>
+              <tr><td class="metric-cell">Hospitality POS</td><td class="neutral">❌</td><td class="ly-win">✅ 10+ POS systems</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+              <tr><td class="metric-cell">AccountsIQ / iplicit</td><td class="neutral">✅ AccountsIQ only</td><td class="ly-win">✅ Both native</td><td style="text-align:center;"><span style="color:#16a34a;font-weight:600;">Lightyear</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card" style="background:#f5f3ff;border-color:#ddd6fe;">
+        <div class="card-title" style="color:#5b21b6;">🎯 Sales Positioning Scripts vs Compleat</div>
+        <div class="script-box">
+          <div class="script-title">Core Differentiator:</div>
+          <p>"Compleat manages what you're buying — they've built great online purchasing tools including Amazon Business integration. Lightyear controls what you're being charged for it. Once a purchase is committed, Lightyear's automated price checking verifies every line on the invoice against your agreed prices and flags any discrepancy before payment."</p>
+        </div>
+        <div class="script-box">
+          <div class="script-title">On Pricing Transparency:</div>
+          <p>"Compleat requires you to contact sales for pricing — you won't know the cost until you've had a demo and a commercial conversation. Lightyear publishes all pricing openly at lightyear.cloud/pricing starting at £130/month, and offers a 30-day free trial without a credit card."</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- DATA QUALITY FOOTER -->
+  <div class="dq-bar" style="margin-top:20px;">
     <div>
-      <strong>Dext — AI Assist agent launched</strong> (bookkeeping automation AI, learns from user choices)
-      <div class="change-source"><a href="https://www.internationalaccountingbulletin.com/news/dext-rolls-out-ai-agent-to-support-bookkeeping-workflows/" target="_blank">Source: International Accounting Bulletin, ~24 Mar 2026</a></div>
+      <div style="font-weight:700;font-size:13px;color:#111827;">Data Quality Summary — 6 April 2026</div>
+      <div style="font-size:11px;color:#6b7280;">Sources: Official websites, G2, Capterra, Software Advice, AccountingWEB, dext.com press releases. Research date: 6 April 2026.</div>
+    </div>
+    <div class="dq-badges">
+      <span class="dq-badge" style="background:#dcfce7;color:#166534;">✅ HIGH: 38 data points</span>
+      <span class="dq-badge" style="background:#fef9c3;color:#854d0e;">⚠ MEDIUM: 14 data points</span>
+      <span class="dq-badge" style="background:#f1f5f9;color:#475569;">— GAPS: 8 data points</span>
+    </div>
+    <div style="font-size:11px;color:#6b7280;max-width:300px;">
+      Key gaps: Tipalti GBP/AUD pricing, Zahara actual GBP plan prices (JS-rendered), Compleat pricing (contact sales), Dext GBP/AUD official pricing.
     </div>
   </div>
 
-  <div class="change-item">
-    <span class="change-badge badge-update">UPDATE</span>
-    <div>
-      <strong>ApprovalMax — Capture (OCR) now free & bundled for UK sign-ups</strong> as of March 2026. Rolling out globally Summer 2026.
-      <div class="change-source"><a href="https://approvalmax.com/features/approvalmax-capture" target="_blank">Source: approvalmax.com/features/approvalmax-capture, Mar 2026</a></div>
-    </div>
-  </div>
-
-  <div class="change-item">
-    <span class="change-badge badge-new">NEW</span>
-    <div>
-      <strong>ApprovalMax — 3-way matching (Bill + PO + Item Receipt) now live</strong> — available on Advanced/Premium plans; Confirmation of Payee (bank name verification) added to ApprovalMax Pay.
-      <div class="change-source"><a href="https://approvalmax.com/feature-releases" target="_blank">Source: approvalmax.com/feature-releases, 2026</a></div>
-    </div>
-  </div>
-
-  <div class="change-item">
-    <span class="change-badge badge-announce">ANNOUNCE</span>
-    <div>
-      <strong>Dext — Payments (via Airwallex) expanding to Canada early 2026</strong>; payroll payments launching soon in 2026 (UK).
-      <div class="change-source"><a href="https://dext.com/uk/business/product/dext-payments/pricing" target="_blank">Source: dext.com payments pricing page, Mar 2026</a></div>
-    </div>
-  </div>
-
-  <div class="change-item">
-    <span class="change-badge badge-update">UPDATE</span>
-    <div>
-      <strong>Lightyear — No pricing or feature changes detected</strong> this week. UK £130/mo and AU A$155/mo (125 credits, Starter) confirmed unchanged.
-      <div class="change-source"><a href="https://www.lightyear.cloud/en-gb/pricing" target="_blank">Source: lightyear.cloud/en-gb/pricing — scraped 30 Mar 2026</a></div>
-    </div>
-  </div>
 </div>
-
-<!-- LIGHTYEAR BASELINE -->
-<div class="ly-baseline">
-  <h2>✅ Lightyear Baseline — Verified 30 March 2026</h2>
-  <div class="ly-grid">
-    <div class="ly-stat"><div class="label">GBP Starter</div><div class="value">£130/mo</div><div class="note">125 credits · Official source</div></div>
-    <div class="ly-stat"><div class="label">AUD Starter</div><div class="value">A$155/mo</div><div class="note">125 credits · Official source</div></div>
-    <div class="ly-stat"><div class="label">Free Trial</div><div class="value">30 days</div><div class="note">No credit card required</div></div>
-    <div class="ly-stat"><div class="label">Approval Levels</div><div class="value">Up to 8</div><div class="note">Multi-tier workflows</div></div>
-    <div class="ly-stat"><div class="label">Archive</div><div class="value">7–8 yrs</div><div class="note">7yr UK site · 8yr Capterra</div></div>
-    <div class="ly-stat"><div class="label">Contract</div><div class="value">30-day</div><div class="note">Rolling, cancel anytime</div></div>
-    <div class="ly-stat"><div class="label">Overage</div><div class="value">Opt-in</div><div class="note">Charged same per-credit rate</div></div>
-    <div class="ly-stat"><div class="label">Users</div><div class="value">Unlimited</div><div class="note">All plans · No per-seat fee</div></div>
-  </div>
-</div>
-
-<!-- COMPETITOR SELECTOR -->
-<div class="comp-tabs" id="compTabs">
-  <button class="comp-tab active" onclick="showComp('dext', this)">Dext</button>
-  <button class="comp-tab" onclick="showComp('approvalmax', this)">ApprovalMax</button>
-  <button class="comp-tab" onclick="showComp('tipalti', this)">Tipalti</button>
-  <button class="comp-tab" onclick="showComp('zahara', this)">Zahara</button>
-  <button class="comp-tab" onclick="showComp('compleat', this)">Compleat</button>
-</div>
-
-<!-- ═══════════════════════════════════════════════════ -->
-<!-- DEXT -->
-<!-- ═══════════════════════════════════════════════════ -->
-<div id="comp-dext" class="comp-content">
-  <div class="inner-tabs">
-    <button class="inner-tab active" onclick="showTab('dext','overview',this)">Overview</button>
-    <button class="inner-tab" onclick="showTab('dext','pricing',this)">Pricing</button>
-    <button class="inner-tab" onclick="showTab('dext','features',this)">Features</button>
-    <button class="inner-tab" onclick="showTab('dext','vs',this)">VS Lightyear</button>
-  </div>
-
-  <!-- DEXT OVERVIEW -->
-  <div id="dext-overview" class="tab-content">
-    <div class="stat-row">
-      <div class="stat-box"><div class="label">Businesses Using</div><div class="value">700K+</div><div class="sub">Worldwide</div></div>
-      <div class="stat-box"><div class="label">Docs Processed/yr</div><div class="value">320M+</div><div class="sub">Annually</div></div>
-      <div class="stat-box"><div class="label">Capterra Rating</div><div class="value">4.5★</div><div class="sub">160+ reviews</div></div>
-      <div class="stat-box"><div class="label">Parent Company</div><div class="value">IRIS</div><div class="sub">Acquired Dec 2024</div></div>
-      <div class="stat-box"><div class="label">Free Trial</div><div class="value">14 days</div><div class="sub">No card required</div></div>
-      <div class="stat-box"><div class="label">Accounting Partners</div><div class="value">35+</div><div class="sub">Incl. Xero, QBO, Sage</div></div>
-    </div>
-    <div class="card">
-      <h3>Key Strengths</h3>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-        <div>
-          <div class="section-h">Where Dext Excels</div>
-          <ul style="list-style:none;">
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>Banking connections: <strong>11,500+</strong> institutions worldwide</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>OCR accuracy <strong>99.9%</strong> (incl. handwritten)</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>Lower entry price (~£25–30/mo vs Lightyear £130/mo)</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>E-commerce data feeds: Shopify, Amazon, Stripe, eBay, Etsy</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>10-year document storage (GDPR-compliant)</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>New AI Assist bookkeeping agent (March 2026)</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>Dext Payments live (UK Xero, via Airwallex)</span></li>
-          </ul>
-        </div>
-        <div>
-          <div class="section-h">Gaps vs Lightyear</div>
-          <ul style="list-style:none;">
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>No native <span class="tt-wrap">Purchase Order creation<span class="tt-icon">i</span><span class="tt-text">A formal document sent to a supplier to order goods or services, controlling spend before it happens.</span></span></span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>No <span class="tt-wrap">3-way matching<span class="tt-icon">i</span><span class="tt-text">Checks that the invoice, purchase order, AND delivery receipt all match before payment — catches undelivered goods.</span></span> (only 2-way via Xero/QBO)</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>No automated <span class="tt-wrap">price checking vs supplier pricelists<span class="tt-icon">i</span><span class="tt-text">Automatically flags if a supplier charges more than your agreed price — prevents overcharging.</span></span></span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>No <span class="tt-wrap">bank detail fraud verification<span class="tt-icon">i</span><span class="tt-text">Checks that supplier bank details on the invoice match your approved records — prevents payment fraud.</span></span></span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>Shorter free trial (14 days vs Lightyear's 30 days)</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>No supplier statement reconciliation</span></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- DEXT PRICING -->
-  <div id="dext-pricing" class="tab-content hidden">
-    <div class="pricing-grid">
-      <div class="pricing-card">
-        <div class="currency-label">🇬🇧 GBP (UK)</div>
-        <div class="price">~£25–30</div>
-        <div class="period">per month (Business plan, 5 users, 250 docs)</div>
-        <div class="warn">⚠ GBP prices NOT published on dext.com — GBP equivalent of USD pricing (March 2026 rate). Verify at sign-up.</div>
-        <div class="conf-note"><span class="conf-medium">⚠ MEDIUM</span></div>
-      </div>
-      <div class="pricing-card">
-        <div class="currency-label">🇦🇺 AUD (Australia)</div>
-        <div class="price">~A$42–47</div>
-        <div class="period">per month (monthly billing)</div>
-        <div class="warn">⚠ Converted from USD pricing. Not official regional AUD price.</div>
-        <div class="conf-note"><span class="conf-medium">⚠ MEDIUM</span></div>
-      </div>
-      <div class="pricing-card highlight">
-        <div class="currency-label">🇺🇸 USD (Reference — Published)</div>
-        <div class="price">$31.50</div>
-        <div class="period">per month (monthly) · $25.21/mo annual (save 20%)</div>
-        <div class="ok">✅ Verified — official published price</div>
-        <div class="conf-note"><span class="conf-high">✅ HIGH</span></div>
-      </div>
-    </div>
-    <div class="card">
-      <h3>Pricing Structure</h3>
-      <table class="feature-table">
-        <tr><td class="feat-name">Billing model</td><td>Per user + document volume</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-        <tr><td class="feat-name">Starter plan includes</td><td>5 users, 250 documents/month</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-        <tr><td class="feat-name">Annual discount</td><td>20% off (monthly → annual billing)</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-        <tr><td class="feat-name">If you exceed document limit</td><td>Documents accepted but data NOT extracted until next billing month. No overage processing.</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-        <tr><td class="feat-name">Additional credits</td><td>Bank statement extraction, line-item extraction, statement recon — each has per-plan credit allowances; extras billed separately</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-        <tr><td class="feat-name">Dext Payments add-on</td><td>£10/client/mo (annual) or £13/mo (monthly) for practice users; transaction fees apply beyond free allowance (£0.25/Faster Payment)</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-        <tr><td class="feat-name">Enterprise pricing</td><td>Custom — contact sales. Setup fees may apply.</td><td><span class="conf-medium">⚠ MEDIUM</span></td></tr>
-      </table>
-      <div class="warn mt-2">⚠ Note: Dext does not publish GBP prices on its UK website as of March 2026. Figures above are GBP conversions of published USD pricing.</div>
-    </div>
-  </div>
-
-  <!-- DEXT FEATURES -->
-  <div id="dext-features" class="tab-content hidden">
-    <div class="card">
-      <h3>Features Available ✓</h3>
-      <table class="feature-table">
-        <thead><tr><th>Feature</th><th>Detail</th><th>Confidence</th></tr></thead>
-        <tbody>
-          <tr><td class="feat-name"><span class="tt-wrap">OCR / Data Extraction<span class="tt-icon">i</span><span class="tt-text">Technology that reads text from images and PDFs automatically — extracts supplier name, amount, date etc.</span></span></td><td>99.9% accuracy including handwritten docs. AI-powered with auto-categorisation.</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Expense Management</td><td>Mileage tracking, mobile receipt capture, expense approvals</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Multi-tier Approvals</td><td>Mobile-enabled; complexity of tiers not fully documented</td><td><span class="conf-medium">⚠ MEDIUM</span></td></tr>
-          <tr><td class="feat-name"><span class="tt-wrap">Line-item Extraction<span class="tt-icon">i</span><span class="tt-text">Pulls individual products/services from an invoice, not just the total — important for cost analysis.</span></span></td><td>Credit-based (limited allowance per plan; extras cost more)</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Multi-entity Support</td><td>Yes — manage multiple businesses under one account</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Mobile App</td><td>iOS + Android. Snap receipts, track mileage, manage claims.</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">10-year Document Storage</td><td>GDPR-compliant UK/EU cloud hosting</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Banking Connections</td><td>11,500+ banks and institutions worldwide</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">E-commerce Feeds</td><td>Shopify, Amazon, Stripe, PayPal, Etsy, eBay — auto data pulls</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Dext Payments</td><td>Live in UK (Xero users). Via Airwallex. Per-transaction fees.</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">AI Assist (NEW)</td><td>Bookkeeping AI agent — learns from user choices to automate repetitive categorisation decisions</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name"><span class="tt-wrap">2-way PO Matching<span class="tt-icon">i</span><span class="tt-text">Compares invoice against purchase order only (2 documents). Catches invoice/PO mismatches but NOT undelivered goods.</span></span></td><td>Via Xero / QBO integrations only; NOT native PO creation</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="card">
-      <h3>Features NOT Available ✗</h3>
-      <table class="feature-table">
-        <thead><tr><th>Missing Feature</th><th>Why It Matters vs Lightyear</th></tr></thead>
-        <tbody>
-          <tr><td class="feat-name"><span class="feat-cross">✗</span> Native Purchase Order Creation</td><td>Dext captures invoices <em>after</em> spending; Lightyear controls spend <em>before</em> it happens via PO workflows</td></tr>
-          <tr><td class="feat-name"><span class="feat-cross">✗</span> 3-way Matching</td><td>Only 2-way via Xero/QBO; Lightyear checks PO + invoice + goods received at line level</td></tr>
-          <tr><td class="feat-name"><span class="feat-cross">✗</span> Automated Price Checking</td><td>Dext does not compare invoice prices against your agreed supplier pricelist — Lightyear auto-flags overcharging</td></tr>
-          <tr><td class="feat-name"><span class="feat-cross">✗</span> Bank Detail Fraud Verification</td><td>Dext does not verify supplier bank account numbers on invoices against approved records</td></tr>
-          <tr><td class="feat-name"><span class="feat-cross">✗</span> Supplier Statement Reconciliation</td><td>Dext does not automate checking supplier statements against your records</td></tr>
-          <tr><td class="feat-name"><span class="feat-cross">✗</span> Supplier Portal / Management</td><td>No dedicated portal for suppliers to submit invoices directly</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="card">
-      <h3>Integrations</h3>
-      <div class="section-h">Accounting Software</div>
-      <div class="chip-row">
-        <span class="chip">Xero (4.9★ 1000+ reviews)</span>
-        <span class="chip">QuickBooks Online (4.9★ 550+)</span>
-        <span class="chip">NetSuite</span>
-        <span class="chip">Sage</span>
-        <span class="chip">MYOB</span>
-        <span class="chip">FreshBooks</span>
-        <span class="chip">35+ total</span>
-      </div>
-      <div class="section-h mt-3">E-commerce / Other</div>
-      <div class="chip-row">
-        <span class="chip gray">Shopify</span><span class="chip gray">Amazon</span><span class="chip gray">Stripe</span><span class="chip gray">PayPal</span><span class="chip gray">Etsy</span><span class="chip gray">eBay</span><span class="chip gray">Dropbox</span><span class="chip gray">WhatsApp upload</span>
-      </div>
-      <div class="section-h mt-3">Payments / API</div>
-      <div class="chip-row">
-        <span class="chip">Airwallex (Payments)</span>
-        <span class="chip gray">11,500+ banking connections</span>
-        <span class="chip gray">No public API</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- DEXT VS LIGHTYEAR -->
-  <div id="dext-vs" class="tab-content hidden">
-    <div class="card">
-      <h3>Head-to-Head: Dext vs Lightyear</h3>
-      <table class="vs-table">
-        <thead>
-          <tr><th>Feature</th><th style="color:#1d4ed8">Dext</th><th style="color:#065f46">Lightyear</th><th>Edge</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><span class="tt-wrap">Entry Price<span class="tt-icon">i</span><span class="tt-text">Lowest published plan (GBP). Dext price is GBP equivalent of USD — not officially published in GBP.</span></span></td><td><span class="vs-comp">~£25–30/mo</span></td><td>£130/mo</td><td style="color:#1d6fd8;font-weight:700">Dext</td></tr>
-          <tr><td>Free Trial</td><td>14 days</td><td><span class="vs-ly">30 days</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td>Contract</td><td>Monthly or Annual</td><td><span class="vs-ly">30-day rolling</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td><span class="tt-wrap">Native PO Creation<span class="tt-icon">i</span><span class="tt-text">Building and sending a Purchase Order to a supplier from within the platform, before the invoice arrives.</span></span></td><td>✗ None</td><td><span class="vs-ly">✅ Full PO workflow</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td><span class="tt-wrap">3-way Matching<span class="tt-icon">i</span><span class="tt-text">Checks invoice vs PO vs goods delivery receipt — catches if you're being invoiced for goods that didn't arrive.</span></span></td><td>✗ 2-way only (Xero/QBO)</td><td><span class="vs-ly">✅ Line-level 3-way</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td><span class="tt-wrap">Automated Price Checking<span class="tt-icon">i</span><span class="tt-text">Automatically compares what a supplier charges on their invoice against your agreed pricelist — flags overcharging immediately.</span></span></td><td>✗ None</td><td><span class="vs-ly">✅ Yes</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td><span class="tt-wrap">Bank Fraud Verification<span class="tt-icon">i</span><span class="tt-text">Checks that bank account details on an invoice match your approved supplier records before payment goes out.</span></span></td><td>✗ None</td><td><span class="vs-ly">✅ Yes</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td><span class="tt-wrap">Statement Reconciliation<span class="tt-icon">i</span><span class="tt-text">Automatically checks supplier statements against your records to find missing or duplicate invoices.</span></span></td><td>✗ None</td><td><span class="vs-ly">✅ Automated</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td>Banking Connections</td><td><span class="vs-comp">✅ 11,500+ banks</span></td><td>✗ Limited</td><td style="color:#1d6fd8;font-weight:700">Dext</td></tr>
-          <tr><td>Document Storage</td><td><span class="vs-comp">10 years</span></td><td>7–8 years</td><td style="color:#1d6fd8;font-weight:700">Dext</td></tr>
-          <tr><td>In-app Payments</td><td>✅ UK Xero (Airwallex)</td><td>✗ Not offered</td><td style="color:#1d6fd8;font-weight:700">Dext</td></tr>
-          <tr><td>E-commerce Feeds</td><td><span class="vs-comp">✅ Amazon, Shopify etc</span></td><td>✗ None</td><td style="color:#1d6fd8;font-weight:700">Dext</td></tr>
-          <tr><td>Unlimited Users</td><td>✗ Per-user pricing</td><td><span class="vs-ly">✅ Unlimited all plans</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td>Hospitality POS Integrations</td><td>✗ None</td><td><span class="vs-ly">✅ 10+ POS systems</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="win-lose-grid">
-      <div class="win-box win-comp"><h4>When Dext Wins</h4><ul>
-        <li>Smaller teams / lower budgets (~5x cheaper entry)</li>
-        <li>Businesses needing bank feeds from thousands of institutions</li>
-        <li>E-commerce businesses (Amazon, Shopify, Stripe auto-feeds)</li>
-        <li>Firms wanting 10-year archive vs 7–8 year</li>
-        <li>Practices managing many clients via Partner plan</li>
-        <li>Teams wanting in-app payment execution (UK Xero)</li>
-      </ul></div>
-      <div class="win-box win-ly"><h4>When Lightyear Wins</h4><ul>
-        <li>Full PO management workflow before spend happens</li>
-        <li>3-way matching to catch goods not delivered</li>
-        <li>Automated price checking prevents supplier overcharging</li>
-        <li>Bank detail fraud checks before payment</li>
-        <li>Supplier statement reconciliation automated</li>
-        <li>Unlimited users included — scales without per-seat cost</li>
-        <li>Hospitality POS integrations for multi-site operators</li>
-        <li>Longer free trial (30 vs 14 days)</li>
-      </ul></div>
-    </div>
-    <div class="position-box">
-      <h4>🎯 Sales Positioning Scripts</h4>
-      <div class="position-item"><strong>Vs Dext (AP control angle):</strong> "While Dext now handles payments, it captures invoices <em>after</em> spending has already happened. Lightyear's PO workflows and automated price checking mean you control what you're agreeing to pay <em>before</em> the invoice ever arrives — which is where the real money is saved."</div>
-      <div class="position-item"><strong>Vs Dext (SMB angle):</strong> "If your team only needs receipt scanning, Dext is cheaper. But if you're managing suppliers, catching overcharging, and need every invoice matched to what you actually ordered and received, Lightyear's price pays for itself in the first avoided overpayment."</div>
-      <div class="position-item"><strong>Vs Dext (hospitality/franchise angle):</strong> "Dext is strong for bookkeeping firms. Lightyear is built for operations — with POS integrations for hospitality, unlimited users across all your sites, and supplier controls your finance team can actually enforce."</div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════ -->
-<!-- APPROVALMAX -->
-<!-- ═══════════════════════════════════════════════════ -->
-<div id="comp-approvalmax" class="comp-content hidden">
-  <div class="inner-tabs">
-    <button class="inner-tab active" onclick="showTab('approvalmax','overview',this)">Overview</button>
-    <button class="inner-tab" onclick="showTab('approvalmax','pricing',this)">Pricing</button>
-    <button class="inner-tab" onclick="showTab('approvalmax','features',this)">Features</button>
-    <button class="inner-tab" onclick="showTab('approvalmax','vs',this)">VS Lightyear</button>
-  </div>
-
-  <!-- AM OVERVIEW -->
-  <div id="approvalmax-overview" class="tab-content">
-    <div class="stat-row">
-      <div class="stat-box"><div class="label">G2 Rating</div><div class="value">4.7★</div><div class="sub">Approval Workflow category</div></div>
-      <div class="stat-box"><div class="label">Capterra Rating</div><div class="value">4.8★</div><div class="sub">Multiple reviews</div></div>
-      <div class="stat-box"><div class="label">Free Trial</div><div class="value">14 days</div><div class="sub">No credit card required</div></div>
-      <div class="stat-box"><div class="label">Funding</div><div class="value">£10M</div><div class="sub">Recent raise</div></div>
-      <div class="stat-box"><div class="label">Price Increase</div><div class="value">Dec 2025</div><div class="sub">Standard: £39 → prices below</div></div>
-      <div class="stat-box"><div class="label">3-way Matching</div><div class="value">NEW ✅</div><div class="sub">Advanced/Premium plans</div></div>
-    </div>
-    <div class="card">
-      <h3>Key Intelligence</h3>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-        <div>
-          <div class="section-h">Where ApprovalMax Excels</div>
-          <ul style="list-style:none;">
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>Best-in-class multi-step approval workflows (unlimited complexity)</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>Unlimited users + requests + approvals on all plans</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>Deep Xero, QBO, NetSuite integration with audit trails in-platform</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>Capture (OCR) now free for UK sign-ups (March 2026)</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>3-way matching launched (Advanced/Premium plans)</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>ApprovalMax Pay: open banking payments (UK beta)</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>Confirmation of Payee — bank name verification before payment</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>Budget vs actual visibility in approvals (Xero budget import)</span></li>
-          </ul>
-        </div>
-        <div>
-          <div class="section-h">Gaps vs Lightyear</div>
-          <ul style="list-style:none;">
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>No automated <em>price checking</em> against agreed supplier pricelists</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>No <em>bank detail fraud detection</em> beyond Confirmation of Payee (payment-stage only)</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>No automated supplier statement reconciliation</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>3-way matching is <em>approval-flow only</em> — not automated line-level price validation</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>No hospitality POS integrations</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>NetSuite/standalone plan available but not Xero ecosystem-agnostic</span></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- AM PRICING -->
-  <div id="approvalmax-pricing" class="tab-content hidden">
-    <div class="pricing-grid">
-      <div class="pricing-card highlight">
-        <div class="currency-label">🇬🇧 GBP — Standard (annual)</div>
-        <div class="price">£39/mo</div>
-        <div class="period">per organisation · unlimited users</div>
-        <div class="ok">✅ Verified — official PDF (Dec 2025 price update)</div>
-        <div class="conf-note"><span class="conf-high">✅ HIGH</span></div>
-      </div>
-      <div class="pricing-card highlight">
-        <div class="currency-label">🇬🇧 GBP — Advanced (annual)</div>
-        <div class="price">£64/mo</div>
-        <div class="period">per organisation (includes 3-way matching)</div>
-        <div class="ok">✅ Verified — official PDF</div>
-        <div class="conf-note"><span class="conf-high">✅ HIGH</span></div>
-      </div>
-      <div class="pricing-card highlight">
-        <div class="currency-label">🇬🇧 GBP — Premium (annual)</div>
-        <div class="price">£87/mo</div>
-        <div class="period">per organisation</div>
-        <div class="ok">✅ Verified — official PDF</div>
-        <div class="conf-note"><span class="conf-high">✅ HIGH</span></div>
-      </div>
-      <div class="pricing-card">
-        <div class="currency-label">🇦🇺 AUD — Standard (annual)</div>
-        <div class="price">A$72/mo</div>
-        <div class="period">per organisation</div>
-        <div class="ok">✅ Verified — official PDF</div>
-        <div class="conf-note"><span class="conf-high">✅ HIGH</span></div>
-      </div>
-      <div class="pricing-card">
-        <div class="currency-label">🇦🇺 AUD — Advanced (annual)</div>
-        <div class="price">A$115/mo</div>
-        <div class="period">per organisation</div>
-        <div class="ok">✅ Verified — official PDF</div>
-        <div class="conf-note"><span class="conf-high">✅ HIGH</span></div>
-      </div>
-      <div class="pricing-card">
-        <div class="currency-label">🇦🇺 AUD — Premium (annual)</div>
-        <div class="price">A$160/mo</div>
-        <div class="period">per organisation</div>
-        <div class="ok">✅ Verified — official PDF</div>
-        <div class="conf-note"><span class="conf-high">✅ HIGH</span></div>
-      </div>
-    </div>
-    <div class="card">
-      <h3>Pricing Notes</h3>
-      <table class="feature-table">
-        <tr><td class="feat-name">Monthly billing (no annual commitment)</td><td>GBP: Standard £43, Advanced £71, Premium £96 / AUD: Standard A$82.80, Adv A$132.25, Prem A$184</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-        <tr><td class="feat-name">Billing model</td><td>Per organisation (NOT per user). Unlimited users, requests, approvals on all plans.</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-        <tr><td class="feat-name">Price increase date</td><td>December 2025 — confirmed via official ApprovalMax PDF notice</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-        <tr><td class="feat-name">Capture (OCR) add-on UK</td><td>Bundled free for UK sign-ups from March 2026. Globally Summer 2026. Overrun: £0.23/doc</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-        <tr><td class="feat-name">ApprovalMax Pay pricing</td><td>Airwallex: 40+ currencies, 150+ countries. Pay-as-you-go. Confirmation of Payee included.</td><td><span class="conf-medium">⚠ MEDIUM</span></td></tr>
-        <tr><td class="feat-name">Not-for-profit discount</td><td>20% NFP discount available</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-        <tr><td class="feat-name">3-way matching availability</td><td>Advanced and Premium plans only</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-      </table>
-    </div>
-  </div>
-
-  <!-- AM FEATURES -->
-  <div id="approvalmax-features" class="tab-content hidden">
-    <div class="card">
-      <h3>Features Available ✓</h3>
-      <table class="feature-table">
-        <thead><tr><th>Feature</th><th>Detail</th><th>Confidence</th></tr></thead>
-        <tbody>
-          <tr><td class="feat-name">Multi-step Approval Workflows</td><td>Unlimited steps, rules (amount/supplier/account code), either/or chains, temporary delegates. Xero, QBO, NetSuite.</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Purchase Order Creation</td><td>Yes — create and approve POs outside accounting platform; syncs back to Xero/QBO</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name"><span class="tt-wrap">3-way Matching<span class="tt-icon">i</span><span class="tt-text">Checks Bill against PO AND Item Receipt before approval. Available on Advanced/Premium plans only.</span></span></td><td>NEW (2025/26) — Bill vs PO vs Item Receipt. Advanced/Premium plans. Edit matches until fully approved.</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">ApprovalMax Capture (OCR)</td><td>Invoice data extraction. Free for UK sign-ups from Mar 2026. Add-on globally. Supplier/customer coding rules per supplier.</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">ApprovalMax Pay</td><td>In-app payments via open banking (UK). Airwallex global (40+ currencies). Scheduled payment runs. Batch payments.</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Confirmation of Payee</td><td>Verifies bank account name matches sort code/account number before payment is sent. UK open banking.</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Budget vs Actual Visibility</td><td>Import Xero budgets; traffic light view of remaining budget on approval screen. Prevent overspend.</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Audit Trail</td><td>Full audit report auto-attached to each approved doc in Xero/QBO. External auditor read-only access.</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Mobile App</td><td>iOS + Android. Approve on go, raise POs, comment on decisions.</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Multi-entity</td><td>Volume discount for multiple organisations; dashboard view</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Credit Note Workflows</td><td>Create/approve credit notes; auto-sync to Xero</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Journal Entry Import</td><td>CSV bulk import of up to 200 journal entry lines (Xero)</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="card">
-      <h3>Features NOT Available / Gaps ✗</h3>
-      <table class="feature-table">
-        <thead><tr><th>Feature</th><th>Context</th></tr></thead>
-        <tbody>
-          <tr><td class="feat-name"><span class="feat-cross">✗</span> Automated Price Checking vs Pricelists</td><td>ApprovalMax checks if an amount <em>exceeds PO value</em> but does NOT compare line prices to agreed supplier pricelists</td></tr>
-          <tr><td class="feat-name"><span class="feat-cross">✗</span> Supplier Statement Reconciliation</td><td>No automated reconciliation of supplier statements against your records</td></tr>
-          <tr><td class="feat-name"><span class="feat-cross">✗</span> Automated Supplier Bank Fraud Detection</td><td>CoP verifies payment-time bank details; does NOT proactively flag suspicious bank changes on incoming invoices</td></tr>
-          <tr><td class="feat-name"><span class="feat-cross">✗</span> Hospitality POS Integrations</td><td>No integrations with restaurant/hospitality POS systems</td></tr>
-          <tr><td class="feat-name"><span class="feat-partial">⚠</span> Expense Management</td><td>ApprovalMax Capture supports expense approval workflows but is not a full expense management platform</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- AM VS LIGHTYEAR -->
-  <div id="approvalmax-vs" class="tab-content hidden">
-    <div class="card">
-      <h3>Head-to-Head: ApprovalMax vs Lightyear</h3>
-      <table class="vs-table">
-        <thead><tr><th>Feature</th><th style="color:#1d4ed8">ApprovalMax</th><th style="color:#065f46">Lightyear</th><th>Edge</th></tr></thead>
-        <tbody>
-          <tr><td>Entry Price (GBP)</td><td><span class="vs-comp">£39/mo (annual)</span></td><td>£130/mo</td><td style="color:#1d6fd8;font-weight:700">ApprovalMax</td></tr>
-          <tr><td>Billing Model</td><td><span class="vs-comp">Per org (unlimited users)</span></td><td><span class="vs-ly">Per org (unlimited users)</span></td><td class="vs-tie">Tie</td></tr>
-          <tr><td>Free Trial</td><td>14 days</td><td><span class="vs-ly">30 days</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td>Approval Workflows</td><td><span class="vs-comp">✅ Unlimited steps/complexity</span></td><td>✅ Up to 8 levels</td><td style="color:#1d6fd8;font-weight:700">ApprovalMax</td></tr>
-          <tr><td><span class="tt-wrap">3-way Matching<span class="tt-icon">i</span><span class="tt-text">Both now offer 3-way matching, but ApprovalMax requires Advanced plan (£64/mo+). Lightyear's is automated at line-item level.</span></span></td><td>✅ Advanced/Premium only</td><td><span class="vs-ly">✅ Automated, line-level</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td>Purchase Order Creation</td><td>✅ Yes (all plans)</td><td>✅ Yes</td><td class="vs-tie">Tie</td></tr>
-          <tr><td><span class="tt-wrap">Automated Price Checking<span class="tt-icon">i</span><span class="tt-text">Comparing invoice line prices against your agreed supplier pricelist — catches overcharging automatically.</span></span></td><td>✗ None</td><td><span class="vs-ly">✅ Yes</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td>Statement Reconciliation</td><td>✗ None</td><td><span class="vs-ly">✅ Automated</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td>In-app Payments</td><td>✅ UK (open banking) + Airwallex</td><td>✗ Not offered</td><td style="color:#1d6fd8;font-weight:700">ApprovalMax</td></tr>
-          <tr><td>OCR / Invoice Capture</td><td>✅ Capture (free UK from Mar 2026)</td><td>✅ Smart Extract+ AI</td><td class="vs-tie">Tie</td></tr>
-          <tr><td>Accounting Integrations</td><td><span class="vs-comp">Xero, QBO, NetSuite</span></td><td>Xero, QBO, NetSuite, AccountsIQ, iplicit, Sage, MYOB, BC</td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td>Hospitality POS</td><td>✗ None</td><td><span class="vs-ly">✅ 10+ POS systems</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td>Fraud Detection (bank details)</td><td>⚠ CoP (payment stage)</td><td><span class="vs-ly">✅ Invoice-stage check</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="win-lose-grid">
-      <div class="win-box win-comp"><h4>When ApprovalMax Wins</h4><ul>
-        <li>Complex, multi-level delegation of authority workflows</li>
-        <li>Strong Xero/QBO ecosystem users wanting approval layer</li>
-        <li>Practices managing client approvals at scale</li>
-        <li>Budget visibility at point of approval</li>
-        <li>Price-sensitive teams (3.3x cheaper entry vs Lightyear)</li>
-        <li>Teams wanting in-app payments (open banking UK)</li>
-      </ul></div>
-      <div class="win-box win-ly"><h4>When Lightyear Wins</h4><ul>
-        <li>Automated price checking — ApprovalMax makes sure the right people say yes; Lightyear makes sure what they're saying yes to is correct</li>
-        <li>Automated statement reconciliation</li>
-        <li>Broader ERP integrations (AccountsIQ, iplicit, Sage, BC)</li>
-        <li>Hospitality multi-site operators with POS needs</li>
-        <li>Fraud detection at invoice arrival (not just payment stage)</li>
-        <li>Longer free trial (30 vs 14 days)</li>
-      </ul></div>
-    </div>
-    <div class="position-box">
-      <h4>🎯 Sales Positioning Scripts</h4>
-      <div class="position-item"><strong>Core differentiator:</strong> "ApprovalMax makes sure the right people say yes. Lightyear makes sure what they're saying yes to is <em>correct</em> — automated price checking catches overcharging before anyone approves it."</div>
-      <div class="position-item"><strong>On 3-way matching:</strong> "ApprovalMax now has 3-way matching on its Advanced plan (£64/mo+). Lightyear's is automated at the line-item level — it doesn't need a workflow step to flag that prices or quantities don't match."</div>
-      <div class="position-item"><strong>On integrations:</strong> "If your business is on Xero or QBO, ApprovalMax integrates beautifully. If you're on AccountsIQ, iplicit, Business Central, or need hospitality POS connections, Lightyear is the only AP platform with those native integrations."</div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════ -->
-<!-- TIPALTI -->
-<!-- ═══════════════════════════════════════════════════ -->
-<div id="comp-tipalti" class="comp-content hidden">
-  <div class="inner-tabs">
-    <button class="inner-tab active" onclick="showTab('tipalti','overview',this)">Overview</button>
-    <button class="inner-tab" onclick="showTab('tipalti','pricing',this)">Pricing</button>
-    <button class="inner-tab" onclick="showTab('tipalti','features',this)">Features</button>
-    <button class="inner-tab" onclick="showTab('tipalti','vs',this)">VS Lightyear</button>
-  </div>
-
-  <!-- TIPALTI OVERVIEW -->
-  <div id="tipalti-overview" class="tab-content">
-    <div class="stat-row">
-      <div class="stat-box"><div class="label">Target Market</div><div class="value">Mid-market</div><div class="sub">Fast-growth / enterprise</div></div>
-      <div class="stat-box"><div class="label">Customers</div><div class="value">5,000+</div><div class="sub">Fast-growing businesses</div></div>
-      <div class="stat-box"><div class="label">Payment Countries</div><div class="value">196</div><div class="sub">120+ currencies</div></div>
-      <div class="stat-box"><div class="label">Free Trial</div><div class="value">None</div><div class="sub">Demo-only</div></div>
-      <div class="stat-box"><div class="label">G2 Rating</div><div class="value">4.5★</div><div class="sub">AP Automation</div></div>
-      <div class="stat-box"><div class="label">Capterra Rating</div><div class="value">4.7★</div><div class="sub">Multiple reviews</div></div>
-    </div>
-    <div class="card">
-      <h3>Key Intelligence</h3>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-        <div>
-          <div class="section-h">Where Tipalti Excels</div>
-          <ul style="list-style:none;">
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>Global mass payments — 196 countries, 120 currencies, 50+ payment methods</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>Tax compliance (W-9/W-8, VAT, 1099/1042-S reporting)</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>OFAC / sanctions screening on every supplier</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>2-way and 3-way PO matching</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>Procurement module (intake-to-procure)</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>Self-service supplier portal (payees choose payment method)</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>Treasury / AI Agents / Tipalti Card (2025 launches)</span></li>
-          </ul>
-        </div>
-        <div>
-          <div class="section-h">Gaps vs Lightyear</div>
-          <ul style="list-style:none;">
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>No automated price checking against agreed supplier pricelists</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>No automated supplier statement reconciliation</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>No hospitality POS integrations</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>Very high entry cost — not suited for SMEs</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>Complex implementation (months vs Lightyear days)</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>No free trial — demo only</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>UI slow navigation reported by users</span></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TIPALTI PRICING -->
-  <div id="tipalti-pricing" class="tab-content hidden">
-    <div class="pricing-grid">
-      <div class="pricing-card">
-        <div class="currency-label">🇬🇧 GBP (UK)</div>
-        <div class="price">N/A</div>
-        <div class="period">GBP pricing not published</div>
-        <div class="warn">⚠ DATA GAP — no GBP pricing found on official site or review platforms</div>
-        <div class="conf-note"><span class="conf-gap">◻ GAP</span></div>
-      </div>
-      <div class="pricing-card">
-        <div class="currency-label">🇦🇺 AUD (Australia)</div>
-        <div class="price">N/A</div>
-        <div class="period">AUD pricing not published</div>
-        <div class="warn">⚠ DATA GAP — no AUD pricing found</div>
-        <div class="conf-note"><span class="conf-gap">◻ GAP</span></div>
-      </div>
-      <div class="pricing-card highlight">
-        <div class="currency-label">🇺🇸 USD — Entry (Express)</div>
-        <div class="price">$149/mo</div>
-        <div class="period">Tipalti Express — published starting price</div>
-        <div class="ok">✅ Verified — multiple sources</div>
-        <div class="conf-note"><span class="conf-high">✅ HIGH</span></div>
-      </div>
-      <div class="pricing-card">
-        <div class="currency-label">🇺🇸 USD — Premium (typical)</div>
-        <div class="price">$500–600/mo</div>
-        <div class="period">Premium tier (some customers discounted to $150–250/mo)</div>
-        <div class="warn">⚠ From customer conversations — not official</div>
-        <div class="conf-note"><span class="conf-low">❌ LOW</span></div>
-      </div>
-    </div>
-    <div class="card">
-      <h3>Pricing Notes</h3>
-      <table class="feature-table">
-        <tr><td class="feat-name">Pricing model</td><td>Platform fee (monthly subscription) + per-transaction fees + implementation costs</td><td><span class="conf-medium">⚠ MEDIUM</span></td></tr>
-        <tr><td class="feat-name">Implementation fees</td><td>Typically $4,000–$5,000 one-time (reported by ex-customers)</td><td><span class="conf-low">❌ LOW</span></td></tr>
-        <tr><td class="feat-name">Additional entity charge</td><td>Monthly fee per additional entity managed</td><td><span class="conf-medium">⚠ MEDIUM</span></td></tr>
-        <tr><td class="feat-name">FX fees</td><td>Markup on exchange rate — not published, varies by currency and transaction size</td><td><span class="conf-medium">⚠ MEDIUM</span></td></tr>
-        <tr><td class="feat-name">Free trial</td><td>None — demo only</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-        <tr><td class="feat-name">Sales approach</td><td>Enterprise sales process — custom quotes for most features</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-      </table>
-      <div class="warn mt-2">⚠ Significant pricing data gap: GBP and AUD pricing not available from official sources or major review platforms. Sales team contact required for UK/AU quotes.</div>
-    </div>
-  </div>
-
-  <!-- TIPALTI FEATURES -->
-  <div id="tipalti-features" class="tab-content hidden">
-    <div class="card">
-      <h3>Features Available ✓</h3>
-      <table class="feature-table">
-        <thead><tr><th>Feature</th><th>Detail</th><th>Confidence</th></tr></thead>
-        <tbody>
-          <tr><td class="feat-name">Global Mass Payments</td><td>196 countries, 120 currencies, 50+ payment methods (ACH, wire, PayPal, local rails). Batch processing.</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Tax Compliance</td><td>W-9/W-8 collection, KPMG-approved VAT engine, 1099/1042-S e-filing via Sovos, 50-country local tax/VAT ID validation</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">OFAC / Sanctions Screening</td><td>All suppliers proactively screened against international blacklists on every payment</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">PO Matching</td><td>2-way and 3-way PO matching available</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Procurement Module</td><td>Full intake-to-procure workflow; purchase requests, approvals, PO management</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Supplier Self-service Portal</td><td>Suppliers choose payment method, manage banking details, submit documents</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Multi-entity</td><td>Yes — multiple entities, intercompany reconciliation</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">ERP Integrations</td><td>NetSuite, Xero, Sage, QuickBooks, Business Central + API</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">AI Agents (2025)</td><td>Launched 2025 — AP automation via AI agents</td><td><span class="conf-medium">⚠ MEDIUM</span></td></tr>
-          <tr><td class="feat-name">Tipalti Card (2025)</td><td>Corporate card product launched 2025</td><td><span class="conf-medium">⚠ MEDIUM</span></td></tr>
-          <tr><td class="feat-name">Treasury Module (2025)</td><td>Cash visibility / treasury management launched 2025</td><td><span class="conf-medium">⚠ MEDIUM</span></td></tr>
-          <tr><td class="feat-name">Audit Trail</td><td>Full audit logs; SOX compliance features. Signatory rights, role-based access.</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="card">
-      <h3>Features NOT Available / Gaps ✗</h3>
-      <table class="feature-table">
-        <thead><tr><th>Feature</th><th>Context</th></tr></thead>
-        <tbody>
-          <tr><td class="feat-name"><span class="feat-cross">✗</span> Automated Price Checking vs Pricelists</td><td>Tipalti processes payments but does not compare invoice line prices to agreed supplier contracts</td></tr>
-          <tr><td class="feat-name"><span class="feat-cross">✗</span> Supplier Statement Reconciliation</td><td>No automated reconciliation of supplier statements</td></tr>
-          <tr><td class="feat-name"><span class="feat-cross">✗</span> Hospitality POS Integrations</td><td>No POS system integrations</td></tr>
-          <tr><td class="feat-name"><span class="feat-cross">✗</span> SME accessibility</td><td>Minimum $149/mo + implementation fees makes this unviable for most SMEs</td></tr>
-          <tr><td class="feat-name"><span class="feat-cross">✗</span> Free trial</td><td>Demo-only — no self-serve trial available</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- TIPALTI VS LIGHTYEAR -->
-  <div id="tipalti-vs" class="tab-content hidden">
-    <div class="card">
-      <h3>Head-to-Head: Tipalti vs Lightyear</h3>
-      <table class="vs-table">
-        <thead><tr><th>Feature</th><th style="color:#1d4ed8">Tipalti</th><th style="color:#065f46">Lightyear</th><th>Edge</th></tr></thead>
-        <tbody>
-          <tr><td>Target market</td><td>Mid-market / Enterprise</td><td><span class="vs-ly">Large SME + Enterprise</span></td><td class="vs-tie">Different</td></tr>
-          <tr><td>Entry Price (USD)</td><td>$149/mo (Express)</td><td>~$155/mo equivalent</td><td class="vs-tie">Comparable</td></tr>
-          <tr><td>Free Trial</td><td>✗ None</td><td><span class="vs-ly">✅ 30 days</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td>Global Payments</td><td><span class="vs-comp">✅ 196 countries, 120 currencies</span></td><td>✗ Not offered</td><td style="color:#1d6fd8;font-weight:700">Tipalti</td></tr>
-          <tr><td>Tax Compliance</td><td><span class="vs-comp">✅ W-9/W-8, 1099, VAT engine</span></td><td>✗ Not in scope</td><td style="color:#1d6fd8;font-weight:700">Tipalti</td></tr>
-          <tr><td>PO + 3-way Matching</td><td>✅ Yes</td><td><span class="vs-ly">✅ Automated line-level</span></td><td class="vs-tie">Both</td></tr>
-          <tr><td>Automated Price Checking</td><td>✗ None</td><td><span class="vs-ly">✅ Yes</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td>Statement Reconciliation</td><td>✗ None</td><td><span class="vs-ly">✅ Automated</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td>Implementation Speed</td><td>Months + $4–5K setup</td><td><span class="vs-ly">Days, no setup fee</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td>Hospitality POS</td><td>✗ None</td><td><span class="vs-ly">✅ 10+ POS systems</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td>Sanctions Screening</td><td><span class="vs-comp">✅ OFAC + international</span></td><td>✗ Not offered</td><td style="color:#1d6fd8;font-weight:700">Tipalti</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="win-lose-grid">
-      <div class="win-box win-comp"><h4>When Tipalti Wins</h4><ul>
-        <li>Fast-growing businesses paying 100s of global contractors/vendors</li>
-        <li>US companies needing W-9/1099 compliance at scale</li>
-        <li>Businesses needing OFAC/sanctions screening</li>
-        <li>Treasury management + corporate card integration</li>
-        <li>Complex multi-entity global payables</li>
-      </ul></div>
-      <div class="win-box win-ly"><h4>When Lightyear Wins</h4><ul>
-        <li>SMEs where Tipalti's cost/complexity is overkill</li>
-        <li>Businesses needing automated price checking (Tipalti doesn't do this)</li>
-        <li>Automated supplier statement reconciliation</li>
-        <li>Hospitality, retail, and multi-site operators</li>
-        <li>Fast setup (days, not months)</li>
-        <li>30-day free trial to prove ROI before committing</li>
-      </ul></div>
-    </div>
-    <div class="position-box">
-      <h4>🎯 Sales Positioning Scripts</h4>
-      <div class="position-item"><strong>Core differentiator:</strong> "Tipalti moves money globally — it's built for global payroll and mass contractor payments. Lightyear controls what you're paying <em>before</em> the money moves — with automated price checking and supplier controls that Tipalti doesn't offer."</div>
-      <div class="position-item"><strong>On cost/complexity:</strong> "Tipalti typically requires months of implementation and $4–5K setup fees. Lightyear can be live in days with a 30-day free trial to prove the ROI. For most UK and Australian SMEs, Tipalti is simply more than you need."</div>
-      <div class="position-item"><strong>On switching conversations:</strong> "If a prospect is evaluating Tipalti, they likely need serious AP automation. Acknowledge Tipalti's strength in global mass payments, but push back on the complexity and cost — and highlight the AP automation gaps (no price checking, no statement recon) that Lightyear solves."</div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════ -->
-<!-- ZAHARA -->
-<!-- ═══════════════════════════════════════════════════ -->
-<div id="comp-zahara" class="comp-content hidden">
-  <div class="inner-tabs">
-    <button class="inner-tab active" onclick="showTab('zahara','overview',this)">Overview</button>
-    <button class="inner-tab" onclick="showTab('zahara','pricing',this)">Pricing</button>
-    <button class="inner-tab" onclick="showTab('zahara','features',this)">Features</button>
-    <button class="inner-tab" onclick="showTab('zahara','vs',this)">VS Lightyear</button>
-  </div>
-
-  <!-- ZAHARA OVERVIEW -->
-  <div id="zahara-overview" class="tab-content">
-    <div class="stat-row">
-      <div class="stat-box"><div class="label">Capterra Rating</div><div class="value">4.3★</div><div class="sub">UK-based reviews</div></div>
-      <div class="stat-box"><div class="label">HQ</div><div class="value">UK</div><div class="sub">Bath, England</div></div>
-      <div class="stat-box"><div class="label">Target</div><div class="value">30–200</div><div class="sub">Users per org</div></div>
-      <div class="stat-box"><div class="label">Free Trial</div><div class="value">30 days</div><div class="sub">No card required</div></div>
-      <div class="stat-box"><div class="label">Payments</div><div class="value">In-app</div><div class="sub">Via Comma / Currencies Direct</div></div>
-      <div class="stat-box"><div class="label">AUD Pricing</div><div class="value">Available</div><div class="sub">AU pricing page exists</div></div>
-    </div>
-    <div class="card">
-      <h3>Key Intelligence</h3>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-        <div>
-          <div class="section-h">Where Zahara Excels</div>
-          <ul style="list-style:none;">
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>Strong budget management — ring-fence spend by dept/project</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>PO creation + multi-step approval workflows + GRN receipting</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>AI invoice processing — OCR to line item level</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>In-app supplier payments (Comma, Currencies Direct)</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>Strong SME pricing — significantly cheaper than Lightyear</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>UK-based company, strong UK customer base</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>AI Expenses module (newer launch)</span></li>
-          </ul>
-        </div>
-        <div>
-          <div class="section-h">Gaps vs Lightyear</div>
-          <ul style="list-style:none;">
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>No automated price checking vs supplier pricelists</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>No automated supplier statement reconciliation</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>No bank detail fraud verification on invoices</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>Premium integrations (Sage 200, Sage Intacct, Business Central) are Enterprise-only</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>No hospitality POS integrations</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>Sage 50 Cloud Accounts integration issues reported</span></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ZAHARA PRICING -->
-  <div id="zahara-pricing" class="tab-content hidden">
-    <div class="pricing-grid">
-      <div class="pricing-card highlight">
-        <div class="currency-label">🇬🇧 GBP — Teams (monthly)</div>
-        <div class="price">£142/mo</div>
-        <div class="period">10 users · 120 orders · 250 invoices/mo</div>
-        <div class="ok">✅ Confirmed — Capterra UK, official page</div>
-        <div class="conf-note"><span class="conf-high">✅ HIGH</span></div>
-      </div>
-      <div class="pricing-card highlight">
-        <div class="currency-label">🇬🇧 GBP — Teams (annual)</div>
-        <div class="price">~£119/mo</div>
-        <div class="period">Annual billing discount (£1,190/yr)</div>
-        <div class="ok">✅ Verified — Tekpon, Oct 2024</div>
-        <div class="conf-note"><span class="conf-high">✅ HIGH</span></div>
-      </div>
-      <div class="pricing-card">
-        <div class="currency-label">🇬🇧 GBP — Business (monthly)</div>
-        <div class="price">~£219/mo</div>
-        <div class="period">18 users · 250 orders · 500 invoices/mo + budget control</div>
-        <div class="ok">✅ Verified — Tekpon, Oct 2024</div>
-        <div class="conf-note"><span class="conf-medium">⚠ MEDIUM</span></div>
-      </div>
-      <div class="pricing-card">
-        <div class="currency-label">🇦🇺 AUD</div>
-        <div class="price">GAP</div>
-        <div class="period">AU pricing page exists on Zahara site but AUD prices not captured</div>
-        <div class="warn">⚠ DATA GAP — visit zaharasoftware.com/2025-pricing-au/ for current AUD prices</div>
-        <div class="conf-note"><span class="conf-gap">◻ GAP</span></div>
-      </div>
-    </div>
-    <div class="card">
-      <h3>Pricing Structure</h3>
-      <table class="feature-table">
-        <tr><td class="feat-name">Billing model</td><td>Per org — fixed user/order/invoice quotas with bolt-on add-ons available</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-        <tr><td class="feat-name">Teams plan limits</td><td>10 users, 120 orders/mo, 250 invoices/mo, 2 business units</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-        <tr><td class="feat-name">Business plan limits</td><td>18 users, 250 orders/mo, 500 invoices/mo, 10 business units + budget control</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-        <tr><td class="feat-name">Enterprise plan</td><td>35 users, 800 orders/mo, 1200 invoices/mo — custom quote required</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-        <tr><td class="feat-name">Premium integrations</td><td>Sage 200, Sage Intacct, Business Central — Enterprise plan only, priced on application</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-        <tr><td class="feat-name">Annual discount</td><td>Annual billing saves ~16% vs monthly</td><td><span class="conf-medium">⚠ MEDIUM</span></td></tr>
-        <tr><td class="feat-name">Cancellation</td><td>Monthly: 30 days notice. Annual: no refund on unused subscription.</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-        <tr><td class="feat-name">Free trial</td><td>30 days available</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-      </table>
-    </div>
-  </div>
-
-  <!-- ZAHARA FEATURES -->
-  <div id="zahara-features" class="tab-content hidden">
-    <div class="card">
-      <h3>Features Available ✓</h3>
-      <table class="feature-table">
-        <thead><tr><th>Feature</th><th>Detail</th><th>Confidence</th></tr></thead>
-        <tbody>
-          <tr><td class="feat-name">Purchase Order Creation</td><td>Full PO workflow — create, approve, send to supplier, receipt deliveries (GRNs)</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Multi-step Approval Workflows</td><td>Infinitely customisable for both POs and invoices; mobile app approvals</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">AI Invoice Processing (OCR)</td><td>Line-item level extraction — hands-free invoice reading and coding</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Budget Management</td><td>Dept/project budgets with visual overspend alerts; over-budget requests escalate for approval</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Supplier Payments</td><td>In-app payments via Comma; international via Currencies Direct integration</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">GRN / Goods Receipting</td><td>Record deliveries; match invoices to POs and delivery receipts</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">AI Expenses Module</td><td>AI-powered expense management (newer feature)</td><td><span class="conf-medium">⚠ MEDIUM</span></td></tr>
-          <tr><td class="feat-name">Multi-entity / Multi-site</td><td>Business units and divisions; up to 10 business units on Business plan</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Mobile App</td><td>iOS + Android — raise orders, receipt deliveries, approve invoices</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Document Storage</td><td>At least 7 years. 4GB (Teams), 8GB (Business), 12GB (Enterprise)</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">API Access</td><td>Yes — API available for custom integrations</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">2FA Security</td><td>Google Authenticator; Microsoft/G Suite SSO login</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="card">
-      <h3>Features NOT Available / Gaps ✗</h3>
-      <table class="feature-table">
-        <tbody>
-          <tr><td class="feat-name"><span class="feat-cross">✗</span> Automated Price Checking vs Pricelists</td><td>No automated comparison of invoice prices to agreed supplier pricelist</td></tr>
-          <tr><td class="feat-name"><span class="feat-cross">✗</span> Supplier Statement Reconciliation</td><td>No automated reconciliation of supplier statements</td></tr>
-          <tr><td class="feat-name"><span class="feat-cross">✗</span> Bank Detail Fraud Verification</td><td>No verification of supplier bank account details on invoices against approved records</td></tr>
-          <tr><td class="feat-name"><span class="feat-cross">✗</span> Hospitality POS Integrations</td><td>No POS system connections</td></tr>
-          <tr><td class="feat-name"><span class="feat-partial">⚠</span> Sage 50 Cloud Integration</td><td>Integration exists but users report issues with Sage 50 Cloud Accounts/Drive sync</td></tr>
-          <tr><td class="feat-name"><span class="feat-cross">✗</span> Premium integrations on base plans</td><td>Business Central, Sage 200, Sage Intacct only available on Enterprise (custom pricing)</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="card">
-      <h3>Integrations</h3>
-      <div class="section-h">Standard (all plans)</div>
-      <div class="chip-row">
-        <span class="chip">Xero</span><span class="chip">QuickBooks Online</span><span class="chip">Sage 50</span><span class="chip">MYOB</span><span class="chip">Pegasus Opera</span><span class="chip">Exchequer</span><span class="chip">Twinfield</span><span class="chip">Zapier</span>
-      </div>
-      <div class="section-h mt-3">Premium (Enterprise only)</div>
-      <div class="chip-row">
-        <span class="chip gray">Sage 200</span><span class="chip gray">Sage Intacct</span><span class="chip gray">Microsoft Business Central</span>
-      </div>
-      <div class="section-h mt-3">Payments</div>
-      <div class="chip-row">
-        <span class="chip">Comma (in-app payments)</span><span class="chip gray">Currencies Direct (international)</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ZAHARA VS LIGHTYEAR -->
-  <div id="zahara-vs" class="tab-content hidden">
-    <div class="card">
-      <h3>Head-to-Head: Zahara vs Lightyear</h3>
-      <table class="vs-table">
-        <thead><tr><th>Feature</th><th style="color:#1d4ed8">Zahara</th><th style="color:#065f46">Lightyear</th><th>Edge</th></tr></thead>
-        <tbody>
-          <tr><td>Entry Price (GBP)</td><td><span class="vs-comp">£119–142/mo (10 users)</span></td><td>£130/mo (unlimited users)</td><td class="vs-tie">Comparable</td></tr>
-          <tr><td>User Limits</td><td>10 (Teams), 18 (Business)</td><td><span class="vs-ly">Unlimited all plans</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td>Free Trial</td><td>30 days</td><td>30 days</td><td class="vs-tie">Tie</td></tr>
-          <tr><td>PO Creation + GRN</td><td>✅ Yes</td><td>✅ Yes</td><td class="vs-tie">Tie</td></tr>
-          <tr><td>3-way Matching</td><td>✅ Via GRN receipting</td><td><span class="vs-ly">✅ Automated line-level</span></td><td class="vs-tie">Both</td></tr>
-          <tr><td>Budget Management</td><td><span class="vs-comp">✅ Strong (dept/project)</span></td><td>✅ Budget tracking</td><td style="color:#1d6fd8;font-weight:700">Zahara</td></tr>
-          <tr><td>Automated Price Checking</td><td>✗ None</td><td><span class="vs-ly">✅ Yes</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td>Statement Reconciliation</td><td>✗ None</td><td><span class="vs-ly">✅ Automated</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td>Bank Fraud Detection</td><td>✗ None</td><td><span class="vs-ly">✅ Yes</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td>In-app Payments</td><td>✅ Comma / Currencies Direct</td><td>✗ Not offered</td><td style="color:#1d6fd8;font-weight:700">Zahara</td></tr>
-          <tr><td>AI Expenses</td><td>✅ AI Expenses module</td><td>⚠ Out-of-pocket only</td><td style="color:#1d6fd8;font-weight:700">Zahara</td></tr>
-          <tr><td>Business Central (native)</td><td>Enterprise plan only</td><td><span class="vs-ly">✅ All plans</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td>Hospitality POS</td><td>✗ None</td><td><span class="vs-ly">✅ 10+ POS systems</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="win-lose-grid">
-      <div class="win-box win-comp"><h4>When Zahara Wins</h4><ul>
-        <li>Teams needing strong budget management / spend ring-fencing</li>
-        <li>UK SMEs with 10–18 users wanting PO + invoice control at lower cost</li>
-        <li>Businesses needing in-app payments (Comma integration)</li>
-        <li>AI-powered expense management</li>
-        <li>Organisations on Sage 50 or Pegasus Opera</li>
-        <li>Teams wanting same 30-day trial period</li>
-      </ul></div>
-      <div class="win-box win-ly"><h4>When Lightyear Wins</h4><ul>
-        <li>Automated price checking vs agreed supplier contracts</li>
-        <li>Automated supplier statement reconciliation</li>
-        <li>Bank detail fraud detection at invoice stage</li>
-        <li>Unlimited users — Zahara caps at 10 (Teams) / 18 (Business)</li>
-        <li>Native Business Central on all plans (not Enterprise-only)</li>
-        <li>Hospitality and multi-site POS integrations</li>
-        <li>AccountsIQ and iplicit native integrations</li>
-      </ul></div>
-    </div>
-    <div class="position-box">
-      <h4>🎯 Sales Positioning Scripts</h4>
-      <div class="position-item"><strong>Core differentiator:</strong> "Zahara controls your budget before you spend — it's strong on PO creation and spend ring-fencing. Lightyear controls what suppliers charge <em>after</em> you've committed — automated price checking, statement reconciliation, and fraud detection that Zahara doesn't offer."</div>
-      <div class="position-item"><strong>On user pricing:</strong> "Zahara's Teams plan allows 10 users. Lightyear includes unlimited users on every plan — as you grow, Zahara gets expensive per-user, Lightyear doesn't change."</div>
-      <div class="position-item"><strong>On integrations:</strong> "If a prospect is on Business Central, Sage Intacct, or Sage 200, Zahara charges Enterprise pricing for these. Lightyear includes Business Central natively on all plans."</div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════ -->
-<!-- COMPLEAT -->
-<!-- ═══════════════════════════════════════════════════ -->
-<div id="comp-compleat" class="comp-content hidden">
-  <div class="inner-tabs">
-    <button class="inner-tab active" onclick="showTab('compleat','overview',this)">Overview</button>
-    <button class="inner-tab" onclick="showTab('compleat','pricing',this)">Pricing</button>
-    <button class="inner-tab" onclick="showTab('compleat','features',this)">Features</button>
-    <button class="inner-tab" onclick="showTab('compleat','vs',this)">VS Lightyear</button>
-  </div>
-
-  <!-- COMPLEAT OVERVIEW -->
-  <div id="compleat-overview" class="tab-content">
-    <div class="stat-row">
-      <div class="stat-box"><div class="label">Customers</div><div class="value">500+</div><div class="sub">EMEA, APAC, AMAC</div></div>
-      <div class="stat-box"><div class="label">Founded</div><div class="value">2008</div><div class="sub">HQ: London, UK</div></div>
-      <div class="stat-box"><div class="label">G2 Rating</div><div class="value">4.3★</div><div class="sub">AP Automation</div></div>
-      <div class="stat-box"><div class="label">Capterra Rating</div><div class="value">4.4★</div><div class="sub">Multiple reviews</div></div>
-      <div class="stat-box"><div class="label">Free Trial</div><div class="value">Yes</div><div class="sub">Available</div></div>
-      <div class="stat-box"><div class="label">Pricing</div><div class="value">Contact</div><div class="sub">No published pricing</div></div>
-    </div>
-    <div class="card">
-      <h3>Key Intelligence</h3>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-        <div>
-          <div class="section-h">Where Compleat Excels</div>
-          <ul style="list-style:none;">
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>Modular SaaS — buy only what you need (invoice capture, AP, buying separately)</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>Online buying / direct supplier ordering (Amazon Business, major suppliers)</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>Education sector strength — thousands of schools, MATs</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>Strong ERP integrations incl. Sage, AccountsIQ, PS Financials, NetSuite</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>Compleat EcoSystem — supplier marketplace (Dec 2024 launch)</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-check">✓</span><span>Described as affordable / commoditised pricing vs enterprise peers</span></li>
-          </ul>
-        </div>
-        <div>
-          <div class="section-h">Gaps vs Lightyear</div>
-          <ul style="list-style:none;">
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>No published pricing — contact sales required (data gap)</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>No automated price checking vs supplier pricelists</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>No automated supplier statement reconciliation</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>No hospitality POS integrations</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>UI described as "outdated" in some reviews; steep learning curve</span></li>
-            <li class="flex gap-2 mt-1"><span class="feat-cross">✗</span><span>Complex implementation (months for larger deployments)</span></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- COMPLEAT PRICING -->
-  <div id="compleat-pricing" class="tab-content hidden">
-    <div class="pricing-grid">
-      <div class="pricing-card">
-        <div class="currency-label">🇬🇧 GBP (UK)</div>
-        <div class="price">Contact Sales</div>
-        <div class="period">No published GBP pricing</div>
-        <div class="warn">⚠ DATA GAP — multiple sources confirm no public pricing available. Custom quotes only.</div>
-        <div class="conf-note"><span class="conf-gap">◻ GAP</span></div>
-      </div>
-      <div class="pricing-card">
-        <div class="currency-label">🇦🇺 AUD (Australia)</div>
-        <div class="price">Contact Sales</div>
-        <div class="period">Office in Australia — no published AUD pricing</div>
-        <div class="warn">⚠ DATA GAP — custom quotes only</div>
-        <div class="conf-note"><span class="conf-gap">◻ GAP</span></div>
-      </div>
-      <div class="pricing-card">
-        <div class="currency-label">Estimated USD range (3rd party)</div>
-        <div class="price">$500+/mo</div>
-        <div class="period">Mid-tier estimate; Enterprise $2,000+/mo</div>
-        <div class="warn">⚠ LOW confidence — 3rd party estimates only, not verified</div>
-        <div class="conf-note"><span class="conf-low">❌ LOW</span></div>
-      </div>
-    </div>
-    <div class="card">
-      <h3>What We Know About Compleat Pricing</h3>
-      <table class="feature-table">
-        <tr><td class="feat-name">Pricing transparency</td><td>No pricing published on website — all plans require direct sales contact</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-        <tr><td class="feat-name">Plan structure</td><td>LinkedIn describes "4 easy to understand plans" — names/prices not public</td><td><span class="conf-medium">⚠ MEDIUM</span></td></tr>
-        <tr><td class="feat-name">Implementation approach</td><td>Customers describe months-long implementations for complex deployments; some live within a day for simple setups</td><td><span class="conf-medium">⚠ MEDIUM</span></td></tr>
-        <tr><td class="feat-name">Modular pricing</td><td>Invoice capture, AP automation, and online buying can be purchased separately (step-by-step adoption)</td><td><span class="conf-medium">⚠ MEDIUM</span></td></tr>
-        <tr><td class="feat-name">Free trial</td><td>Available (confirmed by multiple sources)</td><td><span class="conf-medium">⚠ MEDIUM</span></td></tr>
-        <tr><td class="feat-name">Positioning</td><td>Self-describes as "affordable" vs enterprise peers; Capterra review describes pricing as "amongst the most affordable in the market"</td><td><span class="conf-medium">⚠ MEDIUM</span></td></tr>
-      </table>
-      <div class="warn mt-2">⚠ Major data gap: No GBP or AUD pricing available from any source. Compleat pricing requires direct contact with their sales team. This is an ongoing gap in our competitive intelligence. Recommend contacting Compleat sales for a quote.</div>
-    </div>
-  </div>
-
-  <!-- COMPLEAT FEATURES -->
-  <div id="compleat-features" class="tab-content hidden">
-    <div class="card">
-      <h3>Features Available ✓</h3>
-      <table class="feature-table">
-        <thead><tr><th>Feature</th><th>Detail</th><th>Confidence</th></tr></thead>
-        <tbody>
-          <tr><td class="feat-name">Invoice Capture (AI/OCR)</td><td>Automated data capture from emailed invoices; handles PDFs, Word docs, Excel. Smart PDF invoices auto-processed end-to-end.</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">AP Automation</td><td>Full approval workflows, invoice routing, real-time tracking from submission to payment</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Purchase Order Management</td><td>Create, approve, track POs; match invoices to POs; GRN receipting</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Online Buying / Supplier Marketplace</td><td>Direct ordering from Amazon Business, Lyreco, YPO, Browns Books, and more. One-click order to invoice.</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Compleat EcoSystem</td><td>NEW (Dec 2024): Supplier marketplace connecting buyers to 70+ industries. Enables RFQ, supplier onboarding, direct transacting.</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Approval Workflows</td><td>Multi-level, customisable; role-based access; mobile app approvals</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Mobile App</td><td>iOS + Android</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">ERP Integrations</td><td>Sage (50, 200, Intacct), AccountsIQ, PS Financials (IRIS), Xero, NetSuite, Microsoft Dynamics, MYOB</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">API Access</td><td>Yes</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Fraud Detection (bank details)</td><td>LinkedIn posts confirm a feature that flags if bank details are missing or potentially fraudulent on invoices</td><td><span class="conf-medium">⚠ MEDIUM</span></td></tr>
-          <tr><td class="feat-name">Reporting / Dashboards</td><td>Real-time spend insights, dashboards, spend tracking by supplier/dept</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-          <tr><td class="feat-name">Multi-language</td><td>English, German, Spanish</td><td><span class="conf-high">✅ HIGH</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="card">
-      <h3>Features NOT Available / Gaps ✗</h3>
-      <table class="feature-table">
-        <tbody>
-          <tr><td class="feat-name"><span class="feat-cross">✗</span> Automated Price Checking vs Pricelists</td><td>No evidence of automated comparison of invoice prices to agreed supplier pricelists</td></tr>
-          <tr><td class="feat-name"><span class="feat-cross">✗</span> Automated Supplier Statement Reconciliation</td><td>No automated statement reconciliation found</td></tr>
-          <tr><td class="feat-name"><span class="feat-cross">✗</span> Hospitality POS Integrations</td><td>No POS system connections found</td></tr>
-          <tr><td class="feat-name"><span class="feat-partial">⚠</span> UI / Usability</td><td>Multiple reviewers describe UI as "outdated" with a steep learning curve — contrasts with Lightyear's ease of use</td></tr>
-          <tr><td class="feat-name"><span class="feat-partial">⚠</span> Transparent Pricing</td><td>No published pricing — all quotes require sales contact. Creates friction vs Lightyear's transparent online pricing.</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- COMPLEAT VS LIGHTYEAR -->
-  <div id="compleat-vs" class="tab-content hidden">
-    <div class="card">
-      <h3>Head-to-Head: Compleat vs Lightyear</h3>
-      <table class="vs-table">
-        <thead><tr><th>Feature</th><th style="color:#1d4ed8">Compleat</th><th style="color:#065f46">Lightyear</th><th>Edge</th></tr></thead>
-        <tbody>
-          <tr><td>GBP Pricing</td><td>✗ Contact sales only</td><td><span class="vs-ly">£130/mo (transparent)</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td>Free Trial</td><td>✅ Available</td><td>✅ 30 days</td><td class="vs-tie">Tie</td></tr>
-          <tr><td>Invoice Capture / OCR</td><td>✅ AI-powered, smart PDF</td><td>✅ Smart Extract+</td><td class="vs-tie">Tie</td></tr>
-          <tr><td>PO + Approval Workflows</td><td>✅ Yes</td><td>✅ Yes</td><td class="vs-tie">Tie</td></tr>
-          <tr><td>Online Supplier Marketplace</td><td><span class="vs-comp">✅ Amazon Business, Lyreco, EcoSystem</span></td><td>✗ None</td><td style="color:#1d6fd8;font-weight:700">Compleat</td></tr>
-          <tr><td>Automated Price Checking</td><td>✗ None</td><td><span class="vs-ly">✅ Yes</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td>Statement Reconciliation</td><td>✗ None</td><td><span class="vs-ly">✅ Automated</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td>AccountsIQ Integration</td><td>✅ Yes</td><td>✅ Yes</td><td class="vs-tie">Tie</td></tr>
-          <tr><td>Hospitality POS</td><td>✗ None</td><td><span class="vs-ly">✅ 10+ POS systems</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td>Education sector</td><td><span class="vs-comp">✅ Strong (Compleat Education)</span></td><td>✅ Education vertical</td><td style="color:#1d6fd8;font-weight:700">Compleat</td></tr>
-          <tr><td>UI / Ease of Use</td><td>⚠ Mixed reviews — steep learning curve</td><td><span class="vs-ly">✅ Praised for simplicity</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-          <tr><td>Pricing Transparency</td><td>✗ Contact sales</td><td><span class="vs-ly">✅ Published online</span></td><td style="color:#047857;font-weight:700">Lightyear</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="win-lose-grid">
-      <div class="win-box win-comp"><h4>When Compleat Wins</h4><ul>
-        <li>Education sector — MATs, schools, academies</li>
-        <li>Teams wanting direct online buying (Amazon Business, catalogues)</li>
-        <li>Businesses wanting Compleat EcoSystem supplier marketplace</li>
-        <li>Organisations needing PS Financials (IRIS) integration</li>
-        <li>Multi-language requirements (German, Spanish)</li>
-      </ul></div>
-      <div class="win-box win-ly"><h4>When Lightyear Wins</h4><ul>
-        <li>Automated price checking — Compleat manages what you're buying; Lightyear controls what you're being charged for it</li>
-        <li>Automated supplier statement reconciliation</li>
-        <li>Transparent pricing — no "contact sales" black box</li>
-        <li>Hospitality POS integrations</li>
-        <li>Simpler UI — praised for ease of use vs Compleat's learning curve</li>
-        <li>Faster deployment for standard AP use cases</li>
-      </ul></div>
-    </div>
-    <div class="position-box">
-      <h4>🎯 Sales Positioning Scripts</h4>
-      <div class="position-item"><strong>Core differentiator:</strong> "Compleat manages what you're buying — their marketplace and procurement tools are strong. Lightyear controls what you're being <em>charged</em> for it — automated price checking against agreed supplier contracts, and statement reconciliation to find missing or duplicate invoices."</div>
-      <div class="position-item"><strong>On pricing:</strong> "Compleat's pricing isn't published — you need a sales conversation before you can compare costs. Lightyear's pricing is online, transparent, and you can be on a 30-day trial today without talking to anyone first."</div>
-      <div class="position-item"><strong>On usability:</strong> "Compleat reviewers consistently mention a steep learning curve and outdated UI. Lightyear's team gets consistently praised for ease of use — approvers don't need training to get started."</div>
-    </div>
-  </div>
-</div>
-
-<!-- DATA QUALITY FOOTER -->
-<div class="quality-footer mt-3">
-  <div>
-    <div class="label">Data Quality Summary — 30 March 2026</div>
-    <div class="note">Lightyear pricing: scraped from official source ✅ · All competitors: live web research today</div>
-  </div>
-  <div class="quality-badges">
-    <span class="q-badge q-high">✅ HIGH: Dext, ApprovalMax, Zahara GBP, Tipalti USD</span>
-    <span class="q-badge q-med">⚠ MEDIUM: Tipalti features, Zahara AUD, Compleat features</span>
-    <span class="q-badge q-gap">◻ GAPS: Compleat pricing, Tipalti GBP/AUD, Zahara AUD</span>
-  </div>
-</div>
-
-</div><!-- /container -->
 
 <script>
-function showComp(compId, btn) {
-  document.querySelectorAll('.comp-content').forEach(el => el.classList.add('hidden'));
-  document.querySelectorAll('.comp-tab').forEach(el => el.classList.remove('active'));
-  document.getElementById('comp-' + compId).classList.remove('hidden');
-  btn.classList.add('active');
-}
+  function switchSection(sectionName) {
+    // Update tab active states
+    document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+    // Show/hide content
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById('tab-' + sectionName).classList.add('active');
+  }
 
-function showTab(comp, tabId, btn) {
-  const parent = document.getElementById('comp-' + comp);
-  parent.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-  parent.querySelectorAll('.inner-tab').forEach(el => el.classList.remove('active'));
-  document.getElementById(comp + '-' + tabId).classList.remove('hidden');
-  btn.classList.add('active');
-}
+  function switchVS(competitorId, btn) {
+    document.querySelectorAll('.vs-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.comp-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('vs-' + competitorId).classList.add('active');
+  }
 </script>
+
 </body>
 </html>
