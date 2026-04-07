@@ -1372,6 +1372,39 @@ document.addEventListener('click', function(e) {
   }
 });
 
+
+function switchComp(key, btn) {
+  currentComp = key;
+  document.querySelectorAll('.comp-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.comp-panel').forEach(function(p) { p.style.display='none'; });
+  var panel = document.getElementById('panel-' + key);
+  if (panel) panel.style.display='block';
+  renderChanges(key);
+}
+
+function switchTab(comp, tab, btn) {
+  var panel = document.getElementById('panel-' + comp);
+  panel.querySelectorAll('.sec-btn').forEach(function(b) { b.classList.remove('active'); b.style.background=''; b.style.color=''; });
+  btn.classList.add('active');
+  btn.style.background = tab === 'battlecard' ? '#0d9488' : '#1B3A5C';
+  btn.style.color = 'white';
+  panel.querySelectorAll('.tab-content').forEach(function(t) { t.style.display='none'; });
+  var target = document.getElementById(comp + '-' + tab);
+  if (target) target.style.display='block';
+}
+
+function downloadBC(key) {
+  var b64 = PDF_B64[key];
+  if (!b64) { alert('PDF not available'); return; }
+  var link = document.createElement('a');
+  link.href = 'data:application/pdf;base64,' + b64;
+  link.download = 'Lightyear_vs_' + key.charAt(0).toUpperCase() + key.slice(1) + '_Battlecard.pdf';
+  link.click();
+}
+
+var currentComp = 'dext';
+
 // Init — show first competitor
 document.getElementById('panel-dext').style.display = 'block';
 renderChanges('dext');
