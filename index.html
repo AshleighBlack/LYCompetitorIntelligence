@@ -44,7 +44,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
     </div>
   </div>
 
-  <!-- Changes banner -->
+  <!-- Changes banner — per-competitor filtered view -->
   <div id="changes-banner" class="card" style="padding:16px;border-left:4px solid #f59e0b;background:#fffbeb;display:none">
     <div style="display:flex;gap:10px;align-items:flex-start">
       <span style="font-size:18px">⚠️</span>
@@ -53,6 +53,37 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
         <div id="changes-content"></div>
       </div>
     </div>
+  </div>
+
+  <!-- Changes — all competitors with date filter -->
+  <div class="card" style="padding:20px;margin-bottom:16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2 style="font-size:15px;font-weight:600;color:#92400e">Changes — all competitors</h2>
+      <div style="position:relative">
+        <button onclick="toggleDateFilter()" id="date-filter-btn"
+          style="background:white;border:1px solid #e2e8f0;border-radius:6px;padding:6px 12px;font-size:12px;color:#64748b;cursor:pointer;display:flex;align-items:center;gap:6px">
+          📅 Filter dates
+        </button>
+        <div id="date-filter-panel" style="display:none;position:absolute;right:0;top:36px;background:white;border:1px solid #e2e8f0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);padding:16px;z-index:100;min-width:260px">
+          <div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:12px">Filter by date range</div>
+          <div style="margin-bottom:8px">
+            <label style="font-size:11px;color:#64748b;display:block;margin-bottom:4px">From</label>
+            <input type="date" id="filter-from" onchange="applyDateFilter()"
+              style="width:100%;border:1px solid #e2e8f0;border-radius:4px;padding:6px 8px;font-size:12px">
+          </div>
+          <div style="margin-bottom:12px">
+            <label style="font-size:11px;color:#64748b;display:block;margin-bottom:4px">To</label>
+            <input type="date" id="filter-to" onchange="applyDateFilter()"
+              style="width:100%;border:1px solid #e2e8f0;border-radius:4px;padding:6px 8px;font-size:12px">
+          </div>
+          <button onclick="clearDateFilter()"
+            style="width:100%;background:#1B3A5C;color:white;border:none;border-radius:4px;padding:7px;font-size:12px;cursor:pointer">
+            Clear filter
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="all-changes-content"></div>
   </div>
 
   <!-- Competitor tabs -->
@@ -1282,6 +1313,7 @@ function downloadBC(key) {
 // Init — show first competitor
 document.getElementById('panel-dext').style.display = 'block';
 renderChanges('dext');
+renderAllChanges(null, null);
 </script>
 </body>
 </html>
