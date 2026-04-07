@@ -1268,51 +1268,114 @@ const PDF_B64 = {
 
 var currentComp = 'dext';
 
+// All-changes flat list
+var ALL_CHANGES_DATA = [];
+Object.keys(CHANGES).forEach(function(comp) {
+  (CHANGES[comp] || []).forEach(function(item) {
+    ALL_CHANGES_DATA.push({type:item.type, text:item.text, date:item.date, src:item.src, comp:comp});
+  });
+});
+var COMP_LABELS_MAP = {dext:'Dext',approvalmax:'ApprovalMax',tipalti:'Tipalti',zahara:'Zahara',compleat:'Compleat'};
+
 function renderChanges(comp) {
   var banner = document.getElementById('changes-banner');
   var content = document.getElementById('changes-content');
   var items = CHANGES[comp] || [];
-  if (!items.length) { banner.style.display='none'; return; }
-  banner.style.display='block';
-  content.innerHTML = items.map(function(item) {
-    var badge = item.type==='new'
-      ? '<span style="background:#dcfce7;color:#15803d;border:1px solid #86efac;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:600;margin-right:6px">NEW</span>'
-      : '<span style="background:#dbeafe;color:#1d4ed8;border:1px solid #93c5fd;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:600;margin-right:6px">UPDATE</span>';
-    return '<div style="font-size:12px;margin-bottom:6px;line-height:1.5">' + badge + item.text + ' — ' + item.date + ' | <a href="' + item.src + '" target="_blank" style="color:#0369a1;font-size:11px">Source</a></div>';
-  }).join('');
+  if (!items.length) { banner.style.display='none'; }
+  else {
+    banner.style.display='block';
+    content.innerHTML = items.map(function(item) {
+      var badge = item.type==='new'
+        ? '<span style="background:#dcfce7;color:#15803d;border:1px solid #86efac;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:600;margin-right:6px">NEW</span>'
+        : '<span style="background:#dbeafe;color:#1d4ed8;border:1px solid #93c5fd;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:600;margin-right:6px">UPDATE</span>';
+      return '<div style="font-size:12px;margin-bottom:6px;line-height:1.5">' + badge + item.text + ' — ' + item.date + ' | <a href="' + item.src + '" target="_blank" style="color:#0369a1;font-size:11px">Source</a></div>';
+    }).join('');
+  }
 }
 
-function switchComp(key, btn) {
-  currentComp = key;
-  document.querySelectorAll('.comp-btn').forEach(function(b) { b.classList.remove('active'); });
-  btn.classList.add('active');
-  document.querySelectorAll('.comp-panel').forEach(function(p) { p.style.display='none'; });
-  var panel = document.getElementById('panel-' + key);
-  if (panel) panel.style.display='block';
-  renderChanges(key);
+function renderAllChanges(fromDate, toDate) {
+  var el = document.getElementById('all-changes-content');
+  if (!el) return;
+  var months = {jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+
+  function parseItemDate(raw) {
+    var parts = (raw || '').toLowerCase().trim().split(/\s+/);
+    if (parts.length === 2) {
+      var mo = months[parts[0].substring(0,3)];
+      var yr = parseInt(parts[1]);
+      if (mo !== undefined && !isNaN(yr)) return new Date(yr, mo, 1);
+    }
+    if (parts.length === 1 && !isNaN(parseInt(parts[0]))) return new Date(parseInt(parts[0]), 0, 1);
+    return null;
+  }
+
+  var filtered = ALL_CHANGES_DATA.filter(function(item) {
+    if (!fromDate && !toDate) return true;
+    var d = parseItemDate(item.date);
+    if (!d) return true;
+    if (fromDate && d < fromDate) return false;
+    if (toDate && d > toDate) return false;
+    return true;
+  });
+
+  if (!filtered.length) {
+    el.innerHTML = '<div style="font-size:13px;color:#94a3b8;padding:8px 0">No changes match the selected date range.</div>';
+    return;
+  }
+
+  var grouped = {};
+  filtered.forEach(function(item) {
+    if (!grouped[item.comp]) grouped[item.comp] = [];
+    grouped[item.comp].push(item);
+  });
+
+  var html = '';
+  ['dext','approvalmax','tipalti','zahara','compleat'].forEach(function(comp) {
+    if (!grouped[comp] || !grouped[comp].length) return;
+    html += '<div style="margin-bottom:16px">';
+    html += '<div style="font-size:10px;font-weight:700;color:#92400e;letter-spacing:.8px;margin-bottom:6px">' + COMP_LABELS_MAP[comp].toUpperCase() + '</div>';
+    grouped[comp].forEach(function(item) {
+      html += '<div style="font-size:12px;margin-bottom:5px;line-height:1.5">';
+      html += '<span style="font-weight:500;color:#1e293b">' + item.text + '</span>';
+      html += '<span style="color:#92400e;margin-left:6px">— ' + item.date + '</span>';
+      if (item.src) html += ' | <a href="' + item.src + '" target="_blank" style="color:#0369a1;font-size:11px">Source</a>';
+      html += '</div>';
+    });
+    html += '</div>';
+  });
+  el.innerHTML = html;
 }
 
-function switchTab(comp, tab, btn) {
-  var panel = document.getElementById('panel-' + comp);
-  panel.querySelectorAll('.sec-btn').forEach(function(b) { b.classList.remove('active'); });
-  btn.classList.add('active');
-  panel.querySelectorAll('.tab-content').forEach(function(t) { t.style.display='none'; });
-  var target = document.getElementById(comp + '-' + tab);
-  if (target) target.style.display='block';
+function toggleDateFilter() {
+  var panel = document.getElementById('date-filter-panel');
+  panel.style.display = (panel.style.display === 'none' || panel.style.display === '') ? 'block' : 'none';
 }
 
-function downloadBC(key) {
-  var b64 = PDF_B64[key];
-  if (!b64) { alert('PDF not available'); return; }
-  var link = document.createElement('a');
-  link.href = 'data:application/pdf;base64,' + b64;
-  link.download = 'Lightyear_vs_' + key.charAt(0).toUpperCase() + key.slice(1) + '_Battlecard.pdf';
-  link.click();
+function applyDateFilter() {
+  var fromVal = document.getElementById('filter-from').value;
+  var toVal   = document.getElementById('filter-to').value;
+  renderAllChanges(fromVal ? new Date(fromVal) : null, toVal ? new Date(toVal) : null);
 }
+
+function clearDateFilter() {
+  document.getElementById('filter-from').value = '';
+  document.getElementById('filter-to').value = '';
+  document.getElementById('date-filter-panel').style.display = 'none';
+  renderAllChanges(null, null);
+}
+
+document.addEventListener('click', function(e) {
+  var panel = document.getElementById('date-filter-panel');
+  var btn   = document.getElementById('date-filter-btn');
+  if (panel && btn && !panel.contains(e.target) && !btn.contains(e.target)) {
+    panel.style.display = 'none';
+  }
+});
 
 // Init — show first competitor
 document.getElementById('panel-dext').style.display = 'block';
 renderChanges('dext');
+renderAllChanges(null, null);
 renderAllChanges(null, null);
 </script>
 </body>
